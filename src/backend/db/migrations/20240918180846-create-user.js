@@ -28,7 +28,7 @@ module.exports = {
         validate: {len: [1,256]}
       },
       hashedPassword: {
-        type: Sequelize.STRING.binary,
+        type: Sequelize.STRING.BINARY,
         allowNull: false
       },
       createdAt: {
