@@ -9,8 +9,6 @@ if (process.env.NODE_ENV === 'production') {
 /** @type {import('sequelize-cli').Migration} */
 module.exports = {
   async up (queryInterface, Sequelize) {
-    await Sequelize.query('SET search_path = airdb, $user, public');
-
     await queryInterface.addColumn('Users', 'firstName', {
       type: Sequelize.STRING(30),
       allowNull: false,
