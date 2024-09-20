@@ -9,12 +9,8 @@ if (process.env.NODE_ENV === 'production') {
 /** @type {import('sequelize-cli').Migration} */
 module.exports = {
   async up (queryInterface, Sequelize) {
-    /**
-     * Add altering commands here.
-     *
-     * Example:
-     * await queryInterface.createTable('users', { id: Sequelize.INTEGER });
-     */
+    await Sequelize.query('SET search_path = airdb, $user, public');
+
     await queryInterface.addColumn('Users', 'firstName', {
       type: Sequelize.STRING(30),
       allowNull: false,
@@ -29,13 +25,6 @@ module.exports = {
   },
 
   async down (queryInterface, Sequelize) {
-    /**
-     * Add reverting commands here.
-     *
-     * Example:
-     * await queryInterface.dropTable('users');
-     */
-
     await queryInterface.removeColumn('Users', 'firstName', options);
     await queryInterface.removeColumn('Users', 'lastName', options);
   }
