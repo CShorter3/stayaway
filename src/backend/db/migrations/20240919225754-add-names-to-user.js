@@ -3,7 +3,7 @@
 let options = {};
 if (process.env.NODE_ENV === 'production') {
   options.schema = process.env.SCHEMA;  // define your schema in options object
-  console.log('SCHEMA =====>', schema);
+  console.log('SCHEMA =====>', options.schema);
 }
 
 /** @type {import('sequelize-cli').Migration} */
