@@ -4,8 +4,8 @@
   "description": "AirBnB clone pair project",
   "main": "src/backend/bin/www",
   "scripts": {
-    "install": "npm --prefix src install src"
-    "sequelize": "npm --prefix src run sequelize"
+    "install": "npm --prefix src install src",
+    "sequelize": "npm --prefix src run sequelize",
     "start": "npm --prefix src start",
     "build": "npm --prefix src run build"
   },
