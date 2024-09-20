@@ -8,9 +8,9 @@
     "sequelize": "sequelize",
     "sequelize-cli": "sequelize-cli",
     "start": "per-env",
-    "start:development": "nodemon ./bin/www",
-    "start:production": "node ./bin/www",
-    "dev": "nodemon ./bin/www",
+    "start:development": "nodemon ./backend/bin/www",
+    "start:production": "node ./backend/bin/www",
+    "dev": "nodemon ./backend/bin/www",
     "build": "node backend/psql-setup-script.js"
   },
   "repository": {
