@@ -1,6 +1,6 @@
 const config = require('./index');
 
-//console.log('DBFILE =====>', config.dbFile);
+console.log('DBFILE =====>', config.dbFile);
 
 module.exports = {
   /*development: {
