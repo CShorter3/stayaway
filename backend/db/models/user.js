@@ -3,7 +3,6 @@ const { timestamp } = require('rxjs');
 const {
   Model
 } = require('sequelize');
-const { Sequelize } = require('.');
 module.exports = (sequelize, DataTypes) => {
   class User extends Model {
     /**
@@ -14,6 +13,7 @@ module.exports = (sequelize, DataTypes) => {
     static associate(models) {
       this.hasMany(models.Spot, { foreignKey: 'ownerId' });
       this.hasMany(models.Review, { foreignKey: 'userId' });
+      this.hasMany(models.Booking, { foreignKey: 'userId' });
     }
 
   }
