@@ -1,4 +1,4 @@
-console.log('ENV =====>', process.env);
+//console.log('ENV =====>', process.env);
 
 module.exports = {
   environment: process.env.NODE_ENV || 'development',
