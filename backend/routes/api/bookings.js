@@ -106,6 +106,39 @@ router.put('/:bookingId', validateBookingEdit, async (req, res, next) => {
   }
 
   return res.status(200).json(booking);
-})
+});
+
+/**** DELETE a booking by its ID ****/
+router.delete('/:bookingId', async (req, res, next) => {
+  const { user } = req;
+
+  if (!user) {
+    const err = new Error('Unauthorized');
+    err.title = 'Unauthorized';
+    err.errors = { message: 'You must be signed in to access this resource.' };
+    return res.status(401).json(err);
+  }
+
+  const booking = await Booking.findByPk(req.params.bookingId);
+
+  if (!booking) {
+    return res.status(404).json({ message: 'Booking couldn\'t be found' });
+  }
+
+  if (user.id !== booking.userId) {
+    const err = new Error('Unauthorized');
+    err.title = 'Unauthorized';
+    err.errors = { message: 'You cannot delete a booking that you didn\'t make.' };
+    return res.status(401).json(err);
+  }
+
+  try {
+    await booking.destroy();
+
+    return res.status(200).json({ message: 'Successfully deleted' });
+  } catch (e) {
+    return next(e);
+  }
+});
 
 module.exports = router;
