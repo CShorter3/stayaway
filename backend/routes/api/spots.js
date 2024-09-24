@@ -22,7 +22,7 @@ router.get('/current',
     if(user){
       const userId = user.id;
       const userSpots = await Spot.findAll({
-        where: { userId }
+        where: { userId },
       });
       return res.json({userSpots});
     }
@@ -43,6 +43,16 @@ router.get('/:spotId',
     // Capture spot deatils including associated images and owner details. 
     const spot = await Spot.findOne({
       where: { id: spotId },
+      include: [
+        { 
+          model: SpotImage,
+          attributes: ['id', 'url', 'preview']
+         },
+        {
+          model: User,
+          attributes: ['id', 'firstName', 'lastName']
+        }
+      ]
     });
 
     if(!spot){
