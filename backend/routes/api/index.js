@@ -14,6 +14,8 @@ const usersRouter = require('./users.js');
   router.use('/users', usersRouter);
 
   router.use('/reviews', require('./reviews.js'));
+
+  router.use('/bookings', require('./bookings.js'));
   
   router.post('/test', (req, res) => {
     res.json({ requestBody: req.body });
