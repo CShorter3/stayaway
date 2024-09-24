@@ -40,7 +40,7 @@ router.get('/current', async (req, res, next) => {
 });
 
 /**** Edit a review by its ID ****/
-router.put('/:reviewId', validateReviewEdit, async (req, res) => {
+router.put('/:reviewId', validateReviewEdit, async (req, res, next) => {
   const { user } = req;
 
   if (!user) {
