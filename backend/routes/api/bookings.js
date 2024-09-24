@@ -132,6 +132,10 @@ router.delete('/:bookingId', async (req, res, next) => {
     return res.status(401).json(err);
   }
 
+  if (new Date(booking.startDate).getTime() < new Date().getTime()) {
+    return res.status(400).json({ message: 'You cannot delete a booking after it has started' });
+  }
+
   try {
     await booking.destroy();
 
