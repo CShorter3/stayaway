@@ -4,7 +4,7 @@ const { restoreUser } = require('../../utils/auth.js');
 
 const { Review, Spot, User, ReviewImage } = require('../../db/models');
 
-router.get('/current', async (req, res) => {
+router.get('/current', async (req, res, next) => {
   const { user } = req;
 
   if (user) {
@@ -20,7 +20,10 @@ router.get('/current', async (req, res) => {
     return res.status(200).json(reviews);
   }
 
-  return res.status(200).json(null);
+  const err = new Error('Unauthorized');
+  err.title = 'Unauthorized';
+  err.errors = { message: 'You must be signed in to access this resource.' };
+  return res.status(401).json(err);
 });
 
 module.exports = router;
