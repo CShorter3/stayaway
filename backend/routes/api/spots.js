@@ -33,10 +33,10 @@ router.get('/current',
 });
 
 /*** Get spot details on id */
-
 router.get('/:spotId',
   async(req, res, next) => {
-  
+
+  // get spot id to parse
   const { spotId } = req.params;
 
   try {
@@ -56,12 +56,24 @@ router.get('/:spotId',
       ]
     });
 
+    // Return 404 if spot not found
     if(!spot){
       return res.status(404).json({
         message: "Spot couldn't be found"
       });
     }
 
+    // Create aggregate columns on query 
+    const aggregateStats = await Review.findOne({
+      where: { spotId: spot.id },
+      attributes: [
+        [Sequelize.fn('COUNT', Sequelize.col('Review.id')), 'numReviews'],
+        [Sequelize.fn('AVG', Sequelize.col('stars')), 'avgStarRating']
+      ]
+    });
+
+    // Spot details derived from Spots, and spot associations
+    // with SpotImages, Reviews, and Users.
     const detailedResponse = {
       id: spot.id,
       ownerId: spot.address,
@@ -75,8 +87,10 @@ router.get('/:spotId',
       price: spot.price,
       createdAt: spot.createdAt,
       updatedAt: spot.updatedAt,
-      SpotImages: spot.SpotImages,  // array
-      Owner: {
+      numReviews: parseInt(aggregateStats.numReviews) || 0,                    // aggregate
+      avgStarRating: parseFloat(aggregateStats.avgStarRating).toFixed(1) || 0, // aggregate
+      SpotImages: spot.SpotImages,                                             // array
+      Owner: {                                                                 // alias assocation
         id: spot.Owner.id,
         firstName: spot.Owner.firstName,
         lastName: spot.Owner.lastName
