@@ -74,6 +74,7 @@ router.get('/:spotId',
       price: spot.price,
       createdAt: spot.createdAt,
       updatedAt: spot.updatedAt,
+      SpotImages: spot.SpotImages,  // array
     };
 
     return res.status(200).json(detailedResponse);
