@@ -75,4 +75,37 @@ router.put('/:reviewId', validateReviewEdit, async (req, res, next) => {
   return res.status(200).json(review);
 });
 
+/**** DELETE a review by its ID ****/
+router.delete('/:reviewId', async (req, res, next) => {
+  const { user } = req;
+
+  if (!user) {
+    const err = new Error('Unauthorized');
+    err.title = 'Unauthorized';
+    err.errors = { message: 'You must be signed in to access this resource.' };
+    return res.status(401).json(err);
+  }
+
+  const review = await Review.findByPk(req.params.reviewId);
+
+  if (!review) {
+    return res.status(404).json({ message: 'Review couldn\'t be found' });
+  }
+
+  if (user.id !== review.userId) {
+    const err = new Error('Unauthorized');
+    err.title = 'Unauthorized';
+    err.errors = { message: 'You cannot delete a review that you didn\'t make.' };
+    return res.status(401).json(err);
+  }
+
+  try {
+    await review.destroy();
+
+    return res.status(200).json({ message: 'Successfully deleted' });
+  } catch (e) {
+    return next(e);
+  }
+});
+
 module.exports = router;
