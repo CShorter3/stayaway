@@ -46,6 +46,7 @@ router.get('/:spotId',
       include: [
         { 
           model: SpotImage,
+          as: 'Owner',
           attributes: ['id', 'url', 'preview']
          },
         {
@@ -75,6 +76,11 @@ router.get('/:spotId',
       createdAt: spot.createdAt,
       updatedAt: spot.updatedAt,
       SpotImages: spot.SpotImages,  // array
+      Owner: {
+        id: spot.Owner.id,
+        firstName: spot.Owner.firstName,
+        lastName: spot.Owner.lastName
+      }
     };
 
     return res.status(200).json(detailedResponse);
