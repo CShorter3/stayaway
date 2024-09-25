@@ -108,4 +108,45 @@ router.delete('/:reviewId', async (req, res, next) => {
   }
 });
 
+/**** POST an image to a review based on the review's ID ****/
+router.post('/:reviewId/images', async (req, res, next) => {
+  const { user } = req;
+
+  if (!user) {
+    const err = new Error('Unauthorized');
+    err.title = 'Unauthorized';
+    err.errors = { message: 'You must be signed in to access this resource.' };
+    return res.status(401).json(err);
+  }
+
+  const review = await Review.findByPk(req.params.reviewId);
+
+  if (!review) {
+    return res.status(404).json({ message: 'Review couldn\'t be found' });
+  }
+
+  if (user.id !== review.userId) {
+    return res.status(401).json('You cannot add images to a review that you didn\'t make.');
+  }
+
+  const images = await ReviewImage.findAll({ where: { reviewId: req.params.reviewId } });
+  console.log(images);
+
+  if (images.length >= 10) {
+    return res.status(403).json({
+      message: 'Maximum number of images for this resource was reached'
+    });
+  }
+
+  try {
+    const image = await review.createReviewImage({
+      url: req.body.url,
+    });
+
+    return res.status(201).json(image);
+  } catch (e) {
+    return next(e);
+  }
+});
+
 module.exports = router;
