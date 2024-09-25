@@ -17,6 +17,8 @@ const usersRouter = require('./users.js');
 
   router.use('/bookings', require('./bookings.js'));
   
+  router.use('/spots', require('./spots.js'));
+  
   router.post('/test', (req, res) => {
     res.json({ requestBody: req.body });
   });
@@ -54,4 +56,6 @@ router.get(
   }
 );
 */
+
+
 module.exports = router;
