@@ -253,5 +253,13 @@ router.get('/:spotId',
   
 });
 
+/**** POST image to spot on id ****/
+Router.post('/:postId/images',
+  restoreUser, requireAuth, 
+  async(req, res, next) => {
+
+  }
+);
+
 
 module.exports = router;
