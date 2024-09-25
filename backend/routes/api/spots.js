@@ -198,7 +198,8 @@ router.get('/:spotId',
     // with SpotImages, Reviews, and Users.
     const detailedResponse = {
       id: spot.id,
-      ownerId: spot.address,
+      ownerId: spot.ownerId,
+      address: spot.address,
       city: spot.city,
       state: spot.state,
       country: spot.country,
