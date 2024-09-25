@@ -8,18 +8,6 @@ const { handleValidationErrors } = require('../../utils/validation');
 // requireAuth directs an (un)authorized request
 const { restoreUser, requireAuth } = require('../../utils/auth'); 
 
-// user must be authenticated to create a spot
-
-// create post function 
-// path should use api/spots, take async callback function taking req, res
-// destrucure column names from reqest body
-// create try catch logic 
-//       try
-//       initialize new resource using Model.create({}) to variable
-//       send 201 redirect with new user
-//       catch
-
-
 /**** Validate Create Spot POST body ****/
 const validateSpotData = [
   check('address')
@@ -87,9 +75,7 @@ router.post('/',
       lng,
       name,
       description,
-      price,
-      createdAt,
-      updatedAt
+      price
     });
     
     return res.status(201).json(newSpot);
