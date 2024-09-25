@@ -70,8 +70,8 @@ router.get('/current',
           {
             model: SpotImage,
             as: 'previewImage',
-            // required: false,
-            // where: {preview: true},
+            // where: {preview: true},  // only where there are pics
+            // required: false,         // without voiding query if no pics
             attributes: ['url'],
           },
           {
