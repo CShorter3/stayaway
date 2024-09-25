@@ -45,7 +45,7 @@ module.exports = {
      * await queryInterface.bulkDelete('People', null, {});
      */
     for (const img of seedData) {
-      await ReviewImage.destroy({ where: img });
+      await SpotImage.destroy({ where: img });
     }
   }
 };
