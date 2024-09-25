@@ -19,16 +19,51 @@ const { restoreUser, requireAuth } = require('../../utils/auth');
 //       send 201 redirect with new user
 //       catch
 
-// create spot
+
+/**** Validate Create Spot POST body ****/
+const validateSpotData = [
+  check('address')
+    .exists({ checkFalsy: true })
+    .withMessage('Street address is required'),
+  check('city')
+    .exists({ checkFalsy: true })
+    .withMessage('City is required'),
+  check('state')
+    .exists({ checkFalsy: true })
+  .withMessage('State is required'),
+    check('country')
+  .exists({ checkFalsy: true })
+    .withMessage('Country is required'),
+  check('lat')
+    .isFloat({ min: -90, max: 90 })
+    .withMessage('Latitude must range -90 to 90'),
+  check('lng')
+    .isFloat({ min: -180, max: 180 })
+    .withMessage('Longitude must range -180 to 180'),
+  check('name')
+    .exists({ checkFalsy: true })
+    .isLength({ max: 50 })
+    .withMessage('Name must be less than 50 characters'),
+  check('description')
+    .exists({ checkFalsy: true })
+    .withMessage('Description is required'),
+  check('price')
+    .isFloat({ gt: 0 })
+    .withMessage('Price per day must be a positive number'),
+  handleValidationErrors
+];
+
+/**** Create spot POST ****/
 router.post('/',
-  restoreUser, requireAuth,
+  restoreUser, requireAuth, validateSpotData,
   async (req, res, next) => {
     
   try{
 
-    const { user } = req; // 
     const { address, city, state, country, lat, lng, name, description, price, createdAt, updatedAt } = req.body; // missing id, ownerId
-
+    const { user } = req;
+    const userId = user.id;
+ 
     //only authenticated users can create a new spot listing
     if(!user){  
       return res.status(404).json({
@@ -37,6 +72,8 @@ router.post('/',
     }
 
     const newSpot = await Spot.create({
+      id: userId,
+      ownerId: userId,
       address,
       city,
       state,
