@@ -14,35 +14,48 @@ const { restoreUser, requireAuth } = require('../../utils/auth');
 // path should use api/spots, take async callback function taking req, res
 // destrucure column names from reqest body
 // create try catch logic 
-      // try
-      // initialize new resource using Model.create({}) to variable
-      // send 201 redirect with new user
-      // catch
-      // 
-// router.post('/',
-//   restoreUser, requireAuth,
-//   async (req, res, next) => {
+//       try
+//       initialize new resource using Model.create({}) to variable
+//       send 201 redirect with new user
+//       catch
 
-//     const { address, city, state, country, lat, lng, name, description, price } = req.body;
+// create spot
+router.post('/',
+  restoreUser, requireAuth,
+  async (req, res, next) => {
     
-//     try{
-//       const { user } = req;
+  try{
 
-//       // only authenticated users can create a new spot listing
-//       if(!user){
-//         return res.status(404).json({
-//           message: "user must login to create a new spot listing"
-//         });
-//       }
+    const { user } = req; // 
+    const { address, city, state, country, lat, lng, name, description, price, createdAt, updatedAt } = req.body; // missing id, ownerId
 
-//       const userId = user.id;
-      
-//     } catch(error) {
+    //only authenticated users can create a new spot listing
+    if(!user){  
+      return res.status(404).json({
+        message: "Authentication required"
+      });
+    }
 
-//     }
+    const newSpot = await Spot.create({
+      address,
+      city,
+      state,
+      country,
+      lat,
+      lng,
+      name,
+      description,
+      price,
+      createdAt,
+      updatedAt
+    });
+    
+    return res.status(201).json(newSpot);
 
-//   }
-// )
+  } catch(error) {
+    next(error);
+  }
+});
 
 /**** GET all spots ****/
 router.get('/',
@@ -88,7 +101,6 @@ router.get('/',
         next(error);
     }
 });
-
 
 /**** GET all spots of current user ****/
 router.get('/current', 
