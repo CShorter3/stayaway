@@ -71,7 +71,7 @@ router.get('/current',
             model: SpotImage,
             as: 'previewImage',
             // where: {preview: true},  // Include only where there are pics
-            // required: false,         // without voiding query if no pics
+            required: false,            // without voiding query if no pics
             attributes: ['url'],
           },
           {
@@ -107,7 +107,9 @@ router.get('/current',
       
       // Encapsulate spots in object
       return res.status(200).json({ Spots: userSpotsArray });
-    }
+     }// else {
+    //   return res.status(401).json({ message: 'User must login to see spots'});
+    // }
   } catch (error){                    // Pass query or response error for handdling 
     next(error); 
   }
