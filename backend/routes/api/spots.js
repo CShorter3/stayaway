@@ -59,31 +59,56 @@ router.get('/current',
   try {
     const {user} = req;
 
-    // ensure user is authenticated, restoreUser populates req
+    // Restore user ensures user is loggedin
     if(user){
       const userId = user.id;
 
-      // Capture all spot details by current user + associated preview images 
+      // Capture user's spot listings + associated preview images 
       const userSpots = await Spot.findAll({
         where: { ownerId: userId },
-        include: [
+        include: [                      // Fetch images
           {
             model: SpotImage,
             as: 'previewImage',
-            // where: {preview: true},  // only where there are pics
+            // where: {preview: true},  // Include only where there are pics
             // required: false,         // without voiding query if no pics
             attributes: ['url'],
           },
           {
-            model: Review,
+            model: Review,              // Fetch reviews for forthcoming aggregation
             attributes: ['id']
           }
         ],
+        attributes: [                   // DELETE. not listing any would pull all atts? listing some will pull that exclusive list of atts? 
+          'id', 'ownerId', 'address', 'city', 'state', 'country',
+          'lat', 'lng', 'name', 'description', 'price', 'createdAt', 'updatedAt',
+          [Sequelize.fn('AVG', Sequelize.col('Reviews.stars')), 'avgRating']
+        ] 
       });
-      return res.json({userSpots});
+
+      // Capture spots in array indexes
+      const userSpotsArray = userSpots.map(userSpots => ({
+        id: userSpots.id,
+          ownerId: userSpots.ownerId,
+          address: userSpots.address,
+          city: userSpots.city,
+          state: userSpots.state,
+          country: userSpots.country,
+          lat: userSpots.lat,
+          lng: userSpots.lng,
+          name: userSpots.name,
+          description: userSpots.description,
+          price: userSpots.price,
+          createdAt: userSpots.createdAt,
+          updatedAt: userSpots.updatedAt,
+          avgRating: parseFloat(userSpots.get('avgRating')).toFixed(1) || null,
+          previewImage: userSpots.previewImage || null
+      }));
+      
+      // Encapsulate spots in object
+      return res.status(200).json({ Spots: userSpotsArray });
     }
-  } catch (error){
-    // if query or response error, pass to error handdling 
+  } catch (error){                    // Pass query or response error for handdling 
     next(error); 
   }
 });
