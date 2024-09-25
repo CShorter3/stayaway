@@ -59,16 +59,8 @@ router.post('/',
     }
 
     const newSpot = await Spot.create({
-      ownerId: userId, // ensure authenticated user is owner of new spot
-      address,
-      city,
-      state,
-      country,
-      lat,
-      lng,
-      name,
-      description,
-      price
+      ownerId: userId, address, city, state, country,
+      at, lng, name, description, price
     });
     
     return res.status(201).json(newSpot);
