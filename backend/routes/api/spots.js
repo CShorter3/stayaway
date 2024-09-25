@@ -41,14 +41,14 @@ const validateSpotData = [
   handleValidationErrors
 ];
 
-/**** Create spot POST ****/
+/**** CREATE spot listing ****/
 router.post('/',
   restoreUser, requireAuth, validateSpotData,
   async (req, res, next) => {
     
   try{
 
-    const { address, city, state, country, lat, lng, name, description, price, createdAt, updatedAt } = req.body; // missing id, ownerId
+    const { address, city, state, country, lat, lng, name, description, price } = req.body; // missing id, ownerId
     const { user } = req;
     const userId = user.id;
 
@@ -115,7 +115,7 @@ router.get('/',
     }
 });
 
-/**** GET all spots of current user ****/
+/**** GET current user's spots ****/
 router.get('/current', 
   restoreUser, requireAuth,
   async(req, res, next) => {
@@ -253,13 +253,52 @@ router.get('/:spotId',
   
 });
 
-/**** POST image to spot on id ****/
-Router.post('/:postId/images',
-  restoreUser, requireAuth, 
-  async(req, res, next) => {
 
+/**** validate spot image ****/
+const validateSpotImage = [
+  check('url')
+    .exists({ checkFalsy: true })
+    .withMessage('Image url is required'),  
+  check('preview')
+    .exists()
+    .isBoolean()
+    .withMessage('Preview must be a boolean value')
+]
+
+/**** ADD image to spot on id ****/
+router.post('/:postId/images',
+  restoreUser, requireAuth, validateSpotImage,
+  async(req, res, next) => {
+    
+  const { spotId } = req.params;     // spotId to add image at
+  const { user } = req;              // current user adding image
+  const { url, preview } = req.body; // image data to add
+  const userId = user.id;
+
+  try {
+    const spot = await Spot.findByPk(spotId);
+
+    if(!spot){
+      return res.status(404).json({
+        message: "Authentication required"
+      })
+    }
+
+    if(spot.ownerId !== userId){
+      const err = new Error('Forbidden');
+      err.status = 403;
+      return next(err);
+    }
+
+    const newImage = await SpotImage.create({
+      spotId: spot.id, url, preview
+    });
+
+  } catch (error){
+    next(error)
   }
-);
+
+});
 
 
 module.exports = router;
