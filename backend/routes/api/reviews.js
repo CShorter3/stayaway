@@ -1,5 +1,4 @@
 const router = require('express').Router();
-const { restoreUser } = require('../../utils/auth.js');
 const { Review, Spot, User, ReviewImage } = require('../../db/models');
 const { check } = require('express-validator');
 const { handleValidationErrors } = require('../../utils/validation');
