@@ -1,28 +1,84 @@
 const router = require('express').Router();  // import server and route handling functionality
-const { Spot, Review, SpotImage, User, Sequelize } = require('../../db/models'); // import user model
+const { Spot, Review, SpotImage, User, Sequelize } = require('../../db/models'); // import relevant models
+
+const { check } = require('express-validator');
+const { handleValidationErrors } = require('../../utils/validation');
 
 // restoreUser verifies token on request
 // requireAuth directs an (un)authorized request
 const { restoreUser, requireAuth } = require('../../utils/auth'); 
 
-/**** Get all spots ****/
+// user must be authenticated to create a spot
+
+// create post function 
+// path should use api/spots, take async callback function taking req, res
+// destrucure column names from reqest body
+// create try catch logic 
+      // try
+      // initialize new resource using Model.create({}) to variable
+      // send 201 redirect with new user
+      // catch
+      // 
+// router.post('/',
+//   restoreUser, requireAuth,
+//   async (req, res, next) => {
+
+//     const { address, city, state, country, lat, lng, name, description, price } = req.body;
+    
+//     try{
+//       const { user } = req;
+
+//       // only authenticated users can create a new spot listing
+//       if(!user){
+//         return res.status(404).json({
+//           message: "user must login to create a new spot listing"
+//         });
+//       }
+
+//       const userId = user.id;
+      
+//     } catch(error) {
+
+//     }
+
+//   }
+// )
+
+/**** GET all spots ****/
 router.get('/',
     async (req, res) => {
     const allSpots = await Spot.findAll();
       return res.json({allSpots});
     });
 
-/**** Get all spots of current user ****/
+/**** GET all spots of current user ****/
 router.get('/current', 
   restoreUser, requireAuth,
   async(req, res, next) => {
   
   try {
     const {user} = req;
+
+    // ensure user is authenticated, restoreUser populates req
     if(user){
       const userId = user.id;
+
+      // Capture all spot details by current user + associated preview images 
       const userSpots = await Spot.findAll({
-        where: { userId },
+        where: { ownerId: userId },
+        include: [
+          {
+            model: SpotImage,
+            as: 'previewImage',
+            // required: false,
+            // where: {preview: true},
+            attributes: ['url'],
+          },
+          {
+            model: Review,
+            attributes: ['id']
+          }
+        ],
       });
       return res.json({userSpots});
     }
@@ -32,7 +88,7 @@ router.get('/current',
   }
 });
 
-/*** Get spot details on id */
+/*** GET spot details on id */
 router.get('/:spotId',
   async(req, res, next) => {
 
@@ -40,17 +96,17 @@ router.get('/:spotId',
   const { spotId } = req.params;
 
   try {
-    // Capture spot deatils including associated images and owner details. 
+    // Capture spot deatils including associated images and owner details
     const spot = await Spot.findOne({
       where: { id: spotId },
       include: [
         { 
           model: SpotImage,
-          as: 'Owner',
           attributes: ['id', 'url', 'preview']
-         },
+        },
         {
           model: User,
+          as: 'Owner',
           attributes: ['id', 'firstName', 'lastName']
         }
       ]
@@ -100,9 +156,10 @@ router.get('/:spotId',
     return res.status(200).json(detailedResponse);
 
   } catch (error) {
-      next(error);
+    next(error);
   }
-
+  
 });
+
 
 module.exports = router;
