@@ -1,18 +1,23 @@
 const router = require('express').Router();
 const { Booking, Spot } = require('../../db/models');
+const { Op } = require('sequelize');
 
 const { check } = require('express-validator');
 const { handleValidationErrors } = require('../../utils/validation');
 
 const validateBookingEdit = [
   check('startDate')
-    .isDate({ format: 'ISO' })
-    .withMessage('Start date must be a date in ISO 8601 format'),
+    .isISO8601() // NOTE this may need changed depending on test specs
+    .custom((val) => {
+      // just for the record i hate this but not enough
+      // to write a function on Date.prototype (yet)
+      return new Date(new Date(val).toDateString()) > new Date(new Date().toDateString());
+    })
+    .withMessage('Start date must be a date in ISO 8601 format which is after today'),
   check('endDate')
-    .isDate({ format: 'ISO' })
+    .isISO8601() // NOTE same as above
     .custom((val, { req }) => {
-      new Date(req.body.startDate).getTime()
-        < new Date(req.body.endDate).getTime();
+      return new Date(req.body.startDate).getTime() < new Date(req.body.endDate).getTime();
     })
     .withMessage('End date must be a date in ISO 8601 format which is after start date'),
   handleValidationErrors,
@@ -39,6 +44,7 @@ router.get('/current', async (req, res) => {
 
 /**** Edit a booking by its ID ****/
 router.put('/:bookingId', validateBookingEdit, async (req, res, next) => {
+  // TODO add better comments to this route
   const { user } = req;
   const [startTimestamp, endTimestamp] = [
     new Date(req.body.startDate).getTime(),
@@ -52,23 +58,30 @@ router.put('/:bookingId', validateBookingEdit, async (req, res, next) => {
     return res.status(401).json(err);
   }
 
-  const booking = Booking.findByPk(req.params.bookingId);
+  const booking = await Booking.findByPk(req.params.bookingId);
 
   if (!booking) {
     return res.status(404).json({ message: 'Booking couldn\'t be found' });
   }
 
-  if (user.id !== bookingId) {
+  if (user.id !== booking.userId) {
     const err = new Error('Unauthorized');
     err.title = 'Unauthorized';
     err.errors = { message: 'You cannot edit a booking that you didn\'t make.' };
     return res.status(401).json(err);
   }
 
+  if (new Date(booking.endDate).getTime() <= new Date().getTime()) {
+    return res.status(400).json({ message: 'You cannot edit a booking after it has ended' });
+  }
+
   const bookingConflicts = await Booking.findAll({
     where: {
       spotId: booking.spotId,
-      date: { [Op.between]: [startTimestamp, endTimestamp] },
+      [Op.or]: {
+        startDate: { [Op.between]: [startTimestamp, endTimestamp] },
+        endDate: { [Op.between]: [startTimestamp, endTimestamp] },
+      },
     },
   });
 
@@ -96,8 +109,8 @@ router.put('/:bookingId', validateBookingEdit, async (req, res, next) => {
     });
   }
 
-  booking.startDate = req.startDate;
-  booking.endDate = req.endDate;
+  booking.startDate = req.body.startDate;
+  booking.endDate = req.body.endDate;
 
   try {
     await booking.save();
