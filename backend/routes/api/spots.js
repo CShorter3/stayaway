@@ -36,10 +36,10 @@ const validateSpotData = [
     .withMessage('Country is required'),
   check('lat')
     .isFloat({ min: -90, max: 90 })
-    .withMessage('Latitude must range -90 to 90'),
+    .withMessage('Latitude must must be between -90 to 90'),
   check('lng')
     .isFloat({ min: -180, max: 180 })
-    .withMessage('Longitude must range -180 to 180'),
+    .withMessage('Longitude must be between -180 to 180'),
   check('name')
     .exists({ checkFalsy: true })
     .isLength({ max: 50 })
@@ -65,11 +65,17 @@ router.post('/',
     const userId = user.id;
  
     //only authenticated users can create a new spot listing
-    if(!user){  
-      return res.status(404).json({
-        message: "Authentication required"
-      });
-    }
+    // if(!user){                           // check may not be necessary,restore user and
+    //   return res.status(401).json({      // requireAuth handles. But specs expect 401 error?
+    //     message: "Authentication required"
+    //   });
+    // }
+
+    // if(userId !== user.id){              // specs expects 403 error but
+    //   return res.status(403).json({      // not sure on what conditions to check?
+    //     message: "Forbidden"
+    //   })
+    // }
 
     const newSpot = await Spot.create({
       id: userId,
