@@ -51,19 +51,12 @@ router.post('/',
     const { address, city, state, country, lat, lng, name, description, price, createdAt, updatedAt } = req.body; // missing id, ownerId
     const { user } = req;
     const userId = user.id;
- 
-    //only authenticated users can create a new spot listing
-    // if(!user){                           // check may not be necessary,restore user and
-    //   return res.status(401).json({      // requireAuth handles. But specs expect 401 error?
-    //     message: "Authentication required"
-    //   });
-    // }
 
-    // if(userId !== user.id){              // specs expects 403 error but
-    //   return res.status(403).json({      // not sure on what conditions to check?
-    //     message: "Forbidden"
-    //   })
-    // }
+    if(!user){
+      return res.status(401).json({
+        message: "Authentication required"
+      })
+    }
 
     const newSpot = await Spot.create({
       ownerId: userId, // ensure authenticated user is owner of new spot
