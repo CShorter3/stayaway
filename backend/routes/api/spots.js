@@ -46,10 +46,49 @@ const { restoreUser, requireAuth } = require('../../utils/auth');
 
 /**** GET all spots ****/
 router.get('/',
-    async (req, res) => {
-    const allSpots = await Spot.findAll();
-      return res.json({allSpots});
-    });
+    async (req, res, next) => {
+
+    try {
+      const allSpots = await Spot.findAll({
+        attributes: [ 
+          'id', 'ownerId', 'address', 'city', 'state', 'country',
+          'lat', 'lng', 'name', 'description', 'price', 'createdAt', 'updatedAt',
+          [Sequelize.fn('AVG', Sequelize.col('Reviews.stars')), 'avgRating'], // Calculate average rating
+        ],
+        include: [
+          {
+            model: SpotImage, // Include associated images
+            attributes: ['url'], // Get image URL
+            as: 'previewImage' // Alias for easier access
+          }
+        ]
+      });
+      
+      const allSpotsArray = allSpots.map(spot => ({
+        id: spot.id,
+        ownerId: spot.ownerId,
+        address: spot.address,
+        city: spot.city,
+        state: spot.state,
+        country: spot.country,
+        lat: spot.lat,
+        lng: spot.lng,
+        name: spot.name,
+        description: spot.description,
+        price: spot.price,
+        createdAt: spot.createdAt,
+        updatedAt: spot.updatedAt,
+        avgRating: parseFloat(spot.get('avgRating')).toFixed(1) || null, // Format average rating
+        previewImage: spot.previewImage || null 
+      }));
+
+      return res.status(200).json({ Spots: allSpotsArray });
+    
+    } catch (error) {
+        next(error);
+    }
+});
+
 
 /**** GET all spots of current user ****/
 router.get('/current', 
@@ -107,9 +146,9 @@ router.get('/current',
       
       // Encapsulate spots in object
       return res.status(200).json({ Spots: userSpotsArray });
-     }// else {
-    //   return res.status(401).json({ message: 'User must login to see spots'});
-    // }
+     } else {
+       return res.status(401).json({ message: "Authentication required"});
+     }
   } catch (error){                    // Pass query or response error for handdling 
     next(error); 
   }
