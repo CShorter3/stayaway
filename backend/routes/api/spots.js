@@ -263,8 +263,6 @@ router.get('/:spotId',
 });
 
 /*** EDIT a spot on id ****/
-// to edit a spot on id, we first need to get an id
-// gather edits we want to make from req body
 router.put('/:spotId', 
   restoreUser, requireAuth, validateSpotEdit, 
   async (req, res, next) => {
