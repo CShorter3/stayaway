@@ -1,7 +1,7 @@
 const router = require('express').Router();
-const { Spot } = require('../../db/models');
-//const spot = require('../../db/models/spot');
-
+const { Review, Spot, User, ReviewImage, Booking, Sequelize } = require('../../db/models');
+const { check } = require('express-validator');
+const { handleValidationErrors } = require('../../utils/validation');
 
 router.get('/',
     async (req, res, next) => {
@@ -266,7 +266,8 @@ const validateSpotImage = [
   check('preview')
     .exists()
     .isBoolean()
-    .withMessage('Preview must be a boolean value')
+    .withMessage('Preview must be a boolean value'),
+  handleValidationErrors
 ]
 
 /**** ADD image to spot on id ****/
@@ -299,9 +300,7 @@ router.post('/:postId/images',
     });
 
     return res.status(201).json({
-      id: newImage.id,
-      url: newImage.url,
-      preview: newImage.preview
+      id: newImage.id, url: newImage.url, preview: newImage.preview
     });
 
   } catch (error){
@@ -309,6 +308,146 @@ router.post('/:postId/images',
   }
 
 });
+
+/**** validate review ****/
+const validateReview = [               // do we need to validate id type fields: id, userId, spotId?
+  check('review')
+    .exists({ checkFalsy: true })
+    .withMessage('Review is required')
+    .isString()
+    .withMessage('Review must be a string')
+    .isLength({ max: 4000 })
+    .withMessage('Review must not exceed the length of a verified user\'s tweet'),
+  check('stars')
+    .exists({ checkFalsy: true })
+    .withMessage('Stars rating is required')
+    .isInt({ min: 1, max: 5 })
+    .withMessage('Stars must be an integer between 1 and 5'),
+  check('startDate')
+    .isISO8601() // NOTE this may need changed depending on test specs
+    .custom((val) => {
+      // just for the record i hate this but not enough
+      // to write a function on Date.prototype (yet)
+      return new Date(new Date(val).toDateString()) > new Date(new Date().toDateString());
+    })
+    .withMessage('Start date must be a date in ISO 8601 format which is after today'),
+  check('endDate')
+    .isISO8601() // NOTE same as above
+    .custom((val, { req }) => {
+      return new Date(req.body.startDate).getTime() < new Date(req.body.endDate).getTime();
+    })
+    .withMessage('End date must be a date in ISO 8601 format which is after start date'),
+  handleValidationErrors
+];
+
+/**** CREATE review by spot's id  */
+router.post('/:spots/reveiws', 
+  restoreUser, requireAuth, validateReview,
+  async (req, res) => {
+    
+  }
+)
+
+/**** GET reviews by spot's id */
+router.get('/:spotId/reviews',
+  async (req, res) => {
+
+    const { spot } = req.params;
+    const spotId = Spot.findByPk(req.params.spotId); // get spot id
+    
+  if(!spot){
+    return res.status(404).json({
+      message: "Spot couldn't be found"
+    });
+  }
+
+  const spotReviews = await Review.findAll({
+    where: { spotId: spotId },  // thisTable[foreignKey] === otherTable[uniqueId]
+    include: [
+      { 
+        model: User,
+        attributes: ['id', 'user', 'preview']
+      },
+      {
+        model: ReviewImage,
+        attributes: ['id', 'url']
+      }
+    ]
+  });
+  
+  // Capture spots in review-object array
+  const spotReviewsArray = spotReviews.map(review => ({
+      id: review.id,
+      userId: review.userId,
+      spotId: review.spotId,
+      review: review.review,
+      stars: review.stars,
+      User: { 
+        id: review.User.id, 
+        firstName: review.User.firstName, 
+        lastName: review.User.lastName 
+      },
+      ReviewImages: review.ReviewImages.map(image => ({
+        id: image.id, 
+        url: image.url 
+      }))
+
+  }));
+
+  return res.status(200).json({ Reviews: spotReviewsArray })
+  }
+)
+
+/**** GET bookings by spot's id ****/
+router.get('/:spotId/bookings',
+  restoreUser,
+  async (req, res) => {
+    const { spotId } = req.params;
+    const currentUserId = req.user.id;
+    const spot = spot.findByPk(spotId); // get spot id
+    
+  if(!spot){
+    return res.status(404).json({
+      message: "Spot couldn't be found"
+    });
+  }
+
+  const spotBookings = await Booking.findAll({
+    where: { spotId: spotId },  // Review.[foreignKey] matches Spot.[uniqueId]
+    include: [
+      {
+        model: User,
+        attributes: ['id', 'firstName', 'lastName']
+      }
+    ]
+  });
+  
+  if (spot.ownerId !== currentUserId) {
+    // Capture non-owner booking information
+    const nonOwnerBookings = spotBookings.map(booking => ({
+      spotId: booking.spotId,
+      startDate: booking.startDate,
+      endDate: booking.endDate
+    }));
+    return res.status(200).json({ Bookings: nonOwnerBookings });
+  }
+
+  // Capture booking information
+  const ownerBookings = spotReviews.map(booking => ({
+    User: {
+      id: booking.User.id,
+      firstName: booking.User.firstName,
+      lastName: booking.User.lastName
+    },
+    id: booking.id, 
+    spotId: booking.spotId, 
+    userId: booking.User.id, 
+    startDate: booking.startDate,
+    endDate: booking.endDate
+  }));
+
+  return res.status(200).json({ Bookings: ownerBookings })}
+)
 
 
 module.exports = router;
