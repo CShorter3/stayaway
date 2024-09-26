@@ -1,8 +1,8 @@
 const router = require('express').Router();
-const { Review, Spot, User, ReviewImage } = require('../../db/models');
+const { Review, Spot, User, ReviewImage, SpotImage } = require('../../db/models');
 const { check } = require('express-validator');
 const { handleValidationErrors } = require('../../utils/validation');
-
+const { Sequelize } = require('sequelize');
 
 const validateReviewEdit = [
   check('review')
@@ -24,7 +24,21 @@ router.get('/current', async (req, res, next) => {
       where: { userId: user.id },
       include: [
         { model: User, attributes: ['id', 'firstName', 'lastName'] },
-        Spot,
+        {
+          model: Spot,
+          include: [
+            {
+              model: SpotImage,
+              attributes: [],
+              where: {
+                preview: true,
+              },
+            },
+          ],
+          attributes: [
+            [Sequelize.literal('"Spot->SpotImages"."url"'), 'previewImage'],
+          ]
+        },
         { model: ReviewImage, attributes: ['id', 'url'] },
       ]
     });
