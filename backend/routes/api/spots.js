@@ -299,9 +299,7 @@ router.post('/:postId/images',
     });
 
     return res.status(201).json({
-      id: newImage.id,
-      url: newImage.url,
-      preview: newImage.preview
+      id: newImage.id, url: newImage.url, preview: newImage.preview
     });
 
   } catch (error){
@@ -309,6 +307,61 @@ router.post('/:postId/images',
   }
 
 });
+
+/**** GET reviews by spot's id */
+// goal -> get reviews by a spots id
+// context -> one to many relationship from spot to reviews
+            // match up spotId with Reviews.spotId
+            // create sequelize column holding assocated reviews in array 
+            // findAll where Review.spotId = spot.spotId 
+
+router.get('./:spotId/reviews',
+  async (req, res) => {
+
+    const { spotId } = req.params;
+    const spot = Spot.findByPk(req.params.spotId); // get spot id
+    
+  if(!spotId){
+    return res.status(404).json({
+      message: "Spot couldn't be found"
+    });
+  }
+
+  const spotReviews = await Review.findAll({
+    where: { spotId: spotId },  // Review.[foreignKey] matches Spot.[uniqueId]
+    include: [
+      { 
+        model: User,
+        attributes: ['id', 'user', 'preview']
+      },
+      {
+        model: ReviewImage,
+        attributes: ['id', 'url']
+      }
+    ]
+  });
+  
+  // Capture spots in review-object array
+  const spotReviewsArray = spotReviews.map(review => ({
+      id: review.id,
+      userId: review.userId,
+      spotId: review.spotId,
+      review: review.review,
+      stars: review.stars,
+      User: { 
+        id: review.User.id, 
+        firstName: review.User.firstName, 
+        lastName: review.User.lastName 
+      },
+      ReviewImages: { 
+        id: image.id, 
+        url: image.url 
+      }
+  }));
+
+  return res.status(200).json({ Reviews: spotReviewsArray})
+  }
+)
 
 
 module.exports = router;
