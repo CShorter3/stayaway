@@ -41,9 +41,84 @@ const validateSpotData = [
   handleValidationErrors
 ];
 
+/**** Validate Create Spot POST body ****/
+const validateSpotData = [
+  check('address')
+    .exists({ checkFalsy: true })
+    .withMessage('Street address is required'),
+  check('city')
+    .exists({ checkFalsy: true })
+    .withMessage('City is required'),
+  check('state')
+    .exists({ checkFalsy: true })
+  .withMessage('State is required'),
+    check('country')
+  .exists({ checkFalsy: true })
+    .withMessage('Country is required'),
+  check('lat')
+    .isFloat({ min: -90, max: 90 })
+    .withMessage('Latitude must must be between -90 to 90'),
+  check('lng')
+    .isFloat({ min: -180, max: 180 })
+    .withMessage('Longitude must be between -180 to 180'),
+  check('name')
+    .exists({ checkFalsy: true })
+    .isLength({ max: 50 })
+    .withMessage('Name must be less than 50 characters'),
+  check('description')
+    .exists({ checkFalsy: true })
+    .withMessage('Description is required'),
+  check('price')
+    .isFloat({ gt: 0 })
+    .withMessage('Price per day must be a positive number'),
+  handleValidationErrors
+];
+
+/**** Validate edit spot data ****/
+const validateSpotEdit = [
+  check('address')
+    .optional
+    .exists({ checkFalsy: true })
+    .withMessage('Street address is required'),
+  check('city')
+    .optional
+    .exists({ checkFalsy: true })
+    .withMessage('City is required'),
+  check('state')
+    .optional
+    .exists({ checkFalsy: true })
+    .withMessage('State is required'),
+  check('country')
+    .optional
+    .exists({ checkFalsy: true })
+    .withMessage('Country is required'),
+  check('lat')
+    .optional
+    .isFloat({ min: -90, max: 90 })
+    .withMessage('Latitude must must be between -90 to 90'),
+  check('lng')
+    .optional
+    .isFloat({ min: -180, max: 180 })
+    .withMessage('Longitude must be between -180 to 180'),
+  check('name')
+    .optional
+    .exists({ checkFalsy: true })
+    .isLength({ max: 50 })
+    .withMessage('Name must be less than 50 characters'),
+  check('description')
+    .optional
+    .exists({ checkFalsy: true })
+    .withMessage('Description is required'),
+  check('price')
+    .optional
+    .isFloat({ gt: 0 })
+    .withMessage('Price per day must be a positive number'),
+  handleValidationErrors
+];
+
 /**** CREATE spot listing ****/
 router.post('/',
-  restoreUser, requireAuth, validateSpotData,
+  restoreUser, requireAuth, validateSpotEdit,
   async (req, res, next) => {
     
   try{
@@ -251,6 +326,46 @@ router.get('/:spotId',
     next(error);
   }
   
+});
+
+/*** EDIT a spot on id ****/
+// to edit a spot on id, we first need to get an id
+// gather edits we want to make from req body
+router.put('/:spotId', 
+  restoreUser, requireAuth, validate, 
+  async (req, res, next) => {
+  const { user } = req;
+
+  if (!user) {
+    const err = new Error('Unauthorized');
+    err.title = 'Unauthorized';
+    err.errors = { message: 'You must be signed in to access this resource.' };
+    return res.status(401).json(err);
+  }
+
+  const review = await Review.findByPk(req.params.reviewId);
+
+  if (!review) {
+    return res.status(404).json({ message: 'Review couldn\'t be found' });
+  }
+
+  if (user.id !== review.userId) {
+    const err = new Error('Unauthorized');
+    err.title = 'Unauthorized';
+    err.errors = { message: 'You cannot edit a review that you didn\'t make.' };
+    return res.status(401).json(err);
+  }
+
+  review.review = req.body.review;
+  review.stars = req.body.stars;
+
+  try {
+    await review.save();
+  } catch (e) {
+    return next(e);
+  }
+
+  return res.status(200).json(review);
 });
 
 
