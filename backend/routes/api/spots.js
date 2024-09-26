@@ -293,7 +293,7 @@ router.put('/:spotId',
   spot.state = state || spot.state;
   spot.country = country || spot.country;
   spot.lat = lat !== undefined ? lat : spot.lat;        // left of ternary checks for undefined, if so, leaves value unchanged
-  spot.lng = lng !== undefined ? lng : spot.lng;        // right of ternary assigns new value if truthy, otherwise reassing old value
+  spot.lng = lng !== undefined ? lng : spot.lng;        // right of ternary assigns new value if truthy, otherwise reassigns old value
   spot.name = name || spot.name;
   spot.description = description || spot.description;
   spot.price = price !== undefined ? price : spot.price;
@@ -307,6 +307,34 @@ router.put('/:spotId',
   return res.status(200).json(spot);
 });
 
+/**** DELETE a review by its ID ****/
+router.delete('/:spotId',
+  restoreUser, requireAuth,
+  async (req, res, next) => {
+  const { user } = req;
+  
+  if (!user) {
+    return res.status(401).json({ message: "You must be signed in to access this resource." });
+  }
+  
+  const userId = user.id;
+  const dropSpot = await Spot.findByPk(req.params.spotId);
+
+  if (!dropSpot) {
+    return res.status(404).json({ message: "Spot couldn't be found" });
+  }
+
+  if (userId !== dropSpot.ownerId) {
+    return res.status(403).json({ message: "Forbidden"});
+  }
+
+  try {
+    await dropSpot.destroy();
+    return res.status(200).json({ message: "Successfully deleted" });
+  } catch (e) {
+    return next(e);
+  }
+});
 
 
 /**** validate spot image ****/
