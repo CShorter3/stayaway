@@ -34,28 +34,33 @@ const validateSignup = [
 ];
 
 /**** SIGNUP ****/
-router.post('/', validateSignup, async (req, res) => {
+router.post('/', validateSignup, async (req, res, next) => {
+  console.log(req.body);
   const { firstName, lastName, username, email, password } = req.body;
 
   const hashedPassword = bcrypt.hashSync(password);
 
-  const user = await User.create({
-    firstName,
-    lastName,
-    email,
-    username,
-    hashedPassword,
-  });
+  try {
+    const user = await User.create({
+      firstName,
+      lastName,
+      email,
+      username,
+      hashedPassword,
+    });
 
-  const safeUser = {
-    id: user.id,
-    firstName: user.firstName,
-    lastName: user.lastName,
-    email: user.email,
-    username: user.username,
-  };
+    const safeUser = {
+      id: user.id,
+      firstName: user.firstName,
+      lastName: user.lastName,
+      email: user.email,
+      username: user.username,
+    };
 
-  return res.json({ user: safeUser });
-})
+    return res.status(201).json({ user: safeUser });
+  } catch (e) {
+    return next(e);
+  }
+});
 
 module.exports = router;
