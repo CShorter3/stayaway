@@ -279,7 +279,7 @@ router.post('/:postId/images',
     const spot = await Spot.findByPk(spotId);
 
     if(!spot){
-      return res.status(404).json({
+      return res.status(401).json({
         message: "Authentication required"
       })
     }
@@ -292,6 +292,12 @@ router.post('/:postId/images',
 
     const newImage = await SpotImage.create({
       spotId: spot.id, url, preview
+    });
+
+    return res.status(201).json({
+      id: newImage.id,
+      url: newImage.url,
+      preview: newImage.preview
     });
 
   } catch (error){
