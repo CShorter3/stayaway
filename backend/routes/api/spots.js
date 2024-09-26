@@ -1,38 +1,185 @@
 const router = require('express').Router();  // import server and route handling functionality
-const { Spot, Review, SpotImage, User, Sequelize } = require('../../db/models'); // import user model
+const { Spot, Review, SpotImage, User, Sequelize } = require('../../db/models'); // import relevant models
+
+const { check } = require('express-validator');
+const { handleValidationErrors } = require('../../utils/validation');
 
 // restoreUser verifies token on request
 // requireAuth directs an (un)authorized request
 const { restoreUser, requireAuth } = require('../../utils/auth'); 
 
-/**** Get all spots ****/
-router.get('/',
-    async (req, res) => {
-    const allSpots = await Spot.findAll();
-      return res.json({allSpots});
-    });
+/**** Validate Create Spot POST body ****/
+const validateSpotData = [
+  check('address')
+    .exists({ checkFalsy: true })
+    .withMessage('Street address is required'),
+  check('city')
+    .exists({ checkFalsy: true })
+    .withMessage('City is required'),
+  check('state')
+    .exists({ checkFalsy: true })
+  .withMessage('State is required'),
+    check('country')
+  .exists({ checkFalsy: true })
+    .withMessage('Country is required'),
+  check('lat')
+    .isFloat({ min: -90, max: 90 })
+    .withMessage('Latitude must must be between -90 to 90'),
+  check('lng')
+    .isFloat({ min: -180, max: 180 })
+    .withMessage('Longitude must be between -180 to 180'),
+  check('name')
+    .exists({ checkFalsy: true })
+    .isLength({ max: 50 })
+    .withMessage('Name must be less than 50 characters'),
+  check('description')
+    .exists({ checkFalsy: true })
+    .withMessage('Description is required'),
+  check('price')
+    .isFloat({ gt: 0 })
+    .withMessage('Price per day must be a positive number'),
+  handleValidationErrors
+];
 
-/**** Get all spots of current user ****/
+/**** CREATE spot listing ****/
+router.post('/',
+  restoreUser, requireAuth, validateSpotData,
+  async (req, res, next) => {
+    
+  try{
+
+    const { address, city, state, country, lat, lng, name, description, price } = req.body; // missing id, ownerId
+    const { user } = req;
+    const userId = user.id;
+
+    if(!user){
+      return res.status(401).json({
+        message: "Authentication required"
+      })
+    }
+
+    const newSpot = await Spot.create({
+      ownerId: userId, address, city, state, country,
+      at, lng, name, description, price
+    });
+    
+    return res.status(201).json(newSpot);
+
+  } catch(error) {
+    next(error);
+  }
+});
+
+/**** GET all spots ****/
+router.get('/',
+    async (req, res, next) => {
+
+    try {
+      const allSpots = await Spot.findAll({
+        attributes: [ 
+          'id', 'ownerId', 'address', 'city', 'state', 'country',
+          'lat', 'lng', 'name', 'description', 'price', 'createdAt', 'updatedAt',
+          [Sequelize.fn('AVG', Sequelize.col('Reviews.stars')), 'avgRating'], // Calculate average rating
+        ],
+        include: [
+          {
+            model: SpotImage, // Include associated images
+            attributes: ['url'], // Get image URL
+            as: 'previewImage' // Alias for easier access
+          }
+        ]
+      });
+      
+      const allSpotsArray = allSpots.map(spot => ({
+        id: spot.id,
+        ownerId: spot.ownerId,
+        address: spot.address,
+        city: spot.city,
+        state: spot.state,
+        country: spot.country,
+        lat: spot.lat,
+        lng: spot.lng,
+        name: spot.name,
+        description: spot.description,
+        price: spot.price,
+        createdAt: spot.createdAt,
+        updatedAt: spot.updatedAt,
+        avgRating: parseFloat(spot.get('avgRating')).toFixed(1) || null, // Format average rating
+        previewImage: spot.previewImage || null 
+      }));
+
+      return res.status(200).json({ Spots: allSpotsArray });
+    
+    } catch (error) {
+        next(error);
+    }
+});
+
+/**** GET current user's spots ****/
 router.get('/current', 
   restoreUser, requireAuth,
   async(req, res, next) => {
   
   try {
     const {user} = req;
+
+    // Restore user ensures user is loggedin
     if(user){
       const userId = user.id;
+
+      // Capture user's spot listings + associated preview images 
       const userSpots = await Spot.findAll({
-        where: { userId },
+        where: { ownerId: userId },
+        include: [                      // Fetch images
+          {
+            model: SpotImage,
+            as: 'previewImage',
+            // where: {preview: true},  // Include only where there are pics
+            required: false,            // without voiding query if no pics
+            attributes: ['url'],
+          },
+          {
+            model: Review,              // Fetch reviews for forthcoming aggregation
+            attributes: ['id']
+          }
+        ],
+        attributes: [                   // DELETE. not listing any would pull all atts? listing some will pull that exclusive list of atts? 
+          'id', 'ownerId', 'address', 'city', 'state', 'country',
+          'lat', 'lng', 'name', 'description', 'price', 'createdAt', 'updatedAt',
+          [Sequelize.fn('AVG', Sequelize.col('Reviews.stars')), 'avgRating']
+        ] 
       });
-      return res.json({userSpots});
-    }
-  } catch (error){
-    // if query or response error, pass to error handdling 
+
+      // Capture spots in array indexes
+      const userSpotsArray = userSpots.map(userSpots => ({
+        id: userSpots.id,
+          ownerId: userSpots.ownerId,
+          address: userSpots.address,
+          city: userSpots.city,
+          state: userSpots.state,
+          country: userSpots.country,
+          lat: userSpots.lat,
+          lng: userSpots.lng,
+          name: userSpots.name,
+          description: userSpots.description,
+          price: userSpots.price,
+          createdAt: userSpots.createdAt,
+          updatedAt: userSpots.updatedAt,
+          avgRating: parseFloat(userSpots.get('avgRating')).toFixed(1) || null,
+          previewImage: userSpots.previewImage || null
+      }));
+      
+      // Encapsulate spots in object
+      return res.status(200).json({ Spots: userSpotsArray });
+     } else {
+       return res.status(401).json({ message: "Authentication required"});
+     }
+  } catch (error){                    // Pass query or response error for handdling 
     next(error); 
   }
 });
 
-/*** Get spot details on id */
+/*** GET spot details on id */
 router.get('/:spotId',
   async(req, res, next) => {
 
@@ -40,17 +187,17 @@ router.get('/:spotId',
   const { spotId } = req.params;
 
   try {
-    // Capture spot deatils including associated images and owner details. 
+    // Capture spot deatils including associated images and owner details
     const spot = await Spot.findOne({
       where: { id: spotId },
       include: [
         { 
           model: SpotImage,
-          as: 'Owner',
           attributes: ['id', 'url', 'preview']
-         },
+        },
         {
           model: User,
+          as: 'Owner',
           attributes: ['id', 'firstName', 'lastName']
         }
       ]
@@ -76,7 +223,8 @@ router.get('/:spotId',
     // with SpotImages, Reviews, and Users.
     const detailedResponse = {
       id: spot.id,
-      ownerId: spot.address,
+      ownerId: spot.ownerId,
+      address: spot.address,
       city: spot.city,
       state: spot.state,
       country: spot.country,
@@ -100,9 +248,63 @@ router.get('/:spotId',
     return res.status(200).json(detailedResponse);
 
   } catch (error) {
-      next(error);
+    next(error);
+  }
+  
+});
+
+
+/**** validate spot image ****/
+const validateSpotImage = [
+  check('url')
+    .exists({ checkFalsy: true })
+    .withMessage('Image url is required'),  
+  check('preview')
+    .exists()
+    .isBoolean()
+    .withMessage('Preview must be a boolean value')
+]
+
+/**** ADD image to spot on id ****/
+router.post('/:postId/images',
+  restoreUser, requireAuth, validateSpotImage,
+  async(req, res, next) => {
+    
+  const { spotId } = req.params;     // spotId to add image at
+  const { user } = req;              // current user adding image
+  const { url, preview } = req.body; // image data to add
+  const userId = user.id;
+
+  try {
+    const spot = await Spot.findByPk(spotId);
+
+    if(!spot){
+      return res.status(401).json({
+        message: "Authentication required"
+      })
+    }
+
+    if(spot.ownerId !== userId){
+      const err = new Error('Forbidden');
+      err.status = 403;
+      return next(err);
+    }
+
+    const newImage = await SpotImage.create({
+      spotId: spot.id, url, preview
+    });
+
+    return res.status(201).json({
+      id: newImage.id,
+      url: newImage.url,
+      preview: newImage.preview
+    });
+
+  } catch (error){
+    next(error)
   }
 
 });
+
 
 module.exports = router;
