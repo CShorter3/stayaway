@@ -309,6 +309,42 @@ router.post('/:postId/images',
 
 });
 
+/**** validate review ****/
+const validateReview = [               // do we need to validate id type fields: id, userId, spotId?
+  check('review')
+    .exists({ checkFalsy: true })
+    .withMessage('Review is required')
+    .isString()
+    .withMessage('Review must be a string')
+    .isLength({ max: 4000 })
+    .withMessage('Review must not exceed the length of a verified user\'s tweet'),
+  check('stars')
+    .exists({ checkFalsy: true })
+    .withMessage('Stars rating is required')
+    .isInt({ min: 1, max: 5 })
+    .withMessage('Stars must be an integer between 1 and 5'),
+  check('startDate')
+    .isISO8601() // NOTE this may need changed depending on test specs
+    .custom((val) => {
+      // just for the record i hate this but not enough
+      // to write a function on Date.prototype (yet)
+      return new Date(new Date(val).toDateString()) > new Date(new Date().toDateString());
+    })
+    .withMessage('Start date must be a date in ISO 8601 format which is after today'),
+  check('endDate')
+    .isISO8601() // NOTE same as above
+    .custom((val, { req }) => {
+      return new Date(req.body.startDate).getTime() < new Date(req.body.endDate).getTime();
+    })
+    .withMessage('End date must be a date in ISO 8601 format which is after start date'),
+  handleValidationErrors
+];
+
+/**** CREATE review by spot's id  */
+router.post('/:spots/reveiws', 
+  restoreUser, requireAuth, validateReview
+)
+
 /**** GET reviews by spot's id */
 router.get('/:spotId/reviews',
   async (req, res) => {
@@ -384,6 +420,7 @@ router.get('/:spotId/bookings',
   });
   
   if (spot.ownerId !== currentUserId) {
+    // Capture non-owner booking information
     const nonOwnerBookings = spotBookings.map(booking => ({
       spotId: booking.spotId,
       startDate: booking.startDate,
@@ -392,7 +429,7 @@ router.get('/:spotId/bookings',
     return res.status(200).json({ Bookings: nonOwnerBookings });
   }
 
-  // Capture spots, if owner, in booking-object array
+  // Capture booking information
   const ownerBookings = spotReviews.map(booking => ({
     User: {
       id: booking.User.id,
