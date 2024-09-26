@@ -252,8 +252,8 @@ router.delete('/:spotId',
   try {
     await dropSpot.destroy();
     return res.status(200).json({ message: "Successfully deleted" });
-  } catch (e) {
-    return next(e);
+  } catch (error) {
+    return next(error);
   }
 });
 
