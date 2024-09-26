@@ -1,7 +1,7 @@
 const router = require('express').Router();
-const { Spot } = require('../../db/models');
-//const spot = require('../../db/models/spot');
-
+const { Review, Spot, User, ReviewImage, Booking, Sequelize } = require('../../db/models');
+const { check } = require('express-validator');
+const { handleValidationErrors } = require('../../utils/validation');
 
 router.get('/',
     async (req, res, next) => {
@@ -266,7 +266,8 @@ const validateSpotImage = [
   check('preview')
     .exists()
     .isBoolean()
-    .withMessage('Preview must be a boolean value')
+    .withMessage('Preview must be a boolean value'),
+  handleValidationErrors
 ]
 
 /**** ADD image to spot on id ****/
@@ -309,20 +310,20 @@ router.post('/:postId/images',
 });
 
 /**** GET reviews by spot's id */
-router.get('./:spotId/reviews',
+router.get('/:spotId/reviews',
   async (req, res) => {
 
-    const { spotId } = req.params;
-    const spot = Spot.findByPk(req.params.spotId); // get spot id
+    const { spot } = req.params;
+    const spotId = Spot.findByPk(req.params.spotId); // get spot id
     
-  if(!spotId){
+  if(!spot){
     return res.status(404).json({
       message: "Spot couldn't be found"
     });
   }
 
   const spotReviews = await Review.findAll({
-    where: { spotId: spotId },  // Review.[foreignKey] matches Spot.[uniqueId]
+    where: { spotId: spotId },  // thisTable[foreignKey] === otherTable[uniqueId]
     include: [
       { 
         model: User,
@@ -351,11 +352,61 @@ router.get('./:spotId/reviews',
         id: image.id, 
         url: image.url 
       }))
-      
+
   }));
 
   return res.status(200).json({ Reviews: spotReviewsArray })
   }
+)
+
+/**** GET bookings by spot's id ****/
+router.get('/:spotId/bookings',
+  restoreUser,
+  async (req, res) => {
+    const { spotId } = req.params;
+    const currentUserId = req.user.id;
+    const spot = spot.findByPk(spotId); // get spot id
+    
+  if(!spot){
+    return res.status(404).json({
+      message: "Spot couldn't be found"
+    });
+  }
+
+  const spotBookings = await Booking.findAll({
+    where: { spotId: spotId },  // Review.[foreignKey] matches Spot.[uniqueId]
+    include: [
+      {
+        model: User,
+        attributes: ['id', 'firstName', 'lastName']
+      }
+    ]
+  });
+  
+  if (spot.ownerId !== currentUserId) {
+    const nonOwnerBookings = spotBookings.map(booking => ({
+      spotId: booking.spotId,
+      startDate: booking.startDate,
+      endDate: booking.endDate
+    }));
+    return res.status(200).json({ Bookings: nonOwnerBookings });
+  }
+
+  // Capture spots, if owner, in booking-object array
+  const ownerBookings = spotReviews.map(booking => ({
+    User: {
+      id: booking.User.id,
+      firstName: booking.User.firstName,
+      lastName: booking.User.lastName
+    },
+    id: booking.id, 
+    spotId: booking.spotId, 
+    userId: booking.User.id, 
+    startDate: booking.startDate,
+    endDate: booking.endDate
+  }));
+
+  return res.status(200).json({ Bookings: ownerBookings })}
 )
 
 
