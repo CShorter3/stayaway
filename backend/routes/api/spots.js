@@ -342,7 +342,10 @@ const validateReview = [               // do we need to validate id type fields:
 
 /**** CREATE review by spot's id  */
 router.post('/:spots/reveiws', 
-  restoreUser, requireAuth, validateReview
+  restoreUser, requireAuth, validateReview,
+  async (req, res) => {
+    
+  }
 )
 
 /**** GET reviews by spot's id */
