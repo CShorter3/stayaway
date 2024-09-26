@@ -185,6 +185,48 @@ router.get('/:spotId',
   
 });
 
+/**** Validate edit spot data ****/
+const validateSpotEdit = [
+  check('address')
+    .optional
+    .exists({ checkFalsy: true })
+    .withMessage('Street address is required'),
+  check('city')
+    .optional
+    .exists({ checkFalsy: true })
+    .withMessage('City is required'),
+  check('state')
+    .optional
+    .exists({ checkFalsy: true })
+    .withMessage('State is required'),
+  check('country')
+    .optional
+    .exists({ checkFalsy: true })
+    .withMessage('Country is required'),
+  check('lat')
+    .optional
+    .isFloat({ min: -90, max: 90 })
+    .withMessage('Latitude must must be between -90 to 90'),
+  check('lng')
+    .optional
+    .isFloat({ min: -180, max: 180 })
+    .withMessage('Longitude must be between -180 to 180'),
+  check('name')
+    .optional
+    .exists({ checkFalsy: true })
+    .isLength({ max: 50 })
+    .withMessage('Name must be less than 50 characters'),
+  check('description')
+    .optional
+    .exists({ checkFalsy: true })
+    .withMessage('Description is required'),
+  check('price')
+    .optional
+    .isFloat({ gt: 0 })
+    .withMessage('Price per day must be a positive number'),
+  handleValidationErrors
+];
+
 /*** EDIT a spot on id ****/
 router.put('/:spotId', 
   restoreUser, requireAuth, validateSpotEdit, 
