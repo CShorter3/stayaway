@@ -255,40 +255,40 @@ router.get('/:spotId',
 /**** Validate edit spot data ****/
 const validateSpotEdit = [
   check('address')
-    .optional
+    .optional()
     .exists({ checkFalsy: true })
     .withMessage('Street address is required'),
   check('city')
-    .optional
+    .optional()
     .exists({ checkFalsy: true })
     .withMessage('City is required'),
   check('state')
-    .optional
+    .optional()
     .exists({ checkFalsy: true })
     .withMessage('State is required'),
   check('country')
-    .optional
+    .optional()
     .exists({ checkFalsy: true })
     .withMessage('Country is required'),
   check('lat')
-    .optional
+    .optional()
     .isFloat({ min: -90, max: 90 })
     .withMessage('Latitude must must be between -90 to 90'),
   check('lng')
-    .optional
+    .optional()
     .isFloat({ min: -180, max: 180 })
     .withMessage('Longitude must be between -180 to 180'),
   check('name')
-    .optional
+    .optional()
     .exists({ checkFalsy: true })
     .isLength({ max: 50 })
     .withMessage('Name must be less than 50 characters'),
   check('description')
-    .optional
+    .optional()
     .exists({ checkFalsy: true })
     .withMessage('Description is required'),
   check('price')
-    .optional
+    .optional()
     .isFloat({ gt: 0 })
     .withMessage('Price per day must be a positive number'),
   handleValidationErrors
@@ -449,13 +449,51 @@ const validateReview = [               // do we need to validate id type fields:
   handleValidationErrors
 ];
 
-/**** CREATE review by spot's id  */
-router.post('/:spots/reveiws', 
+/**** CREATE review on spot's id  */
+router.post('/:spots/review', 
   restoreUser, requireAuth, validateReview,
   async (req, res) => {
     
+    const { spotId } = req.params;     // spotId to add image at
+    const { url, preview } = req.body; // image data to add
+    const { user } = req;              // current user adding image
+    const userId = user.id;
+
+    try {
+      const spot = await Spot.findByPk(spotId);
+  
+      if(!spot){
+        return res.status(401).json({
+          message: "Authentication required"
+        })
+      }
+  
+      if(spot.ownerId !== userId){
+        const err = new Error('Forbidden');
+        err.status = 403;
+        return next(err);
+      }
+  
+      const newImage = await SpotImage.create({
+        spotId: spot.id, url, preview
+      });
+  
+      return res.status(201).json({
+        id: newImage.id, url: newImage.url, preview: newImage.preview
+      });
+  
+    } catch (error){
+      next(error)
+    }
   }
 )
+
+
+    
+
+
+
+
 
 /**** GET reviews by spot's id */
 router.get('/:spotId/reviews',
