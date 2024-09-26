@@ -309,12 +309,6 @@ router.post('/:postId/images',
 });
 
 /**** GET reviews by spot's id */
-// goal -> get reviews by a spots id
-// context -> one to many relationship from spot to reviews
-            // match up spotId with Reviews.spotId
-            // create sequelize column holding assocated reviews in array 
-            // findAll where Review.spotId = spot.spotId 
-
 router.get('./:spotId/reviews',
   async (req, res) => {
 
@@ -353,13 +347,14 @@ router.get('./:spotId/reviews',
         firstName: review.User.firstName, 
         lastName: review.User.lastName 
       },
-      ReviewImages: { 
+      ReviewImages: review.ReviewImages.map(image => ({
         id: image.id, 
         url: image.url 
-      }
+      }))
+      
   }));
 
-  return res.status(200).json({ Reviews: spotReviewsArray})
+  return res.status(200).json({ Reviews: spotReviewsArray })
   }
 )
 
