@@ -1,5 +1,4 @@
 'use strict';
-const { timestamp } = require('rxjs');
 const {
   Model
 } = require('sequelize');
@@ -33,7 +32,7 @@ module.exports = (sequelize, DataTypes) => {
     email: {
       type: DataTypes.STRING(256),
       allowNull: false,
-      validate: {len: [1,30]},
+      validate: {len: [1,256]},
     },
     hashedPassword: {
       type: DataTypes.STRING.BINARY,
