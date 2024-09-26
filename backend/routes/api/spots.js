@@ -1,8 +1,75 @@
-const router = require('express').Router();
-const { Review, Spot, User, ReviewImage, Booking, Sequelize } = require('../../db/models');
+const router = require('express').Router();  // import server and route handling functionality
+const { Spot, Review, ReviewImage, SpotImage, User, Booking, Sequelize } = require('../../db/models'); // import relevant models
+
 const { check } = require('express-validator');
 const { handleValidationErrors } = require('../../utils/validation');
 
+// restoreUser verifies token on request
+// requireAuth directs an (un)authorized request
+const { restoreUser, requireAuth } = require('../../utils/auth'); 
+
+/**** Validate Create Spot POST body ****/
+const validateSpotData = [
+  check('address')
+    .exists({ checkFalsy: true })
+    .withMessage('Street address is required'),
+  check('city')
+    .exists({ checkFalsy: true })
+    .withMessage('City is required'),
+  check('state')
+    .exists({ checkFalsy: true })
+    .withMessage('State is required'),
+  check('country')
+    .exists({ checkFalsy: true })
+    .withMessage('Country is required'),
+  check('lat')
+    .exists({ checkFalsy: true })
+    .isFloat({ min: -90, max: 90 })
+    .withMessage('Latitude must must be between -90 to 90'),
+  check('lng')
+    .exists({ checkFalsy: true })
+    .isFloat({ min: -180, max: 180 })
+    .withMessage('Longitude must be between -180 to 180'),
+  check('name')
+    .exists({ checkFalsy: true })
+    .isLength({ max: 50 })
+    .withMessage('Name must be less than 50 characters'),
+  check('description')
+    .exists({ checkFalsy: true })
+    .withMessage('Description is required'),
+  check('price')
+    .exists({ checkFalsy: true })
+    .isFloat({ gt: 0 })
+    .withMessage('Price per day must be a positive number'),
+  handleValidationErrors
+];
+
+/**** CREATE spot ****/
+router.post('/',
+  restoreUser, requireAuth, validateSpotData,
+  async (req, res, next) => {
+    
+  try{
+    const { address, city, state, country, lat, lng, name, description, price } = req.body; // missing id, ownerId
+    const { user } = req;
+    const userId = user.id;
+    if(!user){
+      return res.status(401).json({
+        message: "Authentication required"
+      })
+    }
+    const newSpot = await Spot.create({
+      ownerId: userId, address, city, state, country,
+      at, lng, name, description, price
+    });
+    
+    return res.status(201).json(newSpot);
+  } catch(error) {
+    next(error);
+  }
+});
+
+/**** GET all spots ****/
 router.get('/',
     async (req, res, next) => {
 
@@ -490,6 +557,5 @@ router.get('/:spotId/bookings',
 
   return res.status(200).json({ Bookings: ownerBookings })}
 )
-
 
 module.exports = router;
