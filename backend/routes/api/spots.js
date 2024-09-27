@@ -49,7 +49,7 @@ router.get('/',
         createdAt: spot.createdAt,
         updatedAt: spot.updatedAt,
         avgRating: parseFloat(spot.get('avgRating')).toFixed(1) || null,
-        previewImage: spot.SpotImages[0].url || null
+        previewImage: spot.SpotImages.length ? spot.SpotImages[0].url : null
       }));
 
       return res.status(200).json( { Spots: allSpotsArray} );
@@ -190,7 +190,7 @@ router.get('/current',
           createdAt: userSpots.createdAt,
           updatedAt: userSpots.updatedAt,
           avgRating: parseFloat(userSpots.get('avgRating')).toFixed(1) || null,
-          previewImage: userSpots.SpotImages[0].url || null 
+          previewImage: userSpots.SpotImages.length ? userSpots.SpotImages[0].url : null
       }));
       
       // Encapsulate spots in object
@@ -406,7 +406,7 @@ const validateSpotImage = [
 ]
 
 /**** ADD image to spot on id ****/
-router.post('/:postId/images',
+router.post('/:spotId/images',
   restoreUser, requireAuth, validateSpotImage,
   async(req, res, next) => {
     
@@ -419,7 +419,7 @@ router.post('/:postId/images',
     const spot = await Spot.findByPk(spotId);
 
     if(!spot){
-      return res.status(401).json({
+      return res.status(404).json({
         message: "Authentication required"
       })
     }
@@ -518,9 +518,9 @@ const validateReview = [               // do we need to validate id type fields:
 router.get('/:spotId/reviews',
   async (req, res) => {
 
-    const { spot } = req.params;
-    const spotId = Spot.findByPk(req.params.spotId); // get spot id
-    
+    const { spotId } = req.params;
+    const spot = await Spot.findByPk(req.params.spotId); // get spot id
+    console.log(spot);
   if(!spot){
     return res.status(404).json({
       message: "Spot couldn't be found"
@@ -532,7 +532,7 @@ router.get('/:spotId/reviews',
     include: [
       { 
         model: User,
-        attributes: ['id', 'user', 'preview']
+        attributes: ['id', 'firstName', 'lastName']
       },
       {
         model: ReviewImage,
