@@ -8,67 +8,6 @@ const { handleValidationErrors } = require('../../utils/validation');
 // requireAuth directs an (un)authorized request
 const { restoreUser, requireAuth } = require('../../utils/auth'); 
 
-/**** Validate Create Spot POST body ****/
-const validateSpotData = [
-  check('address')
-    .exists({ checkFalsy: true })
-    .withMessage('Street address is required'),
-  check('city')
-    .exists({ checkFalsy: true })
-    .withMessage('City is required'),
-  check('state')
-    .exists({ checkFalsy: true })
-    .withMessage('State is required'),
-  check('country')
-    .exists({ checkFalsy: true })
-    .withMessage('Country is required'),
-  check('lat')
-    .exists({ checkFalsy: true })
-    .isFloat({ min: -90, max: 90 })
-    .withMessage('Latitude must must be between -90 to 90'),
-  check('lng')
-    .exists({ checkFalsy: true })
-    .isFloat({ min: -180, max: 180 })
-    .withMessage('Longitude must be between -180 to 180'),
-  check('name')
-    .exists({ checkFalsy: true })
-    .isLength({ max: 50 })
-    .withMessage('Name must be less than 50 characters'),
-  check('description')
-    .exists({ checkFalsy: true })
-    .withMessage('Description is required'),
-  check('price')
-    .exists({ checkFalsy: true })
-    .isFloat({ gt: 0 })
-    .withMessage('Price per day must be a positive number'),
-  handleValidationErrors
-];
-
-/**** CREATE spot ****/
-router.post('/',
-  restoreUser, requireAuth, validateSpotData,
-  async (req, res, next) => {
-    
-  try{
-    const { address, city, state, country, lat, lng, name, description, price } = req.body; // missing id, ownerId
-    const { user } = req;
-    const userId = user.id;
-    if(!user){
-      return res.status(401).json({
-        message: "Authentication required"
-      })
-    }
-    const newSpot = await Spot.create({
-      ownerId: userId, address, city, state, country,
-      at, lng, name, description, price
-    });
-    
-    return res.status(201).json(newSpot);
-  } catch(error) {
-    next(error);
-  }
-});
-
 /**** GET all spots ****/
 router.get('/',
     async (req, res, next) => {
@@ -78,15 +17,21 @@ router.get('/',
         attributes: [ 
           'id', 'ownerId', 'address', 'city', 'state', 'country',
           'lat', 'lng', 'name', 'description', 'price', 'createdAt', 'updatedAt',
-          [Sequelize.fn('AVG', Sequelize.col('Reviews.stars')), 'avgRating'], // Calculate average rating
+          [Sequelize.fn('AVG', Sequelize.col('Reviews.stars')), 'avgRating'] // Calculate average rating
         ],
         include: [
           {
             model: SpotImage, // Include associated images
             attributes: ['url'], // Get image URL
-            as: 'previewImage' // Alias for easier access
+            where: { preview: true },
+            required: false
+          },
+          {
+          model: Review,
+          attributes: []
           }
-        ]
+        ],
+        group: ['Spot.id', 'SpotImages.id']
       });
       
       const allSpotsArray = allSpots.map(spot => ({
@@ -103,16 +48,96 @@ router.get('/',
         price: spot.price,
         createdAt: spot.createdAt,
         updatedAt: spot.updatedAt,
-        avgRating: parseFloat(spot.get('avgRating')).toFixed(1) || null, // Format average rating
-        previewImage: spot.previewImage || null 
+        avgRating: parseFloat(spot.get('avgRating')).toFixed(1) || null,
+        previewImage: spot.SpotImages[0].url || null
       }));
 
-      return res.status(200).json({ Spots: allSpotsArray });
+      return res.status(200).json( { Spots: allSpotsArray} );
     
     } catch (error) {
         next(error);
     }
 });
+
+/**** Validate Create Spot POST body ****/
+const validateSpotData = [
+  check('address')
+  .exists({ checkFalsy: true })
+  .isString()
+    .withMessage('Street address is required'),
+  check('city')
+    .exists({ checkFalsy: true })
+    .isString()
+    .withMessage('City is required'),
+  check('state')
+    .exists({ checkFalsy: true })
+    .isString()
+    .withMessage('State is required'),
+  check('country')
+    .exists({ checkFalsy: true })
+    .isString()
+    .withMessage('Country is required'),
+  check('lat')
+    .exists({ checkFalsy: true })
+    .isFloat({ min: -90, max: 90 })
+    .withMessage('Latitude must must be between -90 to 90'),
+  check('lng')
+    .exists({ checkFalsy: true })
+    .isFloat({ min: -180, max: 180 })
+    .withMessage('Longitude must be between -180 to 180'),
+  check('name')
+    .exists({ checkFalsy: true })
+    .isString()
+    .isLength({ max: 50 })
+    .withMessage('Name must be less than 50 characters'),
+  check('description')
+    .exists({ checkFalsy: true })
+    .isString()
+    .withMessage('Description is required'),
+  check('price')
+    .exists({ checkFalsy: true })
+    .isFloat({ gt: 0 })
+    .withMessage('Price per day must be a positive number'),
+  handleValidationErrors
+];
+
+/**** CREATE spot ****/
+router.post('/',
+  restoreUser, requireAuth, validateSpotData,
+  async (req, res) => {
+    
+  try{
+    const { address, city, state, country, lat, lng, name, description, price } = req.body; // missing id, ownerId
+    const { user } = req;
+    // const userId = user.id;
+    if(!user){
+      return res.status(401).json({
+        message: "Authentication required"
+      });
+    }
+
+    const newSpot = await Spot.create({
+      ownerId: user.id, address, city, state, country,
+      lat, lng, name, description, price
+    });
+    
+    return res.status(201).json(newSpot);
+  } catch (error) {
+    // Handle Sequelize validation errors
+    // if (error.name === 'SequelizeValidationError') {
+    //   return res.status(400).json({
+    //     message: "Bad Request",
+    //     errors: error.errors.reduce((acc, curr) => {
+    //       acc[curr.path] = curr.message;
+    //       return acc;
+    //     }, {})
+    //   });
+    // }
+    // Pass any other error to the next middleware
+    next(error);
+  }
+});
+
 
 /**** GET current user's spots ****/
 router.get('/current', 
@@ -132,21 +157,21 @@ router.get('/current',
         include: [                      // Fetch images
           {
             model: SpotImage,
-            as: 'previewImage',
-            // where: {preview: true},  // Include only where there are pics
+            where: {preview: true},  // Include only where there are pics
             required: false,            // without voiding query if no pics
             attributes: ['url'],
           },
           {
             model: Review,              // Fetch reviews for forthcoming aggregation
-            attributes: ['id']
+            attributes: []
           }
         ],
         attributes: [                   // DELETE. not listing any would pull all atts? listing some will pull that exclusive list of atts? 
           'id', 'ownerId', 'address', 'city', 'state', 'country',
           'lat', 'lng', 'name', 'description', 'price', 'createdAt', 'updatedAt',
           [Sequelize.fn('AVG', Sequelize.col('Reviews.stars')), 'avgRating']
-        ] 
+        ],
+        group: ['Spot.id', 'SpotImages.id']
       });
 
       // Capture spots in array indexes
@@ -165,7 +190,7 @@ router.get('/current',
           createdAt: userSpots.createdAt,
           updatedAt: userSpots.updatedAt,
           avgRating: parseFloat(userSpots.get('avgRating')).toFixed(1) || null,
-          previewImage: userSpots.previewImage || null
+          previewImage: userSpots.SpotImages[0].url || null 
       }));
       
       // Encapsulate spots in object
@@ -247,6 +272,7 @@ router.get('/:spotId',
     return res.status(200).json(detailedResponse);
 
   } catch (error) {
+    console.log("Error fetching spot details: ", error)
     next(error);
   }
   
@@ -398,10 +424,10 @@ router.post('/:postId/images',
       })
     }
 
-    if(spot.ownerId !== userId){
-      const err = new Error('Forbidden');
-      err.status = 403;
-      return next(err);
+    if (spot.ownerId !== userId) {
+      return res.status(403).json({
+        message: 'Forbidden: You are not allowed to add images to this spot'
+      });
     }
 
     const newImage = await SpotImage.create({
@@ -449,51 +475,44 @@ const validateReview = [               // do we need to validate id type fields:
   handleValidationErrors
 ];
 
-/**** CREATE review on spot's id  */
-router.post('/:spots/review', 
-  restoreUser, requireAuth, validateReview,
-  async (req, res) => {
+// /**** CREATE review on spot id  ****/
+// router.post('/:spots/review', 
+//   restoreUser, requireAuth, validateReview,
+//   async (req, res) => {
     
-    const { spotId } = req.params;     // spotId to add image at
-    const { url, preview } = req.body; // image data to add
-    const { user } = req;              // current user adding image
-    const userId = user.id;
+//     const { spotId } = req.params;          // retireve spotId to add review at
+//     const { review, stars } = req.body;     // retrieve info to populate review
+//     const { user } = req;                   // current user adding image
+//     const userId = user.id;
 
-    try {
-      const spot = await Spot.findByPk(spotId);
+//     try {
+//       const spot = await Spot.findByPk(spotId);
   
-      if(!spot){
-        return res.status(401).json({
-          message: "Authentication required"
-        })
-      }
+//       if(!spot){
+//         return res.status(401).json({
+//           message: "Authentication required"
+//         })
+//       }
   
-      if(spot.ownerId !== userId){
-        const err = new Error('Forbidden');
-        err.status = 403;
-        return next(err);
-      }
+//       if(spot.ownerId !== userId){
+//         const err = new Error('Forbidden');
+//         err.status = 403;
+//         return next(err);
+//       }
   
-      const newImage = await SpotImage.create({
-        spotId: spot.id, url, preview
-      });
+//       const newImage = await SpotImage.create({
+//         spotId: spot.id, url, preview
+//       });
   
-      return res.status(201).json({
-        id: newImage.id, url: newImage.url, preview: newImage.preview
-      });
+//       return res.status(201).json({
+//         id: newImage.id, url: newImage.url, preview: newImage.preview
+//       });
   
-    } catch (error){
-      next(error)
-    }
-  }
-)
-
-
-    
-
-
-
-
+//     } catch (error){
+//       next(error)
+//     }
+//   }
+// )
 
 /**** GET reviews by spot's id */
 router.get('/:spotId/reviews',
