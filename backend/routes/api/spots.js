@@ -6,14 +6,69 @@ const { handleValidationErrors } = require('../../utils/validation');
 
 // restoreUser verifies token on request
 // requireAuth directs an (un)authorized request
-const { restoreUser, requireAuth } = require('../../utils/auth'); 
+const { restoreUser, requireAuth } = require('../../utils/auth');
+
+const { Op } = require('sequelize');
 
 /**** GET all spots ****/
 router.get('/',
-    async (req, res, next) => {
+  async (req, res, next) => {
+    let { page, size, minLat, maxLat, minLng, maxLng, minPrice, maxPrice } = req.query;
+    page = page ? page : 1;
+    size = size ? size : 10;
+
+    const where = {};
+
+    /*** search filters ***/
+    if (minLat != undefined || maxLat != undefined) {
+      const filter = []
+
+      // obligatory "sequelize sucks"
+      if (minLat != undefined) {
+        filter.push({ [Op.gte]: parseFloat(minLat) });
+      }
+
+      if (maxLat != undefined) {
+        filter.push({ [Op.lte]: parseFloat(maxLat) });
+      }
+
+      where.lat = { [Op.and]: filter };
+    }
+
+    if (minLng != undefined || maxLng != undefined) {
+      const filter = []
+
+      if (minLng != undefined) {
+        filter.push({ [Op.gte]: parseFloat(minLng) });
+      }
+
+      if (maxLng != undefined) {
+        filter.push({ [Op.lte]: parseFloat(maxLng) });
+      }
+
+      where.lng = { [Op.and]: filter };
+    }
+
+    if (minPrice != undefined || maxPrice != undefined) {
+      const filter = []
+
+      if (minPrice != undefined) {
+        filter.push({ [Op.gte]: parseFloat(minPrice) });
+      }
+
+      if (maxPrice != undefined) {
+        filter.push({ [Op.lte]: parseFloat(maxPrice) });
+      }
+
+      where.price = { [Op.and]: filter };
+    }
+    /*** end search filters ***/
 
     try {
       const allSpots = await Spot.findAll({
+        offset: (page - 1) * size,
+        limit: size,
+        where,
         attributes: [ 
           'id', 'ownerId', 'address', 'city', 'state', 'country',
           'lat', 'lng', 'name', 'description', 'price', 'createdAt', 'updatedAt',
@@ -24,38 +79,45 @@ router.get('/',
             model: SpotImage, // Include associated images
             attributes: ['url'], // Get image URL
             where: { preview: true },
-            required: false
+            required: false,
+            duplicating: false,
           },
           {
-          model: Review,
-          attributes: []
+            model: Review,
+            attributes: [],
+            required: false,
+            duplicating: false,
           }
         ],
         group: ['Spot.id', 'SpotImages.id']
       });
-      
-      const allSpotsArray = allSpots.map(spot => ({
-        id: spot.id,
-        ownerId: spot.ownerId,
-        address: spot.address,
-        city: spot.city,
-        state: spot.state,
-        country: spot.country,
-        lat: spot.lat,
-        lng: spot.lng,
-        name: spot.name,
-        description: spot.description,
-        price: spot.price,
-        createdAt: spot.createdAt,
-        updatedAt: spot.updatedAt,
-        avgRating: parseFloat(spot.get('avgRating')).toFixed(1) || null,
-        previewImage: spot.SpotImages.length ? spot.SpotImages[0].url : null
-      }));
 
-      return res.status(200).json( { Spots: allSpotsArray} );
+      console.log('SPOT COUNT =====>', allSpots.length);
+      
+      const allSpotsArray = allSpots.map(spot => {
+        return {
+          id: spot.id,
+          ownerId: spot.ownerId,
+          address: spot.address,
+          city: spot.city,
+          state: spot.state,
+          country: spot.country,
+          lat: spot.lat,
+          lng: spot.lng,
+          name: spot.name,
+          description: spot.description,
+          price: spot.price,
+          createdAt: spot.createdAt,
+          updatedAt: spot.updatedAt,
+          avgRating: spot.get('avgRating') ? parseFloat(spot.get('avgRating')).toFixed(1) : null,
+          previewImage: spot.SpotImages.length ? spot.SpotImages[0].url : null,
+        }
+      });
+
+      return res.status(200).json( { page: page, size: size, Spots: allSpotsArray} );
     
     } catch (error) {
-        next(error);
+      next(error);
     }
 });
 
