@@ -10,8 +10,54 @@ const { restoreUser, requireAuth } = require('../../utils/auth');
 
 const { Op } = require('sequelize');
 
+const validateQueryParams = [
+  check('page')
+    .optional()
+    .isInt({ min: 1 })
+    .withMessage('Page must be an integer greater than 0'),
+  check('size')
+    .optional()
+    .isInt({ min: 1 })
+    .withMessage('Size must be an integer greater than 0'),
+  check('minLat')
+    .optional()
+    .isFloat({ min: -90, max: 90 })
+    .withMessage('Minimum latitude must be between -90 to 90'),
+  check('maxLat')
+    .optional()
+    .isFloat({ max: 90 })
+    .custom((val, { req }) => (req.query.minLat ?? -90) < req.query.maxLat)
+    .withMessage(
+      'Maximum latitude must be between -90 to 90 and greater than minimum latitude if specified'
+    ),
+  check('minLng')
+    .optional()
+    .isFloat({ min: -180, max: 180 })
+    .withMessage('Minimum longitude must be between -180 to 180'),
+  check('maxLng')
+    .optional()
+    .isFloat({ max: 180 })
+    .custom((val, { req }) => (req.query.minLng ?? -180) < req.query.maxLng)
+    .withMessage(
+      'Maximum longitude must be between -180 to 180 and greater than minimum longitude if specified'
+    ),
+  check('minPrice')
+    .optional()
+    .isFloat({ min: 0 })
+    .withMessage('Minimum price must be greater than or equal to 0'),
+  check('maxPrice')
+    .optional()
+    .isFloat()
+    .custom((val, { req }) => (req.query.minPrice ?? 0) < req.query.maxPrice)
+    .withMessage(
+      'Maximum price must be greater than 0 and greater than minimum price if specified'
+    ),
+  handleValidationErrors,
+];
+
 /**** GET all spots ****/
 router.get('/',
+  validateQueryParams,
   async (req, res, next) => {
     let { page, size, minLat, maxLat, minLng, maxLng, minPrice, maxPrice } = req.query;
     page = page ? page : 1;
