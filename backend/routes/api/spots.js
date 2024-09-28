@@ -379,7 +379,6 @@ router.get('/:spotId',
     return res.status(200).json(detailedResponse);
 
   } catch (error) {
-    console.log("Error fetching spot details: ", error)
     return next(error);
   }
   
