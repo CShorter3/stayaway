@@ -768,7 +768,8 @@ router.get('/:spotId/bookings',
   async (req, res) => {
     const { spotId } = req.params;
     const currentUserId = req.user.id;
-    const spot = spot.findByPk(spotId); // get spot id
+
+    const spot = await spot.findByPk(spotId); // get spot id
     
   if(!spot){
     return res.status(404).json({
@@ -797,7 +798,7 @@ router.get('/:spotId/bookings',
   }
 
   // Capture booking information
-  const ownerBookings = spotReviews.map(booking => ({
+  const ownerBookings = spotBookings.map(booking => ({
     User: {
       id: booking.User.id,
       firstName: booking.User.firstName,
@@ -807,7 +808,9 @@ router.get('/:spotId/bookings',
     spotId: booking.spotId, 
     userId: booking.User.id, 
     startDate: booking.startDate,
-    endDate: booking.endDate
+    endDate: booking.endDate,
+    createdAt: booking.createdAt,
+    updatedAt: booking.updatedAt
   }));
 
   return res.status(200).json({ Bookings: ownerBookings })}
