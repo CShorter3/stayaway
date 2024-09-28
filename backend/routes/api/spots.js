@@ -26,7 +26,7 @@ const validateQueryParams = [
   check('maxLat')
     .optional()
     .isFloat({ max: 90 })
-    .custom((val, { req }) => (req.query.minLat ?? -90) < req.query.maxLat)
+    .custom((val, { req }) => (parseFloat(req.query.minLat ?? -90)) < parseFloat(req.query.maxLat))
     .withMessage(
       'Maximum latitude must be between -90 to 90 and greater than minimum latitude if specified'
     ),
@@ -37,9 +37,10 @@ const validateQueryParams = [
   check('maxLng')
     .optional()
     .isFloat({ max: 180 })
-    .custom((val, { req }) => (req.query.minLng ?? -180) < req.query.maxLng)
+    .withMessage('Maximum longitude must be less than 180')
+    .custom((val, { req }) => (parseFloat(req.query.minLng ?? -180)) < parseFloat(req.query.maxLng))
     .withMessage(
-      'Maximum longitude must be between -180 to 180 and greater than minimum longitude if specified'
+      'Maximum longitude must be greater than minimum longitude'
     ),
   check('minPrice')
     .optional()
