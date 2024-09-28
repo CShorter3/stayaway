@@ -379,7 +379,7 @@ router.get('/:spotId',
 
   } catch (error) {
     console.log("Error fetching spot details: ", error)
-    next(error);
+    return next(error);
   }
   
 });
@@ -556,61 +556,53 @@ const validateReview = [               // do we need to validate id type fields:
     .withMessage('Stars rating is required')
     .isInt({ min: 1, max: 5 })
     .withMessage('Stars must be an integer between 1 and 5'),
-  check('startDate')
-    .isISO8601() // NOTE this may need changed depending on test specs
-    .custom((val) => {
-      // just for the record i hate this but not enough
-      // to write a function on Date.prototype (yet)
-      return new Date(new Date(val).toDateString()) > new Date(new Date().toDateString());
-    })
-    .withMessage('Start date must be a date in ISO 8601 format which is after today'),
-  check('endDate')
-    .isISO8601() // NOTE same as above
-    .custom((val, { req }) => {
-      return new Date(req.body.startDate).getTime() < new Date(req.body.endDate).getTime();
-    })
-    .withMessage('End date must be a date in ISO 8601 format which is after start date'),
   handleValidationErrors
 ];
 
-// /**** CREATE review on spot id  ****/
-// router.post('/:spots/review', 
-//   restoreUser, requireAuth, validateReview,
-//   async (req, res) => {
+/**** CREATE review on spot id  ****/
+router.post('/:spotId/reviews', 
+  restoreUser, requireAuth, validateReview,
+  async (req, res, next) => {
     
-//     const { spotId } = req.params;          // retireve spotId to add review at
-//     const { review, stars } = req.body;     // retrieve info to populate review
-//     const { user } = req;                   // current user adding image
-//     const userId = user.id;
+    const { spotId } = req.params;          // retireve spotId to add review at
+    const { review, stars } = req.body;     // retrieve info to populate review
+    const { user } = req;                   // current user adding image
+    const userId = user.id;
 
-//     try {
-//       const spot = await Spot.findByPk(spotId);
+    const spot = await Spot.findByPk(spotId);
+
+    if (!spot) {
+      return res.status(404).json({
+        message: "Spot couldn't be found"
+      });
+    }
+
+    const spotReviews = await Review.findAll({
+      where: {
+        [Op.and]: [
+          { spotId: spotId },
+          { userId: userId },
+        ]
+      }
+    });
+
+    if (spotReviews.length) {
+      return res.status(403).json({
+        message: 'User already has a review for this spot'
+      });
+    }
   
-//       if(!spot){
-//         return res.status(401).json({
-//           message: "Authentication required"
-//         })
-//       }
-  
-//       if(spot.ownerId !== userId){
-//         const err = new Error('Forbidden');
-//         err.status = 403;
-//         return next(err);
-//       }
-  
-//       const newImage = await SpotImage.create({
-//         spotId: spot.id, url, preview
-//       });
-  
-//       return res.status(201).json({
-//         id: newImage.id, url: newImage.url, preview: newImage.preview
-//       });
-  
-//     } catch (error){
-//       next(error)
-//     }
-//   }
-// )
+    try {
+      const newReview = await spot.createReview({
+        userId, review, stars
+      });
+
+      return res.status(201).json(newReview);
+    } catch (e) {
+      return next(e);
+    }
+  }
+);
 
 /**** GET reviews by spot's id */
 router.get('/:spotId/reviews',
@@ -618,47 +610,28 @@ router.get('/:spotId/reviews',
 
     const { spotId } = req.params;
     const spot = await Spot.findByPk(req.params.spotId); // get spot id
-    console.log(spot);
-  if(!spot){
-    return res.status(404).json({
-      message: "Spot couldn't be found"
+
+    if(!spot){
+      return res.status(404).json({
+        message: "Spot couldn't be found"
+      });
+    }
+
+    const spotReviews = await Review.findAll({
+      where: { spotId: spotId },  // thisTable[foreignKey] === otherTable[uniqueId]
+      include: [
+        { 
+          model: User,
+          attributes: ['id', 'firstName', 'lastName']
+        },
+        {
+          model: ReviewImage,
+          attributes: ['id', 'url']
+        }
+      ],
     });
-  }
-
-  const spotReviews = await Review.findAll({
-    where: { spotId: spotId },  // thisTable[foreignKey] === otherTable[uniqueId]
-    include: [
-      { 
-        model: User,
-        attributes: ['id', 'firstName', 'lastName']
-      },
-      {
-        model: ReviewImage,
-        attributes: ['id', 'url']
-      }
-    ]
-  });
   
-  // Capture spots in review-object array
-  const spotReviewsArray = spotReviews.map(review => ({
-      id: review.id,
-      userId: review.userId,
-      spotId: review.spotId,
-      review: review.review,
-      stars: review.stars,
-      User: { 
-        id: review.User.id, 
-        firstName: review.User.firstName, 
-        lastName: review.User.lastName 
-      },
-      ReviewImages: review.ReviewImages.map(image => ({
-        id: image.id, 
-        url: image.url 
-      }))
-
-  }));
-
-  return res.status(200).json({ Reviews: spotReviewsArray })
+    return res.status(200).json({ Reviews: spotReviews })
   }
 )
 
