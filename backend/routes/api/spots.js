@@ -137,8 +137,6 @@ router.get('/',
         ],
         group: ['Spot.id', 'SpotImages.id']
       });
-
-      console.log('SPOT COUNT =====>', allSpots.length);
       
       const allSpotsArray = allSpots.map(spot => {
         return {
