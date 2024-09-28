@@ -138,7 +138,6 @@ router.post('/:reviewId/images',
     }
 
     const images = await ReviewImage.findAll({ where: { reviewId: req.params.reviewId } });
-    console.log(images);
 
     if (images.length >= 10) {
       return res.status(403).json({

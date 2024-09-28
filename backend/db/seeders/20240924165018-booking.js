@@ -2,8 +2,6 @@
 
 const { Booking } = require('../models');
 
-const options = { schema: process.env.SCHEMA };
-
 const seedData = [
   {
     spotId: 1,
@@ -37,7 +35,7 @@ module.exports = {
      *   isBetaMember: false
      * }], {});
     */
-    await queryInterface.bulkInsert('Bookings', seedData, options);
+    await Booking.bulkCreate(seedData);
   },
 
   async down (queryInterface, Sequelize) {

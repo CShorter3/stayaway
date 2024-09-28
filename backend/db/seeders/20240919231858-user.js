@@ -41,7 +41,6 @@ module.exports = {
      *   isBetaMember: false
      * }], {});
     */
-    console.log(User);
     await User.bulkCreate(userSeedData, { validate: true });
   },
 

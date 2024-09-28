@@ -2,8 +2,6 @@
 
 const { ReviewImage } = require('../models');
 
-const options = { schema: process.env.SCHEMA };
-
 const seedData = [
   {
     reviewId: 1,
@@ -23,7 +21,7 @@ module.exports = {
      *   isBetaMember: false
      * }], {});
     */
-    await queryInterface.bulkInsert('ReviewImages', seedData, options);
+    await ReviewImage.bulkCreate(seedData);
   },
 
   async down (queryInterface, Sequelize) {

@@ -55,7 +55,7 @@ module.exports = {
      *   isBetaMember: false
      * }], {});
     */
-    await queryInterface.bulkInsert('Spots', seedData, options);
+    await Spot.bulkCreate(seedData);
   },
 
   async down (queryInterface, Sequelize) {
