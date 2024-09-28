@@ -310,7 +310,7 @@ router.get('/current',
   }
 });
 
-/*** GET spot details on id */
+/**** GET spot details on id ****/
 router.get('/:spotId',
   async(req, res, next) => {
 
@@ -417,7 +417,7 @@ const validateSpotEdit = [
   handleValidationErrors
 ];
 
-/*** EDIT a spot on id ****/
+/**** EDIT a spot on id ****/
 router.put('/:spotId', 
   restoreUser, requireAuth, validateSpotEdit, 
   async (req, res, next) => {
@@ -604,7 +604,7 @@ router.post('/:spotId/reviews',
   }
 );
 
-/**** GET reviews by spot's id */
+/**** GET reviews by spot's id ****/
 router.get('/:spotId/reviews',
   async (req, res) => {
 
