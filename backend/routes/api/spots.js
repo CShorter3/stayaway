@@ -61,7 +61,7 @@ router.get('/',
   async (req, res, next) => {
     let { page, size, minLat, maxLat, minLng, maxLng, minPrice, maxPrice } = req.query;
     page = page ? page : 1;
-    size = size ? size : 10;
+    size = size ? size : 20;
 
     const where = {};
 
