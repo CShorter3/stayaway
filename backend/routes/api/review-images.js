@@ -1,13 +1,12 @@
 const router = require('express').Router();
 const { ReviewImage, Review } = require('../../db/models');
+const { restoreUser, requireAuth } = require('../../utils/auth');
 
 /**** DELETE a ReviewImage ****/
-router.delete('/:imageId', async (req, res, next) => {
+router.delete('/:imageId',
+  restoreUser, requireAuth,
+  async (req, res, next) => {
   const { user } = req;
-  
-  if (!user) {
-    return res.status(401).json({ message: 'You must be signed in to access this resource.' });
-  }
 
   const image = await ReviewImage.findByPk(req.params.imageId);
 
@@ -18,7 +17,7 @@ router.delete('/:imageId', async (req, res, next) => {
   const review = await Review.findByPk(image.reviewId);
 
   if (user.id !== review.userId) {
-    return res.status(401).json({
+    return res.status(403).json({
       message: 'You cannot delete a review image that isn\'t yours.'
     });
   }
