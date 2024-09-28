@@ -387,40 +387,31 @@ router.get('/:spotId',
 /**** Validate edit spot data ****/
 const validateSpotEdit = [
   check('address')
-    .optional()
     .exists({ checkFalsy: true })
     .withMessage('Street address is required'),
   check('city')
-    .optional()
     .exists({ checkFalsy: true })
     .withMessage('City is required'),
   check('state')
-    .optional()
     .exists({ checkFalsy: true })
     .withMessage('State is required'),
   check('country')
-    .optional()
     .exists({ checkFalsy: true })
     .withMessage('Country is required'),
   check('lat')
-    .optional()
     .isFloat({ min: -90, max: 90 })
     .withMessage('Latitude must must be between -90 to 90'),
   check('lng')
-    .optional()
     .isFloat({ min: -180, max: 180 })
     .withMessage('Longitude must be between -180 to 180'),
   check('name')
-    .optional()
     .exists({ checkFalsy: true })
     .isLength({ max: 50 })
     .withMessage('Name must be less than 50 characters'),
   check('description')
-    .optional()
     .exists({ checkFalsy: true })
     .withMessage('Description is required'),
   check('price')
-    .optional()
     .isFloat({ gt: 0 })
     .withMessage('Price per day must be a positive number'),
   handleValidationErrors
@@ -430,44 +421,45 @@ const validateSpotEdit = [
 router.put('/:spotId', 
   restoreUser, requireAuth, validateSpotEdit, 
   async (req, res, next) => {
-  const { user } = req;
-  const userId = user.id;
+    const { user } = req;
+    const userId = user.id;
 
-  if (!user) {
-    return res.status(401).json({ message: "Authentication required" });
+    if (!user) {
+      return res.status(401).json({ message: "Authentication required" });
+    }
+
+    const spot = await Spot.findByPk(req.params.spotId);
+
+    if (!spot) {  
+      return res.status(404).json({ message: "Spot couldn't be found" });
+    }
+
+    if (userId !== spot.ownerId) {
+      return res.status(403).json({ message: "Forbidden" });
+    }
+
+    const { address, city, state, country, lat, lng, name, description, price } = req.body;
+
+    // update or reassign initial values on update if falsy
+    spot.address = address || spot.address;
+    spot.city = city || spot.city;
+    spot.state = state || spot.state;
+    spot.country = country || spot.country;
+    spot.lat = lat !== undefined ? lat : spot.lat;        // left of ternary checks for undefined, if so, leaves value unchanged
+    spot.lng = lng !== undefined ? lng : spot.lng;        // right of ternary assigns new value if truthy, otherwise reassigns old value
+    spot.name = name || spot.name;
+    spot.description = description || spot.description;
+    spot.price = price !== undefined ? price : spot.price;
+
+    try {
+      await spot.save();
+    } catch (error) {
+      return next(error);
+    }
+
+    return res.status(200).json(spot);
   }
-
-  const spot = await Spot.findByPk(req.params.spotId);
-
-  if (!spot) {  
-    return res.status(404).json({ message: "Spot couldn't be found" });
-  }
-
-  if (userId !== spot.ownerId) {
-    return res.status(403).json({ message: "Forbidden" });
-  }
-
-  const { address, city, state, country, lat, lng, name, description, price } = req.body;
-
-  // update or reassign initial values on update if falsy
-  spot.address = address || spot.address;
-  spot.city = city || spot.city;
-  spot.state = state || spot.state;
-  spot.country = country || spot.country;
-  spot.lat = lat !== undefined ? lat : spot.lat;        // left of ternary checks for undefined, if so, leaves value unchanged
-  spot.lng = lng !== undefined ? lng : spot.lng;        // right of ternary assigns new value if truthy, otherwise reassigns old value
-  spot.name = name || spot.name;
-  spot.description = description || spot.description;
-  spot.price = price !== undefined ? price : spot.price;
-
-  try {
-    await spot.save();
-  } catch (error) {
-    return next(error);
-  }
-
-  return res.status(200).json(spot);
-});
+);
 
 /**** DELETE a review by its ID ****/
 router.delete('/:spotId',
