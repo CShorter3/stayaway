@@ -526,8 +526,8 @@ router.post('/:spotId/images',
 
     if(!spot){
       return res.status(404).json({
-        message: "Authentication required"
-      })
+        message: "Spot couldn't be found"
+      });
     }
 
     if (spot.ownerId !== userId) {
