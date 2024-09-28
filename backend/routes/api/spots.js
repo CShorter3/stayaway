@@ -490,9 +490,43 @@ router.delete('/:spotId',
   }
 });
 
+
+/**** Validate new booking request ****/
+const validateBooking = [
+  // Check if startDate exists
+  check('startDate')
+    .exists({ checkFalsy: true })
+    .withMessage('Start date is required')
+    .isISO8601()
+    .withMessage('Start date must be a valid date')
+    .custom((value) => {
+      const startDate = new Date(value);
+      if (startDate < new Date()) {
+        throw new Error('Start date cannot be in the past');
+      }
+      return true;
+    }),
+  
+  // Check if endDate exists and is after startDate
+  check('endDate')
+    .exists({ checkFalsy: true })
+    .withMessage('End date is required')
+    .isISO8601()
+    .withMessage('End date must be a valid date')
+    .custom((value, { req }) => {
+      const startDate = new Date(req.body.startDate);
+      const endDate = new Date(value);
+      if (endDate <= startDate) {
+        throw new Error('End date must be after the start date');
+      }
+      return true;
+    }),
+  handleValidationErrors
+];
+
 /**** CREATE booking on spot id  ****/
 router.post('/:spotId/bookings', 
-  restoreUser, requireAuth,
+  restoreUser, requireAuth, validateBooking,
   async (req, res, next) => {
 
     const { user } = req;                       // Retrieve full record of current user
