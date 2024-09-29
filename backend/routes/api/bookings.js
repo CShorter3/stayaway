@@ -78,11 +78,17 @@ router.put('/:bookingId', validateBookingEdit, async (req, res, next) => {
   const bookingConflicts = await Booking.findAll({
     where: {
       spotId: booking.spotId,
-      [Op.or]: {
-        startDate: { [Op.between]: [startTimestamp, endTimestamp] },
-        endDate: { [Op.between]: [startTimestamp, endTimestamp] },
-      },
-    },
+      [Op.or]: [
+        // where requested start date intersects existing booking
+        { startDate: { [Op.between]: [startTimestamp, endTimestamp] }},
+        // where requested end date intersects existing booking 
+        { endDate: { [Op.between]: [startTimestamp, endTimestamp] }},
+        // where requested dates engulf existing booking
+        { [Op.and]: [
+          { startDate: { [Op.lte]: startTimestamp } },
+          { endDate: { [Op.gte]: endTimestamp } }
+        ]}
+      ]}
   });
 
   if (bookingConflicts.length) {
@@ -92,14 +98,21 @@ router.put('/:bookingId', validateBookingEdit, async (req, res, next) => {
       const conflictStartTimestamp = new Date(conflict.startDate).getTime();
       const conflictEndTimestamp = new Date(conflict.endDate).getTime();
 
+      // Check if requested start date overlaps with conflicting booking
       if (conflictStartTimestamp < startTimestamp
           && startTimestamp < conflictEndTimestamp) {
         errors.startDate = 'Start date conflicts with an existing booking';
       }
 
+      // Check if requested end date intersects with conflicting booking
       if (conflictStartTimestamp < endTimestamp
           && endTimestamp < conflictEndTimestamp) {
         errors.endDate = 'End date conflicts with an existing booking';
+      }
+
+      // Check if the new booking engulfs an existing booking
+      if (startTimestamp < conflictStartTimestamp && endTimestamp > conflictEndTimestamp) {
+        errors.conflict = 'The requested booking completely engulfs an existing booking';
       }
     }
 
