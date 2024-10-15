@@ -7,14 +7,15 @@ const helmet = require('helmet');
 const cookieParser = require('cookie-parser');
 const { ValidationError } = require('sequelize');
 
+// check, in config file, if enviroment variable is in production
 const { environment } = require('./config');
-const isProduction = environment === 'production';
+const isProduction = environment === 'production'; 
 
 const app = express();
 
-app.use(morgan('dev'));
-app.use(cookieParser());
-app.use(express.json());
+app.use(morgan('dev'));     // middleware helps log req + res info
+app.use(cookieParser());    // middleware parses cookies 
+app.use(express.json());    // middleware parses boddies of req w json bodies
 
 // Security Middleware
 if (!isProduction) {
