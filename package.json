@@ -1,7 +1,7 @@
 {
-  "name": "airbnb-clone",
+  "name": "Stayaway",
   "version": "1.0.0",
-  "description": "AirBnB clone pair project",
+  "description": "AirBnB clone",
   "main": "backend/bin/www",
   "scripts": {
     "install": "npm --prefix backend install",
@@ -11,14 +11,15 @@
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/thaag7734/airbnb-backend.git"
+    "url": "git+https://github.com/CShorter3/stayaway.git"
   },
   "author": "Calid Shorter & Tyler Haag",
   "license": "UNLICENSED",
   "bugs": {
-    "url": "https://github.com/thaag7734/airbnb-backend/issues"
+    "url": "https://github.com/CShorter3/stayaway/issues"
   },
-  "homepage": "https://github.com/thaag7734/airbnb-backend#readme",
+  "homepage": "https://github.com/CShorter3/stayaway#readme",
+  
   "dependencies": {
     "bcryptjs": "^2.4.3",
     "cookie-parser": "^1.4.6",
