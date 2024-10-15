@@ -1,5 +1,5 @@
 {
-  "name": "Stayaway",
+  "name": "stayaway",
   "version": "1.0.0",
   "description": "AirBnB clone",
   "main": "backend/bin/www",
