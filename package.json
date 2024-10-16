@@ -1,7 +1,7 @@
 {
-  "name": "stayaway",
+  "name": "airbnb-clone-fork",
   "version": "1.0.0",
-  "description": "AirBnB clone",
+  "description": "fullstack airbnb clone building frontend to forked backend",
   "main": "backend/bin/www",
   "scripts": {
     "install": "npm --prefix backend install",
@@ -13,7 +13,8 @@
     "type": "git",
     "url": "git+https://github.com/CShorter3/stayaway.git"
   },
-  "author": "Calid Shorter & Tyler Haag",
+  "author": "Calid Shorter",
+  "contributors": ["Tyler Hagg"],
   "license": "UNLICENSED",
   "bugs": {
     "url": "https://github.com/CShorter3/stayaway/issues"
