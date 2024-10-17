@@ -1,6 +1,12 @@
+// backend/config/database.js
+
 const config = require('./index');
 
-console.log('URL =====>', process.env.DATABASE_URL);
+console.log('development dbFile =====>', config.dbFile);
+console.log('production DB-URL =====>', process.env.DATABASE_URL);
+
+/* load database config enviroment variables from .env to config/index.js 
+   allowing app to determine scope of and configure the runtime enviroment */
 
 module.exports = {
   development: {

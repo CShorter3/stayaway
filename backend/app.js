@@ -1,10 +1,10 @@
-const express = require('express');
-require('express-async-errors');
-const morgan = require('morgan');
-const cors = require('cors');
-const csurf = require('csurf');
-const helmet = require('helmet');
-const cookieParser = require('cookie-parser');
+const express = require('express');               // backend web app framework for node
+require('express-async-errors');                  // handle async route handlers
+const morgan = require('morgan');                 // log server req and res info
+const cors = require('cors');                     // cross-origin request provision
+const csurf = require('csurf');                   // csrf protection
+const helmet = require('helmet');                 // common security protection
+const cookieParser = require('cookie-parser');    // parses cookies from requests
 const { ValidationError } = require('sequelize');
 
 // check, in config file, if enviroment variable is in production
@@ -13,9 +13,9 @@ const isProduction = environment === 'production';
 
 const app = express();
 
-app.use(morgan('dev'));     // middleware helps log req + res info
-app.use(cookieParser());    // middleware parses cookies 
-app.use(express.json());    // middleware parses boddies of req w json bodies
+app.use(morgan('dev'));
+app.use(cookieParser());
+app.use(express.json());
 
 // Security Middleware
 if (!isProduction) {
@@ -41,7 +41,7 @@ app.use(
   })
 );
 
-const routes = require('./routes');
+const routes = require('./routes'); // import router routes after all middlewares
 
 // ...
 

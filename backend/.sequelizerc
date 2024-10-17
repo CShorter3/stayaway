@@ -1,5 +1,8 @@
-const path = require('path');
+// backend/.sequelizerc
 
+const path = require('path');   // core node module used to work with file paths                  
+
+// provides app's object relational mapping library pathways to models, seeders, migrations
 module.exports = {
   config: path.resolve('config', 'database.js'),
   'models-path': path.resolve('db', 'models'),
