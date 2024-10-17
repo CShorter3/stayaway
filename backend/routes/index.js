@@ -6,11 +6,11 @@ const apiRouter = require('./api');
 
 router.use('/api', apiRouter);
 
-// dumby route, test
-router.get('/hello/world', function(req, res) {
-  res.cookie('XSRF-TOKEN', req.csrfToken());
-  res.send('Hello World!');
-});
+// dumby route, test express, db, server 
+// router.get('/hello/world', function(req, res) {
+//   res.cookie('XSRF-TOKEN', req.csrfToken());
+//   res.send('Hello World!');
+// });
 
 // server generates and verifies unique csrf token at each session
 // prepares the client to include such token in future requests
