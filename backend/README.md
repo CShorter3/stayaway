@@ -1,0 +1,1 @@
+to do: explain how relationship between package.json's work in decided which env congif to use
