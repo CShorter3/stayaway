@@ -3,7 +3,7 @@
 let options = {};
 
 if(process.env.NODE_ENV === 'production'){
-  if(process.env.SCHEMA){
+  if(!process.env.SCHEMA){
     throw new Error('SCHEMA envioment variable not defined');
   }
   options.schema = process.env.SCHEMA;
