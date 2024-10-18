@@ -46,14 +46,17 @@ const routes = require('./routes'); // import router routes after all middleware
 // ...
 
 app.use(routes); // Connect all the routes
+
+// catch unhandled requests that don't match any defined routes in app
 app.use((_req, _res, next) => {
   const err = new Error("The requested resource couldn't be found.");
   err.title = "Resource Not Found";
   err.errors = { message: "The requested resource couldn't be found." };
   err.status = 404;
-  next(err);
+  next(err);  // pass error sequelize formatting 
 });
 
+// formate sequelize errors and pass to next error handler
 app.use((err, _req, _res, next) => {
   // check if error is a Sequelize error:
   if (err instanceof ValidationError) {
@@ -67,6 +70,7 @@ app.use((err, _req, _res, next) => {
   next(err);
 });
 
+// format errors without passing error
 app.use((err, _req, res, _next) => {
   res.status(err.status || 500);
   console.error(err);
