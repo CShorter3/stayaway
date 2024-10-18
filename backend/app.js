@@ -56,7 +56,7 @@ app.use((_req, _res, next) => {
   next(err);  // pass error sequelize formatting 
 });
 
-// formate sequelize errors and pass to next error handler
+// process sequelize errors and pass to 
 app.use((err, _req, _res, next) => {
   // check if error is a Sequelize error:
   if (err instanceof ValidationError) {
