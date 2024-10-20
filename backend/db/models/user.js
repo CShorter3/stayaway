@@ -1,7 +1,7 @@
 'use strict';
-const {
-  Model
-} = require('sequelize');
+
+const { Model, Validator } = require('sequelize');
+
 module.exports = (sequelize, DataTypes) => {
   class User extends Model {
     /**
@@ -18,29 +18,49 @@ module.exports = (sequelize, DataTypes) => {
   }
   User.init({
     firstName: {
-      type: DataTypes.STRING(30),
+      type: DataTypes.STRING,
       allowNull: false,
     },
     lastName: {
-      type: DataTypes.STRING(30),
+      type: DataTypes.STRING,
       allowNull: false,
     },
     username: {
-      type: DataTypes.STRING(30),
+      type: DataTypes.STRING,
       allowNull: false,
+      unique: true,
+      validate: {
+        len: [4, 30],
+        isNotEmail(value){
+          if (Validator.isEmail(value)) {
+            throw new Error('Cannot be an email.');
+          }          
+        },
+      },
     },
     email: {
-      type: DataTypes.STRING(256),
+      type: DataTypes.STRING,
       allowNull: false,
-      validate: {len: [1,256]},
+      unique: true,
+      validate: {
+        len: [3,256],
+        isEmail: true,
+      },
     },
     hashedPassword: {
       type: DataTypes.STRING.BINARY,
       allowNull: false,
+      validate: {
+        len: [60, 60]
+      }
     },
-  }, {
+  }, 
+  {
     sequelize,
     modelName: 'User',
   });
+  
   return User;
 };
+
+// add validate key to hashedPassword: len[60,60]?
