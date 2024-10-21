@@ -1,0 +1,1 @@
+every model has database level constraints and ORM -> sequelize level constraints.
