@@ -2,7 +2,7 @@
 
 const { SpotImage } = require('../models');
 
-const options = { schema: process.env.SCHEMA };
+// const options = { schema: process.env.SCHEMA };
 
 const seedData = [
   {

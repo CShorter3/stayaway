@@ -2,8 +2,6 @@
 
 const { Spot } = require('../models');
 
-const options = { schema: process.env.SCHEMA };
-
 const seedData = [
   {
     ownerId: 1,
