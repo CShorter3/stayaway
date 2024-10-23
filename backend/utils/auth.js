@@ -35,8 +35,8 @@ const restoreUser = (req, res, next) => {
   const { token } = req.cookies;
   req.user = null;
 
-  return jwt.verify(token, secret, null, async (e, jwtPayload) => {
-    if (e) {
+  return jwt.verify(token, secret, null, async (err, jwtPayload) => {
+    if (err) {
       // res.clearCookie('token');
       return next();
     }
@@ -48,7 +48,7 @@ const restoreUser = (req, res, next) => {
           include: ['email', 'createdAt', 'updatedAt']
         }
       });
-    } catch (e) {
+    } catch (err) {
       res.clearCookie('token');
       return next();
     }
