@@ -23,13 +23,15 @@ const usersRouter = require('./users.js');
 
   // router.use('/spot-images', require('./spot-images.js'));
   
-  router.post('/test', (req, res) => {
-    console.log(req.body)
-    res.json({ requestBody: req.body });
-  });
+  // router.post('/test', (req, res) => {
+  //   console.log("hit test route!")
+  //   console.log(req.body)
+  //   res.json({ requestBody: req.body });
+  // });
   
   const { setTokenCookie, requireAuth } = require('../../utils/auth.js');
   router.post('/test', function(req, res) {
+    console.log('hit test route')
     res.json({ requestBody: req.body });
     });
     
