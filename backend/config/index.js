@@ -1,6 +1,6 @@
 // backend/config/index.js
 
-console.log('ENV =====>', process.env);
+//console.log('ENV =====>', process.env);
 
 // read and export app's enviromental variables
 module.exports = {
