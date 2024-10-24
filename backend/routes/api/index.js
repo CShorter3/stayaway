@@ -22,7 +22,7 @@ router.use('/spots', require('./spots.js'));
 
 router.use('/spot-images', require('./spot-images.js'));
   
-const { User } = require('../../db/models');
+/*const { User } = require('../../db/models');
 const { setTokenCookie, requireAuth } = require('../../utils/auth.js');
 
 router.post('/test', function(req, res) {
@@ -55,6 +55,6 @@ router.get(
     return res.json(req.user);
   }
 );
-
+*/
 
 module.exports = router;
