@@ -16,9 +16,7 @@
   },
   "author": "Calid Shorter",
   "contributors": [
-    {
-      "name": "Tyler Hagg"
-    }
+    {"name": "Tyler Hagg"}
   ],
   "license": "UNLICENSED",
   "bugs": {
