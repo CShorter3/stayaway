@@ -4,8 +4,8 @@ const express = require('express');
 const router = express.Router();
 const apiRouter = require('./api');
 
-// trouble shoot deployment
-app.get('/', (req, res) => {
+//trouble shoot deployment
+router.get('/', (req, res) => {
   res.send('Hello World!');
 });
 
