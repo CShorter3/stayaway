@@ -721,7 +721,7 @@ router.post('/:spotId/reviews',
           { spotId: spotId },
           { userId: userId },
         ]
-      }
+      } 
     });
 
     if (spotReviews.length) {
