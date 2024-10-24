@@ -4,6 +4,12 @@ const express = require('express');
 const router = express.Router();
 const apiRouter = require('./api');
 
+// trouble shoot deployment
+app.get('/', (req, res) => {
+  res.send('Hello World!');
+});
+
+
 router.use('/api', apiRouter);
 
 //dumby route, test express, db, server 
