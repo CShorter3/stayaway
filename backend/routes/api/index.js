@@ -13,15 +13,15 @@ const usersRouter = require('./users.js');
   
   router.use('/users', usersRouter);
 
-  // router.use('/reviews', require('./reviews.js'));
+  router.use('/reviews', require('./reviews.js'));
 
-  // router.use('/review-images', require('./review-images.js'));
+  router.use('/review-images', require('./review-images.js'));
 
-  // router.use('/bookings', require('./bookings.js'));
+  router.use('/bookings', require('./bookings.js'));
   
-  // router.use('/spots', require('./spots.js'));
+  router.use('/spots', require('./spots.js'));
 
-  // router.use('/spot-images', require('./spot-images.js'));
+  router.use('/spot-images', require('./spot-images.js'));
   
   // router.post('/test', (req, res) => {
   //   console.log("hit test route!")
@@ -31,7 +31,8 @@ const usersRouter = require('./users.js');
   
   const { setTokenCookie, requireAuth } = require('../../utils/auth.js');
   router.post('/test', function(req, res) {
-    console.log('hit test route')
+    console.log('hit test route') 
+    console.log(req.body)
     res.json({ requestBody: req.body });
     });
     
