@@ -1,0 +1,12 @@
+A 'store' holds the entire state of an application 
+    + brings together state, actions, and reducers that make app
+    + provides a way to access and update state.
+        - holds current state
+        - access state -> store.getState()
+        - update state -> store.dispatch(action)
+        - register listener callbacks and unregister -> store.subscribe(listener), store.unsubscribe()
+
+A 'rootReducer' handles all the actions dispatched by individual reducers,
+which are functions that edits the inital state of the store
+    + reducers takes curent state and action to produce new, *IMMUTABLE state
+    + cant do asynchronous logic or other "side effects"
