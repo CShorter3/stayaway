@@ -27,4 +27,4 @@ const configureStore = (preloadedState) => {
     return createStore(rootReducer, preloadedState, enhancer)
 } 
 
-export default {store, configureStore};
+export default configureStore;
