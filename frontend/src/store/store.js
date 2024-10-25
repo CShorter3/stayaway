@@ -9,7 +9,7 @@ const rootReducer = combineReducers({
 });
 
 let enhancer;
-// prepare enhancer to apply relevant middlewares to the store's dispath method
+// prepare enhancer to apply middlewares to the store's dispatch method
 if(import.meta.env.MODE === 'production'){
     // apply thunk in production envioment
     enhancer = applyMiddleware(thunk);
@@ -21,8 +21,10 @@ if(import.meta.env.MODE === 'production'){
     enhancer = composeEnhancers(applyMiddleware(thunk, logger));
 }
 
+// allow create Redux store the option to take a preloaded state
 const configureStore = (preloadedState) => {
+    // plus the root reducer and enhancer
     return createStore(rootReducer, preloadedState, enhancer)
 } 
 
-export default {store, configureStore}; // double check consequence of object export multiple
+export default {store, configureStore};
