@@ -1,5 +1,5 @@
 // ./frontend/src/store/index.js
 
-import configureStore from './store'
+import { thunk, configureStore } from './store';
 
-export default configureStore;
+export { thunk, configureStore };

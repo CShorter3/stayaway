@@ -2,7 +2,9 @@
 
 import { createStore, combineReducers, applyMiddleware, compose } from 'redux';
 
-import thunk from 'redux-thunk';
+// import thunk from 'redux-thunk';
+// import and export thunk in the same line
+import {thunk} from 'redux-thunk';
 
 const rootReducer = combineReducers({
 
@@ -21,10 +23,9 @@ if(import.meta.env.MODE === 'production'){
     enhancer = composeEnhancers(applyMiddleware(thunk, logger));
 }
 
-// allow create Redux store the option to take a preloaded state
+// function to configure the Redux store
 const configureStore = (preloadedState) => {
-    // plus the root reducer and enhancer
     return createStore(rootReducer, preloadedState, enhancer)
 } 
 
-export default configureStore;
+export { thunk, configureStore };
