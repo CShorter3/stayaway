@@ -23,6 +23,6 @@ if(import.meta.env.MODE === 'production'){
 
 const configureStore = (preloadedState) => {
     return createStore(rootReducer, preloadedState, enhancer)
-}
+} 
 
 export default {store, configureStore}; // double check consequence of object export multiple
