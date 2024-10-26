@@ -1,0 +1,4 @@
+router.use() organizes and manages a route(s)'s behavior
+    + can apply middlware for all routes in a router
+    + can attatch sub-routers to apply focused behavior on particular routes
+    + can implment control path access eg. authentication for requests on particular paths
