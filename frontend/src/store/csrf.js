@@ -27,3 +27,8 @@ export async function csrfFetch(url, options = {}){
     // next promise chain
     return res;
 }
+
+// called from frontend entry file in dev to set csrf token for frontend
+export function restoreCSRF(){
+    return csrfFetch('/api/csrf/restore');
+}
