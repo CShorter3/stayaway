@@ -35,6 +35,16 @@ if (process.env.NODE_ENV === 'production'){
   });
 }
 
+// Add XSRF-TOKEN cookie in development
+if(process.env.NODE_ENV !== 'production'){
+  router.get('/api/csrf/restore',
+    (req, res) => {
+      res.cookie('XSRF-TOKEN', req.csrfToken());
+      return res.json({});
+    }
+  );
+}
+
 //dumby route, test express, db, server 
 router.get('/hello/world', function(req, res) {
   res.cookie('XSRF-TOKEN', req.csrfToken());
@@ -50,5 +60,7 @@ router.get("/api/csrf/restore", (req, res) => {
     'XSRF-Token': csrfToken
   });
 });
+
+
 
 module.exports = router;

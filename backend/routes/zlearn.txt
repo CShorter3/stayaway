@@ -2,3 +2,8 @@ router.use() organizes and manages a route(s)'s behavior
     + can apply middlware for all routes in a router
     + can attatch sub-routers to apply focused behavior on particular routes
     + can implment control path access eg. authentication for requests on particular paths
+
+in development, the backend and frontend servers are seperate
+    + adds GET /api/csrf/restore route in backend/routes/index that can only be accessed in dev to set csrf token on frontend app routes
+in production, the backend served frontend assets following the npm run build command
+    + uses express.static middleware to attatch xsrf token the frontend's root and non api/backend routes via index.html
