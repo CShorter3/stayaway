@@ -9,8 +9,31 @@ router.get('/', (req, res) => {
   res.send('Hello World!');
 });
 
-
 router.use('/api', apiRouter);
+
+// static routes - serves react build files in prod
+if (process.env.NODE_ENV === 'production'){
+  const path = require('path');
+  // Serve the frontend's index.html file at the root route
+  router.get('/', (req, res) => {
+    res.cookie('XSRF-TOKEN', req.csrfToken());
+    return res.sendFile(
+      path.resolve(__dirname,
+        '../../frontend', 'dist', 'index.html')
+    );
+  });
+
+  // serve the static assets in the frontend's build folder
+  router.use(express.static(path.resolve("../frontend/dist")));
+
+  // serve the frontend's index.html file at all other routes NOT starting with /api
+  router.get(/^(?!\/?api).*/, (req, res) => {
+    res.cookie('XSRF-TOKEN', req.csrfToken());
+    return res.sendFile(
+      path.resolve(__dirname, '../../frontend', 'dist', 'index.html')
+    );
+  });
+}
 
 //dumby route, test express, db, server 
 router.get('/hello/world', function(req, res) {
