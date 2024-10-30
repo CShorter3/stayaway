@@ -18,7 +18,7 @@ if(process.env.NODE_ENV !== 'production'){
 if(import.meta.env.MODE !== 'production'){
   restoreCSRF();
   window.csrfFetch = csrfFetch;
-  window.store = store
+  window.store = store;
 }
 
 ReactDOM.createRoot(document.getElementById('root')).render(
