@@ -405,7 +405,6 @@ import { restoreCSRF, csrfFetch } from './store/csrf';
 
 if (import.meta.env.MODE !== 'production') {
   restoreCSRF();
-
   window.csrfFetch = csrfFetch;
   window.store = store;
 }
