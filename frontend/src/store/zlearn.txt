@@ -17,3 +17,6 @@ A 'thunk' is a function that encloses an action used to manipulate the store
     + implement complex logic outside of components 
     + dispatch multiple actions in a row or over time
     + Writing logic that needs access to access stateValues like getState in an action
+
+A 'reducer' uses a switch statement to identify an action type and manipulate the store's state 
+based on the action's payload data.
