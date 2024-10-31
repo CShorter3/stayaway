@@ -35,3 +35,19 @@ export const login = (user) => async (dispatch) => {
     dispatch(setUser(data.user));
     return response;
 }
+
+
+const initialState = { user: null };
+
+const sessionReducer = ( state = initialState, action ) => {
+    switch (action.type) {
+        case SET_USER:
+            return { ...state, user: action.payload };
+        case REMOVE_USER:
+            return { ...state, user: null };
+        default:
+            return state;
+    }
+};
+
+export default sessionReducer;
