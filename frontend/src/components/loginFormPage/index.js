@@ -1,2 +1,2 @@
 // index.js
-export { default } from './LoginFormPage';
+export { LoginFormPage } from './LoginFormPage';
