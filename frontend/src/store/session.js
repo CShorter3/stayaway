@@ -36,9 +36,10 @@ export const login = (user) => async (dispatch) => {
     return response;
 }
 
-
+// initial state represents logged out user
 const initialState = { user: null };
 
+// manipulate current state according to action type
 const sessionReducer = ( state = initialState, action ) => {
     switch (action.type) {
         case SET_USER:
