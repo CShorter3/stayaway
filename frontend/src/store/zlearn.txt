@@ -10,3 +10,6 @@ A 'rootReducer' handles all the actions dispatched by individual reducers,
 which are functions that edits the inital state of the store
     + reducers takes curent state and action to produce new, *IMMUTABLE state
     + cant do asynchronous logic or other "side effects"
+
+A thunk is a function that encloses an action used to manipulate the store
+    + logic is not bound to any specific Redux store instance and keeps it reusable.
