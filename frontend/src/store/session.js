@@ -18,8 +18,9 @@ const removeUser = user => {
     }
 }
 
-// create thunk action -> makes POST api/session request
-export const login = user => async (dispatch) => {
+// creates login thunk action creator - gets user from async csrfFetch
+export const login = (user) => async (dispatch) => {
+    // extract and populate user object f
     const { credential, password } = user;
     const response = await csrfFetch("/api/session", {
         method: "POST",
@@ -29,6 +30,7 @@ export const login = user => async (dispatch) => {
         })
     });
 
+    // updates the store with the new user information
     const data = await response.json();
     dispatch(setUser(data.user));
     return response;
