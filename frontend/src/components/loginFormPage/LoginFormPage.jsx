@@ -5,11 +5,11 @@ import { useDispatch, useSelector } from 'react-redux';
 import { Navigate } from 'react-router-dom';
 
 function LoginFormPage() {
-  const dispatch = useDispatch();
-  const sessionUser = useSelector((state) => state.session.user);
-  const [credential, setCredential] = useState("");
-  const [password, setPassword] = useState("");
-  const [errors, setErrors] = useState({});
+  const dispatch = useDispatch(); // allows component access to dispatch actions
+  const sessionUser = useSelector((state) => state.session.user); // enables direct access to the current user
+  const [credential, setCredential] = useState("");     // implements controlled credential input
+  const [password, setPassword] = useState("");         // implemetes controlled password input 
+  const [errors, setErrors] = useState({});             // implements controlled errors input to support form validation
 
   if (sessionUser) return <Navigate to="/" replace={true} />;
 
