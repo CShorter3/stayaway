@@ -11,6 +11,7 @@ function LoginFormPage() {
   const [password, setPassword] = useState("");         // implemetes controlled password input 
   const [errors, setErrors] = useState({});             // implements controlled errors input to support form validation
 
+  // redirect logged-in user to home page
   if (sessionUser) return <Navigate to="/" replace={true} />;
 
   const handleSubmit = (e) => {
