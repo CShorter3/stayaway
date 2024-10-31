@@ -12,9 +12,9 @@ import * as sessionActions from './store/session';
 const store = configureStore();
 
 // in dev, make store accessible to the global browser scope so developers can inspect it
-if(process.env.NODE_ENV !== 'production'){
-  window.store = store;
-}
+// if(process.env.NODE_ENV !== 'production'){
+//   window.store = store;
+// }
 
 // in dev, call restoreCSRF to set csrf token on frontend routes
 if(import.meta.env.MODE !== 'production'){
