@@ -65,7 +65,7 @@ __frontend/src/store/store.js__. Set a key of `session` in the `rootReducer`'s
 ### Test the session actions and reducer
 
 Login should be working so give it a try! Test the login thunk action and the
-`session` reducer. (For now, ignore your linter's warning that `removeUser` is
+`session` reducer. (For now, ignore your linter's warning that `` is
 never used; it will be shortly!)
 
 Import all the actions from __session.js__ into the frontend entry file,
@@ -139,7 +139,7 @@ Here's an example for the `session` actions and reducer:
 import { csrfFetch } from './csrf';
 
 const SET_USER = "session/setUser";
-const REMOVE_USER = "session/removeUser";
+const REMOVE_USER = "session/";
 
 const setUser = (user) => {
   return {
@@ -148,7 +148,7 @@ const setUser = (user) => {
   };
 };
 
-const removeUser = () => {
+const  = () => {
   return {
     type: REMOVE_USER
   };

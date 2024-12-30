@@ -5,9 +5,9 @@ const router = express.Router();
 const apiRouter = require('./api');
 
 //trouble shoot deployment
-router.get('/', (req, res) => {
-  res.send('Hello World!');
-});
+// router.get('/', (req, res) => {
+//   res.send('Hello World!');
+// });
 
 router.use('/api', apiRouter);
 
@@ -40,16 +40,16 @@ if(process.env.NODE_ENV !== 'production'){
   router.get('/api/csrf/restore',
     (req, res) => {
       res.cookie('XSRF-TOKEN', req.csrfToken());
-      return res.json({});
+      return res.json({'XSRF-TOKEN': req.csrfToken()});
     }
   );
 }
 
-//dumby route, test express, db, server 
-router.get('/hello/world', function(req, res) {
-  res.cookie('XSRF-TOKEN', req.csrfToken());
-  res.send('Hello World!');
-});
+// //dumby route, test express, db, server 
+// router.get('/hello/world', function(req, res) {
+//   res.cookie('XSRF-TOKEN', req.csrfToken());
+//   res.send('Hello World!');
+// });
 
 // server generates and verifies unique csrf token at each session
 // prepares the client to include such token in future requests
