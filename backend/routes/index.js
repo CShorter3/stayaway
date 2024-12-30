@@ -18,8 +18,7 @@ if (process.env.NODE_ENV === 'production'){
   router.get('/', (req, res) => {
     res.cookie('XSRF-TOKEN', req.csrfToken());
     return res.sendFile(
-      path.resolve(__dirname,
-        '../../frontend', 'dist', 'index.html')
+      path.resolve(__dirname,'../../frontend', 'dist', 'index.html')
     );
   });
 
