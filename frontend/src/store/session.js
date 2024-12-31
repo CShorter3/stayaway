@@ -2,6 +2,7 @@ import { csrfFetch } from './csrf';
 
 const SET_USER = "session/setUser";
 const REMOVE_USER = "session/removeUser";
+//const ADD_USER = "session/addUser";
 
 // action sets session slice of state of user to action creator's input parameter
 const setUser = user => {
@@ -18,6 +19,13 @@ const removeUser = user => {
     }
 }
 
+// const addUser = user => {
+//     return {
+//         type: ADD_USER,
+//         payload: user
+//     }
+// }
+
 // creates login thunk action creator - gets user from async csrfFetch
 export const login = (user) => async (dispatch) => {
     // extract and populate user object f
@@ -29,7 +37,6 @@ export const login = (user) => async (dispatch) => {
             password
         })
     });
-
     // updates the store with the new user information
     const data = await response.json();
     dispatch(setUser(data.user));
@@ -46,6 +53,8 @@ const sessionReducer = ( state = initialState, action ) => {
             return { ...state, user: action.payload };
         case REMOVE_USER:
             return { ...state, user: null };
+        // case ADD_USER:
+        //     return { ...state, user: action.payload };
         default:
             return state;
     }
