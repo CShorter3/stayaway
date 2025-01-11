@@ -54,22 +54,13 @@ export const login = (user) => async (dispatch) => {
     }
 }
 
-// initial state represents logged out user
-const initialState = { user: null };
-
-// manipulate current state according to action type
-const sessionReducer = ( state = initialState, action ) => {
-    switch (action.type) {
-        case SET_USER:
-            return { ...state, user: action.payload };
-        case REMOVE_USER:
-            return { ...state, user: null };
-        // case ADD_USER:
-        //     return { ...state, user: action.payload };
-        default:
-            return state;
-    }
-};
+// Thunk action to restore session user
+export const restoreUser = () => async (dispatch) => {
+    const response = await csrfFetch('/api/session');
+    const data = await response.json();
+    dispatch(setUser(data.user));
+    return response;
+}
 
 // creates signup thunk action creator - get user from async csfrFetch
 // export const signup = (user) => async (dispatch) => {
@@ -88,5 +79,23 @@ const sessionReducer = ( state = initialState, action ) => {
 //     dispatch(setUser(data.user));
 //     return response;
 //   };
+
+// initial state represents logged out user
+const initialState = { user: null };
+
+// manipulate current state according to action type
+const sessionReducer = ( state = initialState, action ) => {
+    switch (action.type) {
+        case SET_USER:
+            return { ...state, user: action.payload };
+        case REMOVE_USER:
+            return { ...state, user: null };
+        // case ADD_USER:
+        //     return { ...state, user: action.payload };
+        default:
+            return state;
+    }
+};
+
 
 export default sessionReducer;

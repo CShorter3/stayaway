@@ -13,15 +13,16 @@ function LoginFormPage() {
   const [password, setPassword] = useState("");         // implemetes controlled password input 
   const [errors, setErrors] = useState({});             // implements controlled errors input to support form validation
 
-  // redirect logged-in user to home page
+  // redirect a logged-in user to home page
   if (sessionUser) return <Navigate to="/" replace={true} />;
 
+  // call login thunk on click of login button
   const handleSubmit = (e) => {
     e.preventDefault();
     setErrors({});
     return dispatch(sessionActions.login({ credential, password })).catch(
-      async (res) => {
-        const data = await res.json();
+      async (response) => {
+        const data = await response.json();
         if (data?.errors) setErrors(data.errors);
       }
     );
