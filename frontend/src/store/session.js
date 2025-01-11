@@ -1,5 +1,6 @@
 import { csrfFetch } from './csrf';
 
+// Extracts action types into a constant. For session reducer and action use.
 const SET_USER = "session/setUser";
 const REMOVE_USER = "session/removeUser";
 //const ADD_USER = "session/addUser";
