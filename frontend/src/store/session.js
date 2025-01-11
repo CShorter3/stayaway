@@ -5,7 +5,6 @@ const SET_USER = "session/setUser";
 const REMOVE_USER = "session/removeUser";
 //const ADD_USER = "session/addUser";
 
-// action sets session slice of state of user to action creator's input parameter
 const setUser = user => {
     return {
         type: SET_USER,
@@ -13,12 +12,11 @@ const setUser = user => {
     };
 };
 
-// action creates action to have reducer remove the session user
-// const removeUser = user => {
-//     return {
-//         type: REMOVE_USER,
-//     }
-// }
+const removeUser = () => {
+    return {
+        type: REMOVE_USER,
+    }
+}
 
 // const addUser = user => {
 //     return {
@@ -78,7 +76,14 @@ export const signup = (user) => async (dispatch) => {
     const data = await response.json();
     dispatch(setUser(data.user));
     return response;
-  };
+};
+
+export const logout = () => async (dispatch) => {
+    const response = await csrfFetch('/api/session', { method: "DELETE" });
+    dispatch(removeUser());
+    return response;
+};
+
 
 // initial state represents logged out user
 const initialState = { user: null };
