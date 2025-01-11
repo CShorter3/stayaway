@@ -2,7 +2,7 @@
 
 // loginFormPage is default exported to must re-export
 // import LoginFormPage from './LoginFormPage';
-// export { LoginFormPage };Z
+// export { LoginFormPage };
 
 // valid one liner
 export { default as LoginFormPage } from './LoginFormPage';
