@@ -21,16 +21,19 @@ function Layout() {
   );
 }
 
-
-
 const router = createBrowserRouter([
   {
-    path: '/',
-    element: <h1>Welcome!</h1>
-  },
-  {
-    path: '/login',
-    element: <LoginFormPage />
+    element: <Layout />,
+    children: [
+      {
+        path: '/',
+        element: <h1>Welcome!</h1>
+      },
+      {
+        path: '/login',
+        element: <LoginFormPage />
+      }
+    ]
   }
 ]);
 
