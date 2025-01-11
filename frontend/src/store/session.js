@@ -14,11 +14,11 @@ const setUser = user => {
 };
 
 // action creates action to have reducer remove the session user
-const removeUser = user => {
-    return {
-        type: REMOVE_USER,
-    }
-}
+// const removeUser = user => {
+//     return {
+//         type: REMOVE_USER,
+//     }
+// }
 
 // const addUser = user => {
 //     return {
@@ -27,21 +27,31 @@ const removeUser = user => {
 //     }
 // }
 
-// creates login thunk action creator - gets user from async csrfFetch
+// thunk action to authroize login
 export const login = (user) => async (dispatch) => {
-    // extract and populate user object f
     const { credential, password } = user;
-    const response = await csrfFetch("/api/session", {
-        method: "POST",
-        body: JSON.stringify({
-            credential,
-            password
-        })
-    });
-    // updates the store with the new user information
-    const data = await response.json();
-    dispatch(setUser(data.user));
-    return response;
+    try{
+        const response = await csrfFetch("/api/session", {
+            method: "POST",
+            body: JSON.stringify({
+                credential,
+                password
+            })
+        });
+        
+        if(!response.ok){
+            const errorData = await response.json();
+            throw new error(errorData.message || 'Login failed');
+        }
+        
+        // updates the store with the new user information
+        const data = await response.json();
+        dispatch(setUser(data.user));
+        return response;
+    } catch(error){
+        console.log("invalid credentials: ", error);
+        throw error;
+    }
 }
 
 // initial state represents logged out user
@@ -62,21 +72,21 @@ const sessionReducer = ( state = initialState, action ) => {
 };
 
 // creates signup thunk action creator - get user from async csfrFetch
-export const signup = (user) => async (dispatch) => {
-    const { username, firstName, lastName, email, password } = user;
-    const response = await csrfFetch("/api/users", {
-      method: "POST",
-      body: JSON.stringify({
-        username,
-        firstName,
-        lastName,
-        email,
-        password
-      })
-    });
-    const data = await response.json();
-    dispatch(setUser(data.user));
-    return response;
-  };
+// export const signup = (user) => async (dispatch) => {
+//     const { username, firstName, lastName, email, password } = user;
+//     const response = await csrfFetch("/api/users", {
+//       method: "POST",
+//       body: JSON.stringify({
+//         username,
+//         firstName,
+//         lastName,
+//         email,
+//         password
+//       })
+//     });
+//     const data = await response.json();
+//     dispatch(setUser(data.user));
+//     return response;
+//   };
 
 export default sessionReducer;
