@@ -41,16 +41,16 @@ export const login = (user) => async (dispatch) => {
         
         if(!response.ok){
             const errorData = await response.json();
-            throw new error(errorData.message || 'Login failed');
+            throw new Error(errorData.message || 'Login failed');
         }
         
-        // updates the store with the new user information
+        // send data to Redux store
         const data = await response.json();
         dispatch(setUser(data.user));
         return response;
     } catch(error){
         console.log("invalid credentials: ", error);
-        throw error;
+        throw Error;
     }
 }
 
