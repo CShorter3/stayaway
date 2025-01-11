@@ -62,23 +62,23 @@ export const restoreUser = () => async (dispatch) => {
     return response;
 }
 
-// creates signup thunk action creator - get user from async csfrFetch
-// export const signup = (user) => async (dispatch) => {
-//     const { username, firstName, lastName, email, password } = user;
-//     const response = await csrfFetch("/api/users", {
-//       method: "POST",
-//       body: JSON.stringify({
-//         username,
-//         firstName,
-//         lastName,
-//         email,
-//         password
-//       })
-//     });
-//     const data = await response.json();
-//     dispatch(setUser(data.user));
-//     return response;
-//   };
+// Thunk action to sign up user
+export const signup = (user) => async (dispatch) => {
+    const { username, firstName, lastName, email, password } = user;
+    const response = await csrfFetch("/api/users", {
+      method: "POST",
+      body: JSON.stringify({
+        username,
+        firstName,
+        lastName,
+        email,
+        password
+      })
+    });
+    const data = await response.json();
+    dispatch(setUser(data.user));
+    return response;
+  };
 
 // initial state represents logged out user
 const initialState = { user: null };
@@ -96,6 +96,5 @@ const sessionReducer = ( state = initialState, action ) => {
             return state;
     }
 };
-
 
 export default sessionReducer;
