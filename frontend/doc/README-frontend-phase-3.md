@@ -66,11 +66,22 @@ Here's an example of a logout thunk action:
 
 // ...
 export const logout = () => async (dispatch) => {
-  const response = await csrfFetch('/api/session', {
-    method: 'DELETE'
-  });
-  dispatch(removeUser());
-  return response;
+  try{
+    const response = await csrfFetch('/api/session', { method: 'DELETE' });
+
+    if(!response.ok){
+      // extract error from the server
+      const errorData = await response.json();
+      // throw extracted error or fallback message
+      throw new Error(errorData.message || "Failed to log out");
+    }
+    dispatch(removeUser());
+    return response;
+  } catch (error){
+      // logs the error message to the console for debugging
+      console.error("Logout failed: ", error.message);
+      // throw error;
+  }
 };
 // ...
 ```
