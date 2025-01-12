@@ -1,14 +1,14 @@
-import { FiMenu } from 'react-icons/fi';
+// import { FiMenu } from 'react-icons/fi';
 
-const ProfileButton = () => {
-  return (
-    <div style={{ color: "orange", fontSize: "100px" }}>
-      <FiMenu />
-    </div>
-  );
-};
+// const ProfileButton = () => {
+//   return (
+//     <div style={{ color: "orange", fontSize: "100px" }}>
+//       <FiMenu />
+//     </div>
+//   );
+// };
 
-export default ProfileButton;
+// export default ProfileButton;
 
 // To change
 // the size or color of the icon, wrap the icon component in a parent element like
