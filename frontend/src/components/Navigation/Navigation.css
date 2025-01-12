@@ -9,9 +9,17 @@ nav {
     position: relative; /* Ensure positioning for dropdown */
     box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
   }
-  
+ 
+  /* Profile button container */
+  .profile-dropdown-container {
+    position: fixed;
+    top: 1rem;
+    right: 1rem;
+    z-index: 1000;  /*ensure button is above other content*/
+  }
+
   /* Profile button */
-  nav button {
+  .profile-dropdown-container button {
     background: none;
     border: none;
     color: white;
@@ -25,7 +33,7 @@ nav {
     transition: background-color 0.3s ease;
   }
   
-  nav button:hover {
+  .profile-button-container button:hover {
     background-color: rgba(255, 255, 255, 0.2);
   }
   
@@ -47,6 +55,7 @@ nav {
     flex-direction: column;
   }
   
+  /* Dropdown item styles */
   .profile-dropdown li {
     padding: 0.75rem 1rem;
     font-size: 0.9rem;
