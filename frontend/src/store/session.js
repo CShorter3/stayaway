@@ -3,7 +3,6 @@ import { csrfFetch } from './csrf';
 // Extracts action types into a constant. For session reducer and action use.
 const SET_USER = "session/setUser";
 const REMOVE_USER = "session/removeUser";
-//const ADD_USER = "session/addUser";
 
 const setUser = user => {
     return {
@@ -17,13 +16,6 @@ const removeUser = () => {
         type: REMOVE_USER,
     }
 }
-
-// const addUser = user => {
-//     return {
-//         type: ADD_USER,
-//         payload: user
-//     }
-// }
 
 // thunk action to authroize login
 export const login = (user) => async (dispatch) => {
@@ -78,6 +70,7 @@ export const signup = (user) => async (dispatch) => {
     return response;
 };
 
+// Thunk logs out curent user
 export const logout = () => async (dispatch) => {
     const response = await csrfFetch('/api/session', { method: "DELETE" });
     dispatch(removeUser());
