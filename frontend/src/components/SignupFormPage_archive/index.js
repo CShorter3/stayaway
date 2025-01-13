@@ -1,0 +1,1 @@
+export { default as SignupFormPage } from './SignupFormPage';
