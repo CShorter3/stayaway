@@ -23,6 +23,9 @@ module.exports = {
       files: [
         "src/context/*.jsx"
       ],
+      files: [
+        "src/Context/*.jsx"
+      ],
       rules: {
         'react-refresh/only-export-components': 'off'
       }
