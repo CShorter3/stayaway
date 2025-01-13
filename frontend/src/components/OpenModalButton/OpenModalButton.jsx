@@ -1,4 +1,4 @@
-import { useModal } from '../../context/Modal';
+import { useModal } from '../context/Modal';
 
 function OpenModalButton({
   modalComponent, // component to render inside the modal
@@ -18,3 +18,16 @@ function OpenModalButton({
 }
 
 export default OpenModalButton;
+
+/* Open Modal Button use example
+
+const Greeting = () => {
+  return (
+    <OpenModalButton
+      buttonText="Greeting"
+      modalComponent={<h2>Hello World!</h2>}
+    />
+  );
+};
+
+*/
