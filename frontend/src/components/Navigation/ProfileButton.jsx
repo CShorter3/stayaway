@@ -1,6 +1,7 @@
 import { useState, useEffect, useRef } from 'react';
 import { useDispatch } from 'react-redux';
 import { FaUserCircle } from 'react-icons/fa';
+import { NavLink } from 'react-router-dom';
 import * as sessionActions from '../../store/session';
 import './ProfileButton.css';
 
@@ -10,13 +11,12 @@ function ProfileButton({ user }) {
   const buttonRef = useRef(); // reference to the profile button 
   const dropRef = useRef(); // reference to the dropdown menu
 
+  // Toggle dropdown visibility
   const toggleMenu = (e) => {
-    e.stopPropagation(); // Keep click from bubbling up to document and triggering closeMenu
-    // if (!showMenu) setShowMenu(true);
+    e.stopPropagation(); // Prevent event from propagating to close the menu
     setShowMenu(!showMenu);
   };
 
-  // close drop down off click
   useEffect(() => {
     if (!showMenu) return;
 
@@ -27,37 +27,51 @@ function ProfileButton({ user }) {
     };
 
     document.addEventListener('click', closeMenu);
-
     return () => document.removeEventListener('click', closeMenu);
   }, [showMenu]);
 
-  // log out user on button click event handler
   const logout = (e) => {
     e.preventDefault();
     dispatch(sessionActions.logout());
   };
 
-  // comment out secondary drop down log for now
   const ulClassName = "profile-dropdown" + (showMenu ? "" : " hidden");
 
   return (
     <div className="profile-button-container">
+      {/* Always visible profile button */}
       <button ref={buttonRef} onClick={toggleMenu}>
         <FaUserCircle />
       </button>
       <ul className={ulClassName} ref={dropRef}>
-        <li>{user.username}</li>
-        <li>{user.firstName} {user.lastName}</li>
-        <li>{user.email}</li>
-        <li>
-          <button onClick={logout}>Log Out</button>
-        </li>
+        {user ? (
+          <>
+            {/* User info and logout button if logged in */}
+            <li>{user.username}</li>
+            <li>{user.firstName} {user.lastName}</li>
+            <li>{user.email}</li>
+            <li>
+              <button onClick={logout}>Log Out</button>
+            </li>
+          </>
+        ) : (
+          <>
+            {/* Login and signup options if not logged in */}
+            <li>
+              <NavLink to="/login">Log In</NavLink>
+            </li>
+            <li>
+              <NavLink to="/signup">Sign Up</NavLink>
+            </li>
+          </>
+        )}
       </ul>
     </div>
   );
 }
 
 export default ProfileButton;
+
 
 
 // import { FiMenu } from 'react-icons/fi';

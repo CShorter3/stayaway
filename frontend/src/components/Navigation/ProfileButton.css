@@ -1,0 +1,85 @@
+/* Profile button container */
+.profile-button-container {
+    position: relative; /* Allows the dropdown to be positioned relative to the button */
+  }
+  
+  /* Profile button */
+  .profile-button-container button {
+    background: none;
+    border: none;
+    color: white;
+    font-size: 1.5rem;
+    cursor: pointer;
+    padding: 0.5rem;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: background-color 0.3s ease;
+  }
+  
+  /* Profile button hover effect */
+  .profile-button-container button:hover {
+    background-color: rgba(255, 255, 255, 0.2);
+  }
+  
+  /* Dropdown menu (hidden by default) */
+  .profile-dropdown {
+    position: absolute;
+    top: 3.5rem; /* Positioning the dropdown below the button */
+    right: 0;
+    background-color: #fff;
+    color: #333;
+    border-radius: 8px;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    list-style: none;
+    margin: 0;
+    padding: 1rem 0;
+    width: 200px;
+    z-index: 1000;
+    display: flex;
+    flex-direction: column;
+  }
+  
+  /* Dropdown item styles */
+  .profile-dropdown li {
+    padding: 0.75rem 1rem;
+    font-size: 0.9rem;
+    border-bottom: 1px solid #ddd;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    color: #333;
+  }
+  
+  /* Remove border for the last item */
+  .profile-dropdown li:last-child {
+    border-bottom: none;
+  }
+  
+  /* Hover effect for dropdown items */
+  .profile-dropdown li:hover {
+    background-color: #f4f4f4;
+  }
+  
+  /* Logout button in dropdown */
+  .profile-dropdown button {
+    background-color: #e74c3c;
+    color: white;
+    border: none;
+    padding: 0.5rem 1rem;
+    border-radius: 4px;
+    cursor: pointer;
+    font-size: 0.9rem;
+    transition: background-color 0.3s ease;
+  }
+  
+  .profile-dropdown button:hover {
+    background-color: #c0392b;
+  }
+  
+  /* Hidden dropdown class */
+  .hidden {
+    display: none;
+  }
+  
