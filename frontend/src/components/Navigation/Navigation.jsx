@@ -1,6 +1,7 @@
 import { NavLink } from 'react-router-dom';
 import { useSelector } from 'react-redux';
 import ProfileButton from './ProfileButton';
+import logo from '../../../../images/StayAwayLogo-blank.png';
 import './Navigation.css';
 
 function Navigation({ isLoaded }) {
@@ -10,7 +11,7 @@ function Navigation({ isLoaded }) {
     <nav>
       <div className="nav-left">
         <NavLink to="/" className="nav-link">
-          Home
+          <img className="nav-logo" src={logo} alt="home"/>
         </NavLink>
       </div>
       <div className="nav-right">

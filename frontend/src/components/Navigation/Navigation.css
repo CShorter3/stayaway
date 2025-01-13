@@ -3,7 +3,7 @@ nav {
   display: flex;
   justify-content: space-between;
   align-items: center;
-  padding: 1rem 2rem;
+  padding: 0 2rem;
   background: linear-gradient(to right, #3498db, #2980b9); /* Gradient background */
   color: #ffffff;
   position: fixed;
@@ -11,21 +11,28 @@ nav {
   left: 0;
   right: 0;
   z-index: 1000;
+  height: 120px; /* Fixed height for nav */
   box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
-  height: 60px;
 }
 
-/* Left section (Home link) */
+/* Left section (Logo link) */
+.nav-left {
+  display: flex;
+  align-items: center;
+  height: 100%;
+}
+
 .nav-left .nav-link {
-  color: #ffffff;
+  display: inline-block;
+  height: 100%;
   text-decoration: none;
-  font-size: 1rem;
-  font-weight: bold;
-  padding: 0.5rem;
 }
 
-.nav-left .nav-link:hover {
-  text-decoration: underline;
+/* Logo image */
+.nav-logo {
+  height: 100%; /* Keep logo proportional to the nav height */
+  width: auto; /* Maintain aspect ratio */
+  cursor: pointer;
 }
 
 /* Right section (Profile button) */
@@ -34,7 +41,12 @@ nav {
   align-items: center;
 }
 
-/* Center the <h1> header */
+/* Optional: Add hover effect for the logo */
+.nav-left .nav-link:hover .nav-logo {
+  opacity: 0.8;
+}
+
+/* Center the <h1> header if needed */
 h1 {
   position: absolute;
   top: 50%;
