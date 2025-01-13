@@ -1,7 +1,7 @@
 /* Navigation bar container */
 nav {
   display: flex;
-  justify-content: space-between; /* Space between left (logo) and right sections */
+  justify-content: space-between;
   align-items: center;
   padding: 1rem 2rem;
   background: linear-gradient(to right, #3498db, #2980b9); /* Gradient background */
@@ -12,53 +12,47 @@ nav {
   right: 0;
   z-index: 1000;
   box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+  height: 60px;
 }
 
-/* Left section (logo) */
-.nav-left {
-  display: flex;
-  align-items: center;
-}
-
-.logo {
+/* Left section (Home link) */
+.nav-left .nav-link {
   color: #ffffff;
   text-decoration: none;
-  font-size: 1.5rem;
+  font-size: 1rem;
   font-weight: bold;
+  padding: 0.5rem;
 }
 
-.logo:hover {
+.nav-left .nav-link:hover {
   text-decoration: underline;
 }
 
-/* Right section (links and profile button) */
+/* Right section (Profile button) */
 .nav-right {
   display: flex;
   align-items: center;
 }
 
-/* Navigation links */
-ul {
-  display: flex;
-  align-items: center;
-  list-style: none;
-  padding: 0;
-  margin: 0;
+/* Center the <h1> header */
+h1 {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  font-size: 2.5rem;
+  font-weight: bold;
+  color: #34495e;
+  text-align: center;
 }
 
-ul li {
-  margin-left: 1.5rem;
-}
+/* Responsive tweaks for mobile screens */
+/* @media (max-width: 768px) {
+  nav {
+    padding: 0.5rem 1rem;
+  }
 
-.nav-link {
-  color: #ffffff;
-  text-decoration: none;
-  font-size: 1rem;
-  padding: 0.5rem;
-  border-radius: 4px;
-  transition: background-color 0.2s ease;
-}
-
-.nav-link:hover {
-  background-color: rgba(255, 255, 255, 0.2);
-}
+  h1 {
+    font-size: 2rem;
+  }
+} */
