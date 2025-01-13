@@ -2,7 +2,8 @@
 // create function component called ModalProvider
 
 import { useRef, createContext } from 'react';
-import { useState } from 'react';
+import { useState, useContext } from 'react';
+import ReactDOM from 'react-dom';
 
 const ModalContext = createContext();
 
@@ -35,5 +36,19 @@ export function ModalProvider({ children }) {
         </ModalContext.Provider>
         <div ref={modalRef} />
       </>
+    );
+  }
+
+  export function Modal(){
+    const { modalRef, modalContent, closeModal } = useContext(ModalContext);
+
+    if(!modalRef || !modalRef.current || !modalContent) return null;
+
+    return ReactDOM.createPortal(
+        <div id="modal">
+            <div id="modal-background" onClick={closeModal} />
+            <div id="modal-content">{modalContent}</div>
+        </div>,
+        modalRef.current
     );
   }
