@@ -5,7 +5,8 @@
 // export { LoginFormPage };
 
 // valid one liner
-export { default as LoginFormPage } from './LoginFormPage';
+export { default as LoginFormModal } from './LoginFormModal';
+
 
 // invalid named export would be exported as | also named import in app would then need to be wrapped in curly braces
 // export { LoginFormPage } from './LoginFormPage';
