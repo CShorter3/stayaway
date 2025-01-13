@@ -1,70 +1,28 @@
-import { useState, useEffect, useRef } from 'react';
-import { useDispatch } from 'react-redux';
-import { FaUserCircle } from 'react-icons/fa';
+import { useSelector } from 'react-redux';
 import { NavLink } from 'react-router-dom';
-import * as sessionActions from '../../store/session';
-import './ProfileButton.css';
+import ProfileButton from './ProfileButton';
+import './Navigation.css';
 
-function ProfileButton({ user }) {
-  const dispatch = useDispatch();
-  const [showMenu, setShowMenu] = useState(false);
-  const buttonRef = useRef(); // reference to the profile button 
-  const dropRef = useRef(); // reference to the dropdown menu
-
-  // Toggle dropdown visibility
-  const toggleMenu = (e) => {
-    e.stopPropagation(); // Prevent event from propagating to close the menu
-    setShowMenu(!showMenu);
-  };
-
-  useEffect(() => {
-    if (!showMenu) return;
-
-    const closeMenu = (e) => {
-      if (dropRef.current && !dropRef.current.contains(e.target)) {
-        setShowMenu(false);
-      }
-    };
-
-    document.addEventListener('click', closeMenu);
-    return () => document.removeEventListener('click', closeMenu);
-  }, [showMenu]);
-
-  const logout = (e) => {
-    e.preventDefault();
-    dispatch(sessionActions.logout());
-  };
-
-  const ulClassName = "profile-dropdown" + (showMenu ? "" : " hidden");
+function Navigation({ isLoaded }) {
+  const sessionUser = useSelector((state) => state.session.user);
 
   return (
-    <div className="profile-button-container">
-      <button ref={buttonRef} onClick={toggleMenu}>
-        <FaUserCircle />
-      </button>
-      <ul className={ulClassName} ref={dropRef}>
-        {user ? (
-          <>
-            <li>{user.username}</li>
-            <li>{user.firstName} {user.lastName}</li>
-            <li>{user.email}</li>
-            <li>
-              <button onClick={logout}>Log Out</button>
-            </li>
-          </>
-        ) : (
-          <>
-            <li>
-              <NavLink to="/login">Log In</NavLink>
-            </li>
-            <li>
-              <NavLink to="/signup">Sign Up</NavLink>
-            </li>
-          </>
-        )}
+    <nav className="navigation-bar">
+      <ul className="nav-links">
+        <li>
+          <NavLink exact="true" to="/">
+            Home
+          </NavLink>
+        </li>
       </ul>
-    </div>
+      {isLoaded && (
+        <div className="profile-section">
+          <ProfileButton user={sessionUser} />
+        </div>
+      )}
+    </nav>
   );
 }
 
-export default ProfileButton;
+export default Navigation;
+

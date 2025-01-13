@@ -1,17 +1,41 @@
 /* Navigation bar container */
 nav {
   display: flex;
-  justify-content: flex-end; /* Align elements to the right */
+  justify-content: space-between; /* Space between left (logo) and right sections */
   align-items: center;
   padding: 1rem 2rem;
-  background-color: #333;
-  color: white;
-  position: relative; /* Ensure positioning for dropdown */
+  background: linear-gradient(to right, #3498db, #2980b9); /* Gradient background */
+  color: #ffffff;
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  z-index: 1000;
   box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
 }
 
-/* Profile button container (now no longer here) */
-/* (Profile button related styles moved to ProfileButton.css) */
+/* Left section (logo) */
+.nav-left {
+  display: flex;
+  align-items: center;
+}
+
+.logo {
+  color: #ffffff;
+  text-decoration: none;
+  font-size: 1.5rem;
+  font-weight: bold;
+}
+
+.logo:hover {
+  text-decoration: underline;
+}
+
+/* Right section (links and profile button) */
+.nav-right {
+  display: flex;
+  align-items: center;
+}
 
 /* Navigation links */
 ul {
@@ -26,13 +50,15 @@ ul li {
   margin-left: 1.5rem;
 }
 
-/* Link styling */
-NavLink {
-  color: white;
+.nav-link {
+  color: #ffffff;
   text-decoration: none;
   font-size: 1rem;
+  padding: 0.5rem;
+  border-radius: 4px;
+  transition: background-color 0.2s ease;
 }
 
-NavLink:hover {
-  text-decoration: underline;
+.nav-link:hover {
+  background-color: rgba(255, 255, 255, 0.2);
 }
