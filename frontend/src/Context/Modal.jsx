@@ -2,6 +2,7 @@
 // create function component called ModalProvider
 
 import { useRef, createContext } from 'react';
+import { useState } from 'react';
 
 const ModalContext = createContext();
 
