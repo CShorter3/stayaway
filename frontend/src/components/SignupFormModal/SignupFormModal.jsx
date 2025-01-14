@@ -41,7 +41,7 @@ function SignupFormModal() {
     if (!invalidAttempt) {
       setErrors({});
       return dispatch(
-        sessionActions.signup({ email, username, firstName, lastName, password
+        sessionActions.signup({ email, username, firstName, lastName, password, confirmPassword
         })
       )
         .then(closeModal)
