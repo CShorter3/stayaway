@@ -6,6 +6,7 @@ import * as sessionActions from '../../store/session';
 import { OpenModalButton } from '../OpenModalButton';
 import { LoginFormModal } from '../LoginFormModal';
 import { SignupFormModal } from '../SignupFormModal';
+import { useNavigate } from 'react-router-dom';
 import './ProfileButton.css';
 //import OpenModalMenuItem from './OpenModalMenuItem';
 
@@ -41,9 +42,11 @@ function ProfileButton({ user }) {
 
   const closeMenu = () => setShowMenu(false);
 
+  const navigate = useNavigate();
+
   const logoutHandler = (e) => {
     e.preventDefault();
-    dispatch(sessionActions.logout());
+    dispatch(sessionActions.logout()).then(() => { navigate('/') });
     closeMenu();
   };
 
@@ -57,8 +60,7 @@ function ProfileButton({ user }) {
       <ul className={ulClassName} ref={dropRef}>
         {user ? (
           <>
-            <li>{user.username}</li>
-            <li>{user.firstName} {user.lastName}</li>
+            <li>Hello, {user.firstName}</li>
             <li>{user.email}</li>
             <li>
               <button className="auth-btn" onClick={logoutHandler}>

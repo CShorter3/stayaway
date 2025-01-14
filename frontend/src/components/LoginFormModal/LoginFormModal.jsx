@@ -38,6 +38,17 @@ function LoginFormModal() {
       }
     };
 
+    const handleDemoLogin = async () => {
+      setErrors({});
+      try {
+        await dispatch(sessionActions.login({ credential: "Demo-lition", password: "password" }));
+        closeModal(); // Close the modal if login is successful
+      } catch (error) {
+        console.log("Error caught: ", error);
+        setErrors({ credential: "The provided credentials were invalid" });
+      }
+    };
+
     /*
     const handleSubmit = async (e) => {
     e.preventDefault();
@@ -57,8 +68,10 @@ function LoginFormModal() {
 
   return (
     <>
+      <div style={{ position: 'absolute', top: 0, right: 0 }}>
+        <a href="#" onClick={handleDemoLogin}>Log in as Demo User</a>
+      </div>
       <form onSubmit={handleSubmit}>
-        
         <label>
           Username or Email
           <input
