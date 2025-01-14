@@ -15,46 +15,50 @@ function LoginFormModal() {
 
   const isDisabled = credential.length < 4 || password.length < 6;
 
+  // **** NOT WORKING CORRECTLY ****
   const handleSubmit = async (e) => {
     e.preventDefault();
-    setErrors({}); // Clear previous errors
-
-    try{
+    setErrors({}); 
+  
+    try {
       await dispatch(sessionActions.login({ credential, password }));
-      closeModal;
-    } catch(error){
-      try{
+      closeModal(); 
+    } catch (error) {
+         // Parse the JSON body of the response to see whats going on
         const data = await error.json();
-        if(data && data.errors){
+        console.log("Parsed error data:", data); 
+  
+        if (error.status === 401 && data.message === "Invalid credentials") {
+          setErrors({ credential: "The provided credentials were invalid." });
+        } else if (error.status === 400 && data.errors) {
           setErrors(data.errors);
         } else {
-          setErrors({ credential: "The provided credentials were invalid" });
+          setErrors({ credential: "An unexpected error occurred. Please try again." });
         }
-      } catch {
-        setErrors({ credential: "An unexpected error occurred. Please try again."});
       }
-    }
-
-    // try {
-    //   await dispatch(sessionActions.login({ credential, password }));
-    //   closeModal(); // Close the modal if login is successful
-    // } catch (error) {
-    //   console.log("Error caught: ", error);
-    //   // Handle eirors if login fails
-    //   if(error.json){
-    //     const data = await error.json();
-    //     console.log("Parsed error data: ", data);
-    //     if (data && data.errors) {
-    //     // Set a generic error message
-    //     setErrors({ credential: "The provided credentials were invalid" });
-    //     }
-    //   }
-    // }
     };
+
+    /*
+    const handleSubmit = async (e) => {
+    e.preventDefault();
+    setErrors({}); // Clear previous errors
+    
+    try {
+      await dispatch(sessionActions.login({ credential, password }));
+      closeModal(); // Close the modal if login is successful
+    } catch (error) {
+      console.log("Error caught: ", error);
+      // Handle errors
+      setErrors({ credential: "The provided credentials were invalid" });
+    }
+  };
+    */
+  
 
   return (
     <>
       <form onSubmit={handleSubmit}>
+        
         <label>
           Username or Email
           <input
