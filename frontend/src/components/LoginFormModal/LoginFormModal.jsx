@@ -15,18 +15,42 @@ function LoginFormModal() {
 
   const isDisabled = credential.length < 4 || password.length < 6;
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
-    setErrors({});
-    return dispatch(sessionActions.login({ credential, password }))
-      .then(closeModal)
-      .catch(async (res) => {
-        const data = await res.json();
-        if (data && data.errors) {
+    setErrors({}); // Clear previous errors
+
+    try{
+      await dispatch(sessionActions.login({ credential, password }));
+      closeModal;
+    } catch(error){
+      try{
+        const data = await error.json();
+        if(data && data.errors){
           setErrors(data.errors);
+        } else {
+          setErrors({ credential: "The provided credentials were invalid" });
         }
-      });
-  };
+      } catch {
+        setErrors({ credential: "An unexpected error occurred. Please try again."});
+      }
+    }
+
+    // try {
+    //   await dispatch(sessionActions.login({ credential, password }));
+    //   closeModal(); // Close the modal if login is successful
+    // } catch (error) {
+    //   console.log("Error caught: ", error);
+    //   // Handle eirors if login fails
+    //   if(error.json){
+    //     const data = await error.json();
+    //     console.log("Parsed error data: ", data);
+    //     if (data && data.errors) {
+    //     // Set a generic error message
+    //     setErrors({ credential: "The provided credentials were invalid" });
+    //     }
+    //   }
+    // }
+    };
 
   return (
     <>
@@ -49,13 +73,17 @@ function LoginFormModal() {
             required
           />
         </label>
+
         {errors.credential && (
           <p>{errors.credential}</p>
         )}
+        
         <button type="submit" 
           disabled={isDisabled}
           className={isDisabled ? "prohibited-cursor" : ""}
-        >Log In</button>
+        >
+          Log In
+        </button>
       </form>
     </>
   );
