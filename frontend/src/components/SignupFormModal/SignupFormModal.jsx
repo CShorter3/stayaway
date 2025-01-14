@@ -14,10 +14,18 @@ function SignupFormModal() {
   const [confirmPassword, setConfirmPassword] = useState("");
   const [errors, setErrors] = useState({});
   const { closeModal } = useModal();
+  
+  const formFilled = email && username && firstName
+                           && lastName && password
+                           && confirmPassword;
+  const passwordConfrimed = password === confirmPassword;
+  const fieldLengsValid =  password.length >= 6 && username.length >= 4; 
+  const invalidAttempt = (!formFilled || !passwordConfrimed || !fieldLengsValid);
+  const isDisabled = invalidAttempt;
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    if (password === confirmPassword) {
+    if (!invalidAttempt) {
       setErrors({});
       return dispatch(
         sessionActions.signup({
@@ -40,6 +48,7 @@ function SignupFormModal() {
       confirmPassword: "Confirm Password field must be the same as the Password field"
     });
   };
+
 
   return (
     <>
@@ -106,7 +115,12 @@ function SignupFormModal() {
         {errors.confirmPassword && (
           <p>{errors.confirmPassword}</p>
         )}
-        <button type="submit">Sign Up</button>
+        <button type="submit"
+          disabled={isDisabled}
+          className={isDisabled ? "prohibited-cursor" : ""}
+        >
+          Sign Up
+        </button>
       </form>
     </>
   );
