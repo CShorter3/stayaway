@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { useDispatch } from 'react-redux';
 import { useModal } from '../../context/Modal';
 import * as sessionActions from '../../store/session';
@@ -23,17 +23,20 @@ function SignupFormModal() {
   const invalidAttempt = (!formFilled || !passwordConfrimed || !fieldLengsValid);
   const isDisabled = invalidAttempt;
 
+  useEffect(() => {
+    if(password && confirmPassword && !passwordConfrimed){
+      setErrors((prevErrors) => ({
+        ...prevErrors, confirmPassword: "Confirm Password must be the same as Password"
+      }));
+    }
+  }, [password, confirmPassword, passwordConfrimed])
+
   const handleSubmit = (e) => {
     e.preventDefault();
     if (!invalidAttempt) {
       setErrors({});
       return dispatch(
-        sessionActions.signup({
-          email,
-          username,
-          firstName,
-          lastName,
-          password
+        sessionActions.signup({ email, username, firstName, lastName, password
         })
       )
         .then(closeModal)
