@@ -28,6 +28,11 @@ function SignupFormModal() {
       setErrors((prevErrors) => ({
         ...prevErrors, confirmPassword: "Confirm Password must be the same as Password"
       }));
+    } else {
+      setErrors((prevErrors) => {
+        const { confirmPassword, ...rest } = prevErrors; // extract confirmPassword key from errors object
+        return rest;
+      })
     }
   }, [password, confirmPassword, passwordConfrimed])
 
