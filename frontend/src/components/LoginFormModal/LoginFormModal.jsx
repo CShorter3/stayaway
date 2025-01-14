@@ -13,6 +13,8 @@ function LoginFormModal() {
   const [errors, setErrors] = useState({});
   const { closeModal } = useModal();
 
+  const isDisabled = credential.length < 4 || password.length < 6;
+
   const handleSubmit = (e) => {
     e.preventDefault();
     setErrors({});
@@ -50,7 +52,10 @@ function LoginFormModal() {
         {errors.credential && (
           <p>{errors.credential}</p>
         )}
-        <button type="submit">Log In</button>
+        <button type="submit" 
+          disabled={isDisabled}
+          className={isDisabled ? "prohibited-cursor" : ""}
+        >Log In</button>
       </form>
     </>
   );
