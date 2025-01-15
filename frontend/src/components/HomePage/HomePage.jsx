@@ -1,9 +1,26 @@
-import { useDispatch } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
+import { useEffect } from 'react';
 import { Tile } from './Tile';
+import "./HomePage.css";
+import { fetchSpots } from '../../store/spots';
 
 // HomePage will dynamically populate the grid with spot tiles
 function HomePage(){
     const dispatch = useDispatch();
+    // access normalized spots object from store
+    const spots = useSelector((state) => Object.values(state.spots.allSpots));
+
+    // listen for spots slice of state changes
+    useEffect(() => {
+        dispatch(fetchSpots());
+    }, [dispatch]);
+
+    return (
+        <div className="tiles-grid">
+            dynamically populate grid
+        </div> 
+
+    )
 }
 
 export default HomePage;
