@@ -1,32 +1,32 @@
 import { csrfFetch } from "./csrf";
 
-export const LOAD_SPOTS = 'spots/LOAD_REPORTS';
+export const LOAD_SPOTS = 'spots/LOAD_SPOTS';
 
 // **** Action Creators ****
-export const loadSpots = (spots) => {
-    //type: LOAD_SPOTS,
-    spots 
-}
+export const loadSpots = (normalSpotsObj) => ({
+        type: LOAD_SPOTS,
+        normalSpotsObj 
+});
 
 // **** Thunk Actions ****
 export const fetchSpots = () => async (dispatch) => {
     console.log("Entered fetchSpots thunk!");
     console.log("Value of dispatch at invocation: ", dispatch || "empty");
     const response = await csrfFetch('/api/spots');
-    console.log("Fetch api regquest: ", response);
-    const spots = await response.json();
-    console.log("Spots recieved: ", spots);
-
+    console.log("Fetch api response: ", response);
+    
     if(response.ok){
+        console.log("Response is ok!");
         const data = await response.json();
+        console.log("parsed data response ", data);
 
+        //normalize parsed spots data
         const normalSpotsObj = {};
-        data.spots.forEach((spot) => {
+        data.Spots.forEach((spot) => {
             normalSpotsObj[spot.id] = spot;
         });
+        console.log("normalized data: ", normalSpotsObj);
         dispatch(loadSpots(normalSpotsObj));
-    } else {
-        console.log("error in fetchSpots thunk")
     }
 }
 
@@ -35,7 +35,7 @@ const initialState = {};
 const spotsReducer = ( state = initialState, action) => {
     switch (action.type) {
         case LOAD_SPOTS:
-            return { ...initialState, ...action.spots};
+            return { ...initialState, ...action.normalSpotsObj};
         default:
             return state;
     }
