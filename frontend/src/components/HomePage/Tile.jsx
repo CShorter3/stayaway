@@ -1,12 +1,19 @@
+import { useNavigate } from "react-router-dom";
+import { Tooltip } from "react-tooltip";
+
 import "./Tile.css";
 
 const Tile = ({ spot }) => {
+
+    const navigate = useNavigate();
     
-    // will handle click on tile navigates to spot page
+    const handleClick = () => {
+        navigate(`/spots/${spot.id}`);
+    }
     
     return (
         /* display child elements vertically*/
-        <div className="tile-container">
+        <div className="tile-container" onClick={handleClick} data-tooltip-id="flashName">
             {/* tile image should take atleast 80% the tile container */}
             <div className="tile-image"> <img src={spot.previewImage} alt="spot image" /></div>
             {/* spot detail rows should take ~10% container height */}
@@ -19,6 +26,12 @@ const Tile = ({ spot }) => {
                 <p id="push-detail-left"> ${spot.price} <span>night</span> </p>
             </div> 
             </div>
+            <Tooltip
+                id="flashName"
+                place="center"
+                variant="info"
+                content={spot.name} 
+            />
         </div>
     );
 }

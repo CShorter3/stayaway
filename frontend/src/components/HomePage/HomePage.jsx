@@ -1,8 +1,8 @@
 import { useDispatch, useSelector } from 'react-redux';
 import { useEffect } from 'react';
 import { Tile } from '.';
-import "./HomePage.css";
 import { fetchSpots } from '../../store/spots';
+import "./HomePage.css";
 
 // HomePage will dynamically populate the grid with spot tiles
 function HomePage(){
