@@ -1,0 +1,1 @@
+export { default as SpotDetail } from './SpotDetail';
