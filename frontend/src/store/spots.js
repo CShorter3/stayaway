@@ -25,6 +25,8 @@ export const fetchSpots = () => async (dispatch) => {
             normalSpotsObj[spot.id] = spot;
         });
         dispatch(loadSpots(normalSpotsObj));
+    } else {
+        console.log("error in fetchSpots thunk")
     }
 }
 
@@ -33,8 +35,7 @@ const initialState = {};
 const spotsReducer = ( state = initialState, action) => {
     switch (action.type) {
         case LOAD_SPOTS:
-            return { ...initialState, spots};
-            // write reminaing reducer...
+            return { ...initialState, ...action.spots};
         default:
             return state;
     }
