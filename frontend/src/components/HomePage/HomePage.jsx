@@ -17,7 +17,9 @@ function HomePage(){
 
     return (
         <div className="tiles-grid">
-            dynamically populate grid
+            {spots.map((spot) => (
+                <Tile key={spot.id} spot={spot} />
+            ))}
         </div> 
 
     )
