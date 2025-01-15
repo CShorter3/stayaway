@@ -1,5 +1,7 @@
 // Spot detail will present a detailed view of one spot
 
+import ReserveButton from "./ReserveButton";
+
 const SpotDetail = (/*{ spot }*/) => {
 
     // handle click on pics
@@ -35,7 +37,7 @@ const SpotDetail = (/*{ spot }*/) => {
                 </div>
                 {/* blurb uses 1/3 of detail sections width */}
                 <div className="reserve">
-                        insert reserve button component
+                    <ReserveButton />
                 </div>
             </section>
         </ div>
