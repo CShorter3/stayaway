@@ -11,7 +11,7 @@ export const loadSpots = (spots) => {
 // **** Thunk Actions ****
 export const fetchSpots = () => async (dispatch) => {
     console.log("Entered fetchSpots thunk!");
-    console.log("Value of dispatch at invocation: ", dispatch);
+    console.log("Value of dispatch at invocation: ", dispatch || "empty");
     const response = await csrfFetch('/api/spots');
     console.log("Fetch api regquest: ", response);
     const spots = await response.json();

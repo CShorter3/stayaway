@@ -1,6 +1,6 @@
 import { useDispatch, useSelector } from 'react-redux';
 import { useEffect } from 'react';
-import { Tile } from './Tile';
+import { Tile } from '.';
 import "./HomePage.css";
 import { fetchSpots } from '../../store/spots';
 
@@ -8,7 +8,7 @@ import { fetchSpots } from '../../store/spots';
 function HomePage(){
     const dispatch = useDispatch();
     // access normalized spots object from store
-    const spots = useSelector((state) => Object.values(state.spots.allSpots));
+    const spots = useSelector((state) => Object.values(state.spots));
 
     // listen for spots slice of state changes
     useEffect(() => {
