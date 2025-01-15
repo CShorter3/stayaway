@@ -20,8 +20,7 @@ function HomePage(){
             {spots.map((spot) => (
                 <Tile key={spot.id} spot={spot} />
             ))}
-        </div> 
-
+        </div>
     )
 }
 

@@ -1,3 +1,5 @@
+import { csrfFetch } from "./csrf";
+
 export const LOAD_SPOTS = 'spots/LOAD_REPORTS';
 
 // **** Action Creators ****
@@ -10,27 +12,35 @@ export const loadSpots = (spots) => {
 export const fetchSpots = () => async (dispatch) => {
     console.log("Entered fetchSpots thunk!");
     console.log("Value of dispatch at invocation: ", dispatch);
-    const response = await fetch('/api/spots');
+    const response = await csrfFetch('/api/spots');
     console.log("Fetch api regquest: ", response);
     const spots = await response.json();
     console.log("Spots recieved: ", spots);
 
-    // write remaining thunk ...
+    if(response.ok){
+        const data = await response.json();
+
+        const normalSpotsObj = {};
+        data.spots.forEach((spot) => {
+            normalSpotsObj[spot.id] = spot;
+        });
+        dispatch(loadSpots(normalSpotsObj));
+    }
 }
 
-// const initialState = {};
+const initialState = {};
 
-// const spotsReducer = ( state = initialState, action) => {
-//     switch (action.type) {
-//         case LOAD_SPOTS:
-//             return { ...initialState, spots};
-//             // write reminaing reducer...
-//         default:
-//             return state;
-//     }
-// }
+const spotsReducer = ( state = initialState, action) => {
+    switch (action.type) {
+        case LOAD_SPOTS:
+            return { ...initialState, spots};
+            // write reminaing reducer...
+        default:
+            return state;
+    }
+}
 
-// export default spotsReducer;
+export default spotsReducer;
 
 
 
