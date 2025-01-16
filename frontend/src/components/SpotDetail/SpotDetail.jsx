@@ -10,11 +10,16 @@ const SpotDetail = () => {
 
     const { id } = useParams();
     const spot = useSelector((state) => state.spots[id]);
+    //const owner = useSelector((state) => state
     
     const dispatch=useDispatch();
+
     useEffect(() => {
         dispatch(fetchSpot(id));
     }, [dispatch, id]);
+
+    // Convert SpotImages into an array
+    //const spotImages = Object.values(spot.SpotImages);
 
     if(!spot) return <p>spot not found</p>;
 
@@ -30,7 +35,7 @@ const SpotDetail = () => {
             <section className="gallery">
                 {/*Image uses the first pic-box's entire width and height*/}
                 <div>
-                    <img src={spot.previewImage} alt="image 0" />
+                    <img src="" alt="Main spot image" />
                 </div>
                 {/*Each image uses a quarter of the second pic-box's width and height*/}
                 <div className="pic-box" id="quarter">
@@ -44,14 +49,14 @@ const SpotDetail = () => {
             <section className="details">
                 {/* blurb uses 2/3 of detail sections width */}
                 <div className="blurb">
-                    <h3>Hosted by FirstName Lastname</h3>
-                    <p>blurb</p>
+                    <h3>Hosted by {spot.Owner.firstName} {spot.Owner.lastName}</h3>
+                    <p>{spot.description}</p>
                 </div>
                 {/* blurb uses 1/3 of detail sections width */}
                 <div className="reserve">
-                    <ReserveButton />
+                    <ReserveButton/>
                 </div>
-            <hr/>
+                <hr/>
             </section>
         </ div>
     )
