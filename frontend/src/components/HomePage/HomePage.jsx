@@ -22,6 +22,8 @@ function HomePage(){
 
     return (
         <div className="tiles-grid">
+            console.log(spot);
+
             {spots.map((spot) => (
                 <Tile key={spot.id} spot={spot} />
             ))}
