@@ -71,21 +71,21 @@ const initialState = {
 const spotsReducer = ( state = initialState, action) => {
   switch (action.type) {
     case LOAD_SPOTS:
-      return { ...state, ...action.normalSpotsObj};
+      return { ...state, spots: { ...state.spots, ...action.payload} }; 
     case LOAD_SPOT:
       return {
-        ...state,
-        [action.spot.id]: {
-          ...state[action.spot.id], // Retain existing spot data
-          ...action.spot, // Merge new spot data
-        },
+        ...state, spots: { ...state.spots,
+          [action.payload.spot.id]:{
+            ...state.spots[action.payload.spot.id],   //retain existing spot data
+            ...action.payload.spot                    //merge new spot data
+        }},
         SpotImages: {
             ...state.SpotImages, 
-            ...action.spot.SpotImages, 
-          },
+            ...action.payload.SpotImages, 
+        },
         Owners: {
             ...state.Owners, 
-            ...action.spot.Owners, 
+            ...action.payload.Owners, 
           },
       };
     default:
