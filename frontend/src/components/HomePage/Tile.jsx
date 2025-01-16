@@ -1,7 +1,7 @@
 import { useNavigate } from "react-router-dom";
 import { Tooltip } from "react-tooltip";
 
-import "./Tile.css";
+//import "./Tile.css";
 
 const Tile = ({ spot }) => {
 
@@ -10,6 +10,8 @@ const Tile = ({ spot }) => {
     const handleClick = () => {
         navigate(`/spots/${spot.id}`);
     }
+
+    if (!spot) return <div>Loading...</div>;
     
     return (
         /* display child elements vertically*/
