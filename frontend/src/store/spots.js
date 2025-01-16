@@ -17,16 +17,16 @@ export const fetchSpots = () => async (dispatch) => {
   const response = await csrfFetch('/api/spots');
 
   if (response.ok) {
-      const data = await response.json();
+    const data = await response.json();
 
-      // Normalize spots data
-      const normalizedSpots = {};
-      data.Spots.forEach((spot) => {
-          normalizedSpots[spot.id] = spot;
-      });
+    // Normalize spots data
+    const normalizedSpots = {};
+    data.Spots.forEach((spot) => {
+        normalizedSpots[spot.id] = spot;
+    });
 
-      // Dispatch normalized spots to the store
-      dispatch(loadSpots(normalizedSpots));
+    // Dispatch normalized spots to the store
+    dispatch(loadSpots(normalizedSpots));
   }
 };
 
@@ -34,49 +34,80 @@ export const fetchSpot = (spotId) => async (dispatch) => {
   const response = await csrfFetch(`/api/spots/${spotId}`);
 
   if (response.ok) {
-      const data = await response.json();
+    const data = await response.json();
 
-      // Normalize SpotImages
-      const normalizedSpotImages = {};
-      data.SpotImages.forEach((image) => {
-          normalizedSpotImages[image.id] = image;
-      });
+    // Normalize SpotImages
+    const normalizedSpotImages = {};
+    data.SpotImages.forEach((image) => {
+        normalizedSpotImages[image.id] = image;
+    });
 
-      // Normalize Owner
-      const normalizedOwner = { [data.Owner.id]: data.Owner };
+    // Normalize Owner
+    const normalizedOwner = { [data.Owner.id]: data.Owner };
 
-      // Normalize Spot data (excluding SpotImages and Owner)
-      const { SpotImages, Owner, ...spot } = data;
+    // Normalize Spot data (excluding SpotImages and Owner)
+    const { SpotImages, Owner, ...spot } = data;
 
-      // Add previewImage key
-      spot.previewImage = SpotImages.find((img) => img.preview)?.url || null;
+    // Add previewImage key
+    spot.previewImage = SpotImages.find((img) => img.preview)?.url || null;
 
-      // Dispatch normalized data
-      dispatch(
-          loadSpot({
-              spot,
-              SpotImages: normalizedSpotImages,
-              Owner: normalizedOwner,
-          })
-      );
+    // Dispatch normalized data
+    dispatch(
+      loadSpot({
+        spot,
+        SpotImages: normalizedSpotImages,
+        Owner: normalizedOwner,
+      })
+    );
   }
 };
 
+const initialState = {
+  spots: {},
+  SpotImages: {},
+  Owners: {}
+};
+          
+const spotsReducer = ( state = initialState, action) => {
+  switch (action.type) {
+    case LOAD_SPOTS:
+      return { ...state, ...action.normalSpotsObj};
+    case LOAD_SPOT:
+      return {
+        ...state,
+        [action.spot.id]: {
+          ...state[action.spot.id], // Retain existing spot data
+          ...action.spot, // Merge new spot data
+        },
+        SpotImages: {
+            ...state.SpotImages, 
+            ...action.spot.SpotImages, 
+          },
+        Owners: {
+            ...state.Owners, 
+            ...action.spot.Owner, 
+          },
+      };
+    default:
+      return state;
+  }
+}
+      
+export default spotsReducer;
+          
+          
+          
+          
+          
+          
+          
+          
+          
+          
+          
 
 
-
-
-
-
-
-
-
-
-
-
-
-
-
+          
 
 // // **** Action Creators ****
 // export const loadSpots = (spots) => ({
@@ -148,41 +179,8 @@ export const fetchSpot = (spotId) => async (dispatch) => {
 // }
 // };
 
-// // i dont know which initial state to use, making sure that operations are compatible
-// const initialState = {
-//   spots: {},
-//   SpotImages: {},
-//   Owners: {}
-// };
 
-// const initialState = {};
 
-// const spotsReducer = ( state = initialState, action) => {
-//     switch (action.type) {
-//       case LOAD_SPOTS:
-//             return { ...state, ...action.normalSpotsObj};
-//             case LOAD_SPOT:
-//           return {
-//             ...state,
-//             [action.spot.id]: {
-//               ...state[action.spot.id], // Retain existing spot data
-//               ...action.spot, // Merge new spot data
-//             },
-//             SpotImages: {
-//                 ...state.SpotImages, 
-//                 ...action.spot.SpotImages, 
-//               },
-//             Owners: {
-//                 ...state.Owners, 
-//                 ...action.spot.Owner, 
-//               },
-//             };
-//             default:
-//               return state;
-//             }
-// }
-
-// export default spotsReducer;
 
 
 // export const fetchSpot = (spotId) => async (dispatch) =>{
