@@ -2,16 +2,18 @@
 
 import ReserveButton from "./ReserveButton";
 
-const SpotDetail = (/*{ spot }*/) => {
 
-    // handle click on pics
+
+const SpotDetail = ({ spot }) => {
+
+    
 
     return (
         /* displays content vertically */
         <div className="overview-container">
             {/* Header section's children are stacked and aligned left*/}
             <section className="header">
-                <h2>Spot Name</h2>
+                <h2>{spot.name}</h2>
                 <h5>City, State, Country</h5>
             </section>
             {/*Gallery section displays 1 pic in left half of width, next 4 in second half of width*/}
@@ -39,6 +41,7 @@ const SpotDetail = (/*{ spot }*/) => {
                 <div className="reserve">
                     <ReserveButton />
                 </div>
+            <hr/>
             </section>
         </ div>
     )

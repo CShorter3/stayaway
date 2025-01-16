@@ -1,6 +1,14 @@
+import { useAlert } from 'react-alert'
+
+
 const ReserveButton = () => {
 
+    const alert = useAlert();
+
     // handle reserve button click, returns alert "Feature coming soon" alert.
+    const handleClick = (e) => {
+        alert.show("Feature coming soon...");
+    }
 
     // handle revies click, jump to reviews
 
@@ -17,7 +25,7 @@ const ReserveButton = () => {
                     <p>*4.5 · </p><p>5 reviews</p>
                 </div>
             </div>
-            <button>
+            <button onClick={handleClick}>
                 Reserve
             </button>
         </div>
