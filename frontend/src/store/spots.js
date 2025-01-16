@@ -1,12 +1,19 @@
 import { csrfFetch } from "./csrf";
 
 export const LOAD_SPOTS = 'spots/LOAD_SPOTS';
+export const LOAD_SPOT = 'spots/LOAD_SPOT';
+
 
 // **** Action Creators ****
 export const loadSpots = (normalSpotsObj) => ({
         type: LOAD_SPOTS,
         normalSpotsObj 
 });
+
+export const loadSpot = (spot) => ({
+  type: LOAD_SPOTS,
+  spot
+})
 
 // **** Thunk Actions ****
 export const fetchSpots = () => async (dispatch) => {
@@ -30,12 +37,23 @@ export const fetchSpots = () => async (dispatch) => {
     }
 }
 
+export const fetchSpot = (spotId) => async (dispatch) =>{
+  const response = await csrfFetch(`/api/spots/${spotId}`);
+
+  if(response.ok){
+    const spot = await response.json();
+    dispatch(loadSpot(spot));
+  } 
+}
+
 const initialState = {};
 
 const spotsReducer = ( state = initialState, action) => {
     switch (action.type) {
         case LOAD_SPOTS:
-            return { ...initialState, ...action.normalSpotsObj};
+            return { ...state, ...action.normalSpotsObj};
+        case LOAD_SPOT:
+            return { ...state, [action.spot.id]: action.spot };
         default:
             return state;
     }
