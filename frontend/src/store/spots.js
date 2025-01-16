@@ -46,7 +46,7 @@ export const fetchSpot = (spotId) => async (dispatch) => {
     const normalizedOwner = { [data.Owner.id]: data.Owner };
 
     // Normalize Spot data (excluding SpotImages and Owner)
-    const { SpotImages, Owner, ...spot } = data;
+    const { SpotImages=[], Owner={}, ...spot } = data;
 
     // Add previewImage key
     spot.previewImage = SpotImages.find((img) => img.preview)?.url || null;
