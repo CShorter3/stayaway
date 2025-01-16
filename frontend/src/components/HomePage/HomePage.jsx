@@ -15,6 +15,11 @@ function HomePage(){
         dispatch(fetchSpots());
     }, [dispatch]);
 
+    // If spots are not loaded yet, show loading
+    if (!spots || spots.length === 0) {
+        return <div>Loading spots...</div>;
+    }
+
     return (
         <div className="tiles-grid">
             {spots.map((spot) => (
