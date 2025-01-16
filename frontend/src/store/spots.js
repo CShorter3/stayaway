@@ -8,9 +8,9 @@ export const loadSpots = (spots) => ({
   payload: spots, // Normalized spots object
 });
 
-export const loadSpot = (spotData) => ({
+export const loadSpot = (spotDetail) => ({
   type: LOAD_SPOT,
-  payload: spotData, // Normalized spot data with SpotImages and Owner
+  payload: spotDetail, // Normalized spot data with SpotImages and Owner
 });
 
 export const fetchSpots = () => async (dispatch) => {
@@ -43,20 +43,20 @@ export const fetchSpot = (spotId) => async (dispatch) => {
     });
 
     // Normalize Owner
-    const normalizedOwner = { [data.Owner.id]: data.Owner };
+    const normalizedOwners = { [data.Owner.id]: data.Owner };
 
     // Normalize Spot data (excluding SpotImages and Owner)
-    const { SpotImages=[], Owner={}, ...spot } = data;
+    const { SpotImages=[], Owners={}, ...normalizedSpot } = data;
 
     // Add previewImage key
-    spot.previewImage = SpotImages.find((img) => img.preview)?.url || null;
+    normalizedSpot.previewImage = SpotImages.find((img) => img.preview)?.url || null;
 
     // Dispatch normalized data
     dispatch(
       loadSpot({
-        spot,
+        spot: normalizedSpot,
         SpotImages: normalizedSpotImages,
-        Owner: normalizedOwner,
+        Owners: normalizedOwners,
       })
     );
   }
@@ -85,7 +85,7 @@ const spotsReducer = ( state = initialState, action) => {
           },
         Owners: {
             ...state.Owners, 
-            ...action.spot.Owner, 
+            ...action.spot.Owners, 
           },
       };
     default:
