@@ -83,14 +83,12 @@ const SpotDetail = () => {
                 </div>
                 {/* blurb uses 1/3 of detail sections width */}
                 <div className="reserve">
-                    <ReserveButton/>
+                 
                 </div>
                 <hr/>
             </section>
             <section className="Review-container">
-                ADD CREATE REVIEW BUTTON HERE
-                <SpotDetail/>
-                
+                <p> ADD CREATE REVIEW BUTTON HERE</p>
 
             </section>
         </ div>
