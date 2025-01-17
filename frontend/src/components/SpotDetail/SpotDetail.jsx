@@ -3,7 +3,7 @@ import { useParams } from "react-router-dom";
 import { useSelector, useDispatch } from "react-redux";
 import { useEffect } from "react";
 import ReserveButton from "./ReserveButton";
-import { fetchSpot } from "../../store/spots";
+import { fetchSpot, fetchSpots } from "../../store/spots";
 //import './SpotDetail.css';
 
 // const getOwnersOfSpot = (spotId) => {
@@ -33,9 +33,8 @@ const SpotDetail = () => {
     const owner= owners && spot ? Object.values(owners).find((owner) => owner.id === spot.ownerId) : null;
 
     useEffect(() => {
-        if(!spot) {
-            dispatch(fetchSpot(id));
-        }
+        dispatch(fetchSpots());
+        dispatch(fetchSpot(id));
     }, [dispatch, id, spot]);
 
     // const getSpotOwners = () => {

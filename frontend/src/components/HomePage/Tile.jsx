@@ -15,9 +15,11 @@ const Tile = ({ spot }) => {
 
     if (!spot) return <div>Loading...</div>;
     
+    const tooltipId = `tooltip-${spot.id}`;
+
     return (
         /* display child elements vertically*/
-        <div className="tile-container" onClick={handleClick} data-tooltip-id="flashName">
+        <div className="tile-container" onClick={handleClick} data-tooltip-id={tooltipId}>
             {/* tile image should take atleast 80% the tile container */}
             <div className="tile-image"> <img src={spot.previewImage} alt="spot image" /></div>
             {/* spot detail rows should take ~10% container height */}
@@ -31,7 +33,7 @@ const Tile = ({ spot }) => {
             </div> 
             </div>
             <Tooltip
-                id="flashName"
+                id={tooltipId}
                 place="center"
                 variant="info"
                 content={spot.name} 
