@@ -32,9 +32,12 @@ const SpotDetail = () => {
     // const spotOwners = Object.values(owners).filter((owner) => owner.id === spot.ownerId);
     const owner= owners && spot ? Object.values(owners).find((owner) => owner.id === spot.ownerId) : null;
 
+    // check if this code will create bugs. dont want to stop stop continuous rendering 
     useEffect(() => {
-        dispatch(fetchSpots());
-        dispatch(fetchSpot(id));
+        if(!spot) {
+            dispatch(fetchSpots());
+            dispatch(fetchSpot(id));
+        }
     }, [dispatch, id, spot]);
 
     // const getSpotOwners = () => {
