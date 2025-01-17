@@ -2,7 +2,7 @@ import { useParams } from "react-router-dom";
 import { useSelector } from "react-redux";
 import { FaStar } from 'react-icons/fa';
 
-const ReviewSummary = () => {
+const SpotDetailSnippet = () => {
 
     const { id } = useParams();
     const reviews = useSelector((state) => state.reviews[id] || []);
@@ -22,4 +22,4 @@ const ReviewSummary = () => {
     );
 };
 
-export default ReviewSummary;
+export default SpotDetailSnippet;
