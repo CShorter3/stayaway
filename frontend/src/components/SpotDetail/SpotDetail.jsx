@@ -23,9 +23,12 @@ const SpotDetail = () => {
     console.log("Enter SpotDetail Component!")
     
     const { id } = useParams();
+    console.log("sucessfully grabs param: ", id)
     const dispatch=useDispatch();
+    console.log("hits dispatch line: ", dispatch);
     
     const spot = useSelector((state) => state.spots.spots[id]);          // expect to grab target spot's object from store
+    console.log("should select spot with unique id ", spot)
     const owners = useSelector((state) => state.spots.Owners);               // expect to grab spot owners object from store
     
     // necessary logic for future functionality and scalability where mutliple users can one one spots 
@@ -83,7 +86,6 @@ const SpotDetail = () => {
                 </div>
                 {/* blurb uses 1/3 of detail sections width */}
                 <div className="reserve">
-                 
                 </div>
                 <hr/>
             </section>

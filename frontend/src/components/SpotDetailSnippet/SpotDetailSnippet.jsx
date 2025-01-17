@@ -8,7 +8,8 @@ const SpotDetailSnippet = () => {
     const reviews = useSelector((state) => state.reviews[id] || []);
 
     const newSpot = reviews.length === 0;
-    const averageRating = reviews.reduce((sum, currReview) => sum + currReview.stars, 0) / reviews.length;
+    // Provide reviews a value until reviews are fetched to prevent crashing before calculating average
+    const averageRating = newSpot ? 0 : reviews.reduce((sum, currReview) => sum + currReview.stars, 0) / reviews.length;
 
     return (
         <div className="snippet">
