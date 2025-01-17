@@ -1,4 +1,5 @@
 import { useAlert } from 'react-alert'
+import SpotDetailSnippet from '../SpotDetailSnippet/SpotDetailSnippet';
 
 
 const ReserveButton = () => {
@@ -23,8 +24,8 @@ const ReserveButton = () => {
                 </div>
                 {/* price-block elements are aligned right of btn content*/}
                 <div className="reputation-block">
-                    <p>*4.5 · </p><p>5 reviews</p>
-                </div>
+                    <SpotDetailSnippet/>
+d                </div>
             </div>
             <button onClick={handleClick}>
                 Reserve
