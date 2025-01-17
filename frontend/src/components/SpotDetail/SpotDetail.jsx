@@ -87,6 +87,12 @@ const SpotDetail = () => {
                 </div>
                 <hr/>
             </section>
+            <section className="Review-container">
+                ADD CREATE REVIEW BUTTON HERE
+                <SpotDetail/>
+                
+
+            </section>
         </ div>
     );
 
