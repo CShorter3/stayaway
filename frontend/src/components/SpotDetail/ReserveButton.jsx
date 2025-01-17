@@ -8,6 +8,7 @@ const ReserveButton = () => {
     // handle reserve button click, returns alert "Feature coming soon" alert.
     const handleClick = (e) => {
         alert.show("Feature coming soon...");
+        console.log("alert triggered, should show: ", e.target)
     }
 
     // handle revies click, jump to reviews
