@@ -1,11 +1,13 @@
 import { useNavigate } from "react-router-dom";
 import { Tooltip } from "react-tooltip";
-
-//import "./Tile.css";
+import "./Tile.css";
 
 const Tile = ({ spot }) => {
 
     const navigate = useNavigate();
+
+    // console.log("Enters Tile component for current spot: ", spot);
+    // console.log("Curent spot's spot.id: ", spot.id);
     
     const handleClick = () => {
         navigate(`/spots/${spot.id}`);

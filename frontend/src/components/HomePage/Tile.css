@@ -1,0 +1,45 @@
+/* Container for each individual tile */
+.tile-container {
+    display: flex; /* Use flexbox for vertical alignment */
+    flex-direction: column; /* Arrange child elements vertically */
+    width: 300px; /* Fixed width for each tile */
+    height: 400px; /* Fixed height for each tile */
+    background-color: white; /* White background for each tile */
+    border-radius: 8px; /* Rounded corners */
+    overflow: hidden; /* Ensure content doesn't overflow the container */
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); /* Subtle shadow for depth */
+    transition: transform 0.2s ease-in-out, box-shadow 0.2s ease-in-out;
+    cursor: pointer; /* Pointer cursor for interactive tiles */
+  }
+  
+  .tile-container:hover {
+    transform: translateY(-4px); /* Lift effect on hover */
+    box-shadow: 0 8px 16px rgba(0, 0, 0, 0.2); /* Deeper shadow on hover */
+  }
+  
+  /* Image container taking 80% of the tile */
+  .tile-image img {
+    width: 100%; /* Full width of the container */
+    height: 80%; /* 80% of the tile height */
+    object-fit: cover; /* Ensure the image scales properly */
+  }
+  
+  /* Spot detail rows taking ~10% of the container each */
+  .tile-detail-row {
+    display: flex; /* Use flexbox for row alignment */
+    justify-content: space-between; /* Space out the details */
+    align-items: center; /* Center-align the text vertically */
+    padding: 0.5rem 1rem; /* Add padding for spacing */
+    font-size: 1rem; /* Standard font size for details */
+    font-weight: 500; /* Medium font weight */
+  }
+  
+  /* Push content to the left and right */
+  #push-detail-left {
+    text-align: left;
+  }
+  
+  #push-detail-right {
+    text-align: right;
+  }
+  

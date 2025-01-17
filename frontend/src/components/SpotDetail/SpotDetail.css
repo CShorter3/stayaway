@@ -1,0 +1,118 @@
+/* Container for the entire spot detail page */
+.overview-container {
+    display: flex;
+    flex-direction: column;
+    gap: 2rem;
+    padding: 2rem;
+    background-color: #f8f9fa; /* Light gray background */
+    font-family: Arial, sans-serif;
+  }
+  
+  /* Header section styles */
+  .header h2 {
+    font-size: 2.5rem;
+    font-weight: bold;
+    margin-bottom: 0.5rem;
+  }
+  
+  .header h5 {
+    font-size: 1.2rem;
+    color: #6c757d; /* Subtle gray for location text */
+  }
+  
+  /* Gallery section styles */
+  .gallery {
+    display: flex;
+    gap: 1rem;
+    height: 500px; /* Fixed height for the gallery */
+  }
+  
+  /* Left side image (Main spot image) */
+  .gallery > div:first-child {
+    flex: 1; /* Take up 50% of the width */
+    height: 100%; /* Full height of the gallery */
+    overflow: hidden; /* Ensure the image doesn't overflow */
+    border-radius: 8px; /* Rounded corners for the main image */
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  }
+  
+  .gallery > div:first-child img {
+    width: 100%; /* Full width of the container */
+    height: 100%; /* Full height of the container */
+    object-fit: cover; /* Scale and crop the image */
+  }
+  
+  /* Right side images (Smaller images) */
+  .pic-box {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr); /* 2 images per row */
+    grid-template-rows: repeat(2, 1fr); /* 2 rows of images */
+    gap: 0.5rem; /* Add spacing between images */
+    flex: 1; /* Take up 50% of the width */
+  }
+  
+  .pic-box img {
+    width: 100%; /* Full width of the grid cell */
+    height: 100%; /* Full height of the grid cell */
+    object-fit: cover; /* Scale and crop the image */
+    border-radius: 8px; /* Rounded corners for smaller images */
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  }
+  
+  /* Details section styles */
+  .details {
+    display: flex;
+    gap: 2rem;
+    align-items: flex-start;
+  }
+  
+  /* Blurb takes 2/3 of the details width */
+  .blurb {
+    flex: 2;
+  }
+  
+  .blurb h3 {
+    font-size: 1.8rem;
+    margin-bottom: 1rem;
+  }
+  
+  .blurb p {
+    font-size: 1rem;
+    line-height: 1.5;
+    color: #495057; /* Darker gray for description text */
+  }
+  
+  /* Reserve section takes 1/3 of the details width */
+  .reserve {
+    flex: 1;
+    border: 1px solid #dee2e6; /* Subtle border for reserve section */
+    border-radius: 8px;
+    padding: 1rem;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.05);
+    background-color: white;
+  }
+  
+  .reserve hr {
+    margin: 1rem 0;
+    border: none;
+    border-top: 1px solid #e9ecef; /* Subtle divider line */
+  }
+  
+  /* Responsive styles for smaller screens */
+  @media (max-width: 768px) {
+    .gallery {
+      flex-direction: column; /* Stack images vertically */
+      height: auto; /* Let the height adjust to content */
+    }
+  
+    .gallery > div:first-child,
+    .pic-box {
+      flex: none;
+      height: auto; /* Adjust height for smaller screens */
+    }
+  
+    .details {
+      flex-direction: column; /* Stack details vertically */
+    }
+  }
+  

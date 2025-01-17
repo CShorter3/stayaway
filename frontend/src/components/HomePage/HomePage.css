@@ -1,0 +1,17 @@
+/* Container for the tiles grid */
+.tiles-grid {
+    display: flex; /* Use flexbox for horizontal alignment */
+    flex-wrap: wrap; /* Allow tiles to wrap onto the next row */
+    gap: 1.5rem; /* Add space between tiles */
+    justify-content: center; /* Center-align tiles horizontally */
+    padding: 2rem; /* Add padding around the grid */
+    background-color: #f8f9fa; /* Light gray background for the page */
+  }
+  
+  /* Optional responsiveness for smaller screens */
+  @media (max-width: 768px) {
+    .tiles-grid {
+      justify-content: flex-start; /* Align tiles to the left on smaller screens */
+    }
+  }
+  
