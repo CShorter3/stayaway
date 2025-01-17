@@ -1,6 +1,6 @@
 import { useNavigate } from "react-router-dom";
 import { Tooltip } from "react-tooltip";
-import "./Tile.css";
+//import "./Tile.css";
 
 const Tile = ({ spot }) => {
 

@@ -4,7 +4,7 @@ import { useSelector, useDispatch } from "react-redux";
 import { useEffect } from "react";
 import ReserveButton from "./ReserveButton";
 import { fetchSpot } from "../../store/spots";
-import './SpotDetail.css';
+//import './SpotDetail.css';
 
 // const getOwnersOfSpot = (spotId) => {
     
