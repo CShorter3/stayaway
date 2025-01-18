@@ -10,16 +10,16 @@ const ReviewList = ({ spotId }) => {
         );
     }
 
-    return (
-        <div className="review-list">
-            {reviews.map((review) => (
-                <div key={review.id} className="review-item">
-                    <h4>{review.User.firstName}</h4>
-                    <p>{review.comment}</p>
-                </div>
-            ))}
+return (
+    <div className="review-list">
+        {reviews.map((review) => (
+            <div key={review.id} className="review-item">
+                <h4>{review.User.firstName}</h4>
+                <p>{review.comment}</p>
+            </div>
+        ))}
     </div>
-    )
+)
 
 
 }

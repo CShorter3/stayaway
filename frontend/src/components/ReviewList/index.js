@@ -1,0 +1,1 @@
+import { default as ReviewList } from './ReviewList';
