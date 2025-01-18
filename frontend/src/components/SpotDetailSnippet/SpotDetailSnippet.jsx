@@ -5,16 +5,29 @@ import { FaStar } from 'react-icons/fa';
 import { fetchReviewsBySpotId } from "../../store/reviews";
 
 const SpotDetailSnippet = () => {
+    console.log("IN SPOT DETAIL SNIPPET!")
 
     const { id } = useParams();
+
+    /* testing */
+    console.log("lets see what Review object looks like");
+   
+    const reviewsState = useSelector((state) => state.reviews)
+    console.log("lets see state.reviews: ", reviewsState);
+
+
+    console.log("searching for reviews for spot id: ", id)
     const dispatch = useDispatch();
+    console.log("value of dispatch", dispatch);
 
     const reviews = useSelector((state) => state.reviews.reviews || {}); // ensure data exists
     const spotReviews = Object.values(reviews).filter((review) => review.spotId === parseInt(id)); // ensure integer comparison
 
     useEffect(() => {
+        if(spotReviews.length === 0){
         dispatch(fetchReviewsBySpotId(id));
-    }, [dispatch, id]);
+        }
+    }, [dispatch, id, spotReviews.length]);
     
     const newSpot = reviews.length === 0;
     // Provide reviews a value until reviews are fetched to prevent crashing before calculating average
