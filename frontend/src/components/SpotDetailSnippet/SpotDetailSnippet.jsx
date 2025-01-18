@@ -1,5 +1,5 @@
 import { useParams } from "react-router-dom";
-import { useSelector, UseDispatch, useDispatch } from "react-redux";
+import { useSelector, useDispatch } from "react-redux";
 import { useEffect } from "react";
 import { FaStar } from 'react-icons/fa';
 import { fetchReviewsBySpotId } from "../../store/reviews";
@@ -13,10 +13,8 @@ const SpotDetailSnippet = () => {
     const spotReviews = Object.values(reviews).filter((review) => review.spotId === parseInt(id)); // ensure integer comparison
 
     useEffect(() => {
-        //if (spotReviews.length === 0) {
-            dispatch(fetchReviewsBySpotId(id));
-        //}
-    }, [dispatch, id, spotReviews]);
+        dispatch(fetchReviewsBySpotId(id));
+    }, [dispatch, id]);
     
     const newSpot = reviews.length === 0;
     // Provide reviews a value until reviews are fetched to prevent crashing before calculating average
