@@ -4,6 +4,7 @@ import { useSelector, useDispatch } from "react-redux";
 import { useEffect } from "react";
 import ReserveButton from "./ReserveButton";
 import { fetchSpot, fetchSpots } from "../../store/spots";
+import { SpotDetailSnippet } from "../SpotDetailSnippet";
 //import './SpotDetail.css';
 
 // const getOwnersOfSpot = (spotId) => {
@@ -86,10 +87,12 @@ const SpotDetail = () => {
                 </div>
                 {/* blurb uses 1/3 of detail sections width */}
                 <div className="reserve">
+                    <ReserveButton/>
                 </div>
                 <hr/>
             </section>
             <section className="Review-container">
+                <SpotDetailSnippet/>
                 <p> ADD CREATE REVIEW BUTTON HERE</p>
 
             </section>

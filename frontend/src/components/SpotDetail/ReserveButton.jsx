@@ -1,6 +1,5 @@
 import { useAlert } from 'react-alert'
-import SpotDetailSnippet from '../SpotDetailSnippet/SpotDetailSnippet';
-
+import { SpotDetailSnippet } from '../SpotDetailSnippet';
 
 const ReserveButton = () => {
 
