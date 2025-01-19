@@ -4,6 +4,7 @@ import { useSelector, useDispatch } from "react-redux";
 import { useEffect } from "react";
 import ReserveButton from "./ReserveButton";
 import { fetchSpot, fetchSpots } from "../../store/spots";
+import { fetchReviewsBySpotId } from "../../store/reviews";
 import { SpotDetailSnippet } from "../SpotDetailSnippet";
 import { ReviewList } from "../ReviewList";
 //import './SpotDetail.css';
@@ -22,29 +23,40 @@ import { ReviewList } from "../ReviewList";
 
 const SpotDetail = () => {
     
-    console.log("Enter SpotDetail Component!")
+    //console.log("Enter SpotDetail Component!")
     
     const { id } = useParams();
-    console.log("sucessfully grabs param: ", id)
     const dispatch=useDispatch();
-    console.log("hits dispatch line: ", dispatch);
+    //console.log("sucessfully grabs param: ", id)
+    //console.log("hits dispatch line: ", dispatch);
     
     const spot = useSelector((state) => state.spots.spots[id]);          // expect to grab target spot's object from store
-    console.log("should select spot with unique id ", spot)
-    const owners = useSelector((state) => state.spots.Owners);               // expect to grab spot owners object from store
+    const owners = useSelector((state) => state.spots.Owners);
     
     // necessary logic for future functionality and scalability where mutliple users can one one spots 
     // const spotOwners = Object.values(owners).filter((owner) => owner.id === spot.ownerId);
-    const owner= owners && spot ? Object.values(owners).find((owner) => owner.id === spot.ownerId) : null;
-
+    
+    const sessionUser = useSelector((state) => state.session.user);
+    //const sessionUserId = sessionUser ? sessionUser.id : null;
+    const spotReviews = useSelector((state) => Object.values(state.reviews.reviews || {}).filter((review) => review.spotId === parseInt(id, 10)); // Access reviews from Redux store
+    
+    //const reviewsForSpot = Object.values(spotReviews).filter((review) => review.spotId === parseInt(id, 10));
+    
     // check if this code will create bugs. dont want to stop stop continuous rendering 
     useEffect(() => {
         if(!spot) {
             dispatch(fetchSpots());
             dispatch(fetchSpot(id));
         }
+        dispatch(fetchReviewsBySpotId(id)); // Fetch reviews when loading SpotDetail
     }, [dispatch, id, spot]);
-
+    
+    if(!spot) return <p>spot not found or loading ...</p>;
+    
+    // const owner = owners && spot ? Object.values(owners).find((owner) => owner.id === spot.ownerId) : null;
+    const owner = owners ? owners[spot.ownerId] : null;
+    const spotIsOwnedBySession = spot && sessionUser && spot.ownerId === sessionUserId;
+    
     // const getSpotOwners = () => {
     //     return useSelector((state) => {
     //     console.log("Redux state:", state);                          // expect entire state
@@ -54,7 +66,6 @@ const SpotDetail = () => {
     //     return owners; 
     // }   
 
-    if(!spot) return <p>spot not found or loading ...</p>;
 
     const spotImages = spot.SpotImages ? Object.values(spot.SpotImages) : [];
 
@@ -74,7 +85,7 @@ const SpotDetail = () => {
                 </div>
                 {/*Each image uses a quarter of the second pic-box's width and height*/}
                 <div className="pic-box">
-                    {spotImages.slice(0, 4).map((image, index) => (
+                    {spotImages && spotImages.slice(0, 4).map((image, index) => (
                         <img key={index} src={image.url} alt={`image ${index + 1}`} />
                     ))}
                 </div>
@@ -94,11 +105,15 @@ const SpotDetail = () => {
             </section>
             <section className="Review-container">
                 <SpotDetailSnippet/>
-                <p> ADD CREATE REVIEW BUTTON HERE</p>
-                <ReviewList spotId={id} />
-
+                { sessionUser && !spotIsOwnedBySession && (
+                    <button>Add Review</button>
+                )}
+                { sessionUser && !spotIsOwnedBySession && reviewsForSpot.length === 0 && (
+                    <p>Be the first to post a review!</p>
+                )}
+                <ReviewList spotId={id} reviews={reviewsForSpot} />
             </section>
-        </ div>
+        </div>
     );
 
 };
