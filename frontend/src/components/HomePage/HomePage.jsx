@@ -18,6 +18,7 @@ function HomePage(){
     // listen for spots slice of state changes
     useEffect(() => {
         dispatch(fetchSpots());
+        console.log("Re-rendering fetchspots from homepage")
     }, [dispatch]);
 
     // If spots are not loaded yet, show loading

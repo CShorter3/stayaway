@@ -64,9 +64,9 @@ export const fetchReviewsBySpotId = (spotId) => async (dispatch) => {
 
         dispatch(
             loadReviews({
-                reviews: normalizedReviews,
-                users: normalizedUsers,
-                reviewImages: normalizedReviewImages
+                reviews: normalizedReviews || {},
+                users: normalizedUsers || {},
+                reviewImages: normalizedReviewImages || {}
             })
         );
     }

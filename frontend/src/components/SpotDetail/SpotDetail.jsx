@@ -53,7 +53,7 @@ const SpotDetail = () => {
     //     return owners; 
     // }   
 
-    if(!spot) return <p>spot not found</p>;
+    if(!spot) return <p>spot not found or loading ...</p>;
 
     const spotImages = spot.SpotImages ? Object.values(spot.SpotImages) : [];
 
