@@ -23,19 +23,24 @@ const SpotDetailSnippet = () => {
     const dispatch = useDispatch();
     // console.log("value of dispatch", dispatch);
 
-    const reviews = useSelector((state) => state.reviews.state || {}); // ensure data exists
-    const spotReviews = Object.values(reviews).filter((review) => review.spotId === parseInt(id)); // ensure integer comparison
+    const reviews = useSelector((state) => state.reviews.reviews || {}); // ensure data exists
+    console.log("selected object", reviews) // <-- NOT RECIEVING THE REVIEW DATA
+    const spotReviews = Object.values(reviews).filter((review) => review.spotId === parseInt(id, 10)); // ensure integer comparison
 
     useEffect(() => {
-        if(spotReviews.length === 0){
+        //if(spotReviews.length === 0){
+        if(!Object.keys(reviews).length){
             console.log("Dispatching fetchReviewsBySpotId with id:", id); // Add this log
-        dispatch(fetchReviewsBySpotId(id));
+            dispatch(fetchReviewsBySpotId(id));
         }
-    }, [dispatch, id, spotReviews.length]);
+    }, [dispatch, id, reviews]);
     
-    const newSpot = reviews.length === 0;
+    console.log("selected object", reviews)
+
+    // const newSpot = reviews.length === 0;
+    const newSpot = Object.keys(reviews).length === 0;
     // Provide reviews a value until reviews are fetched to prevent crashing before calculating average
-    const averageRating = newSpot ? 0 : spotReviews.reduce((sum, currReview) => sum + currReview.stars, 0) / spotReviews.length;
+    const averageRating = newSpot ? 0 : spotReviews.reduce((sum, currReview) => sum + currReview.stars, 0) / spotReviews.length; // !!!WHAT IF LENGHT IS ZERO!!!
 
     return (
         <div className="snippet">

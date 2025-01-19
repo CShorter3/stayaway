@@ -24,7 +24,7 @@ const ReserveButton = () => {
                 {/* price-block elements are aligned right of btn content*/}
                 <div className="reputation-block">
                     <SpotDetailSnippet/>
-d                </div>
+                </div>
             </div>
             <button onClick={handleClick}>
                 Reserve
