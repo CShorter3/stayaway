@@ -10,21 +10,25 @@ const SpotDetailSnippet = () => {
     const { id } = useParams();
 
     /* testing */
-    console.log("lets see what Review object looks like");
+    // console.log("lets see what Review object looks like");
    
-    const reviewsState = useSelector((state) => state.reviews)
-    console.log("lets see state.reviews: ", reviewsState);
-
+    // const currState = useSelector((state) => state)
+    // console.log("Lets see current state", currState);
+    // const reviewsObj = useSelector((state) => state.reviews)
+    // console.log("lets see state.reviews: ", reviewsObj);
+    // const currReviews = useSelector((state) => state.reviews.reviews)
+    // console.log("lets see state.reviews.reviews: ", reviewsObj);
 
     console.log("searching for reviews for spot id: ", id)
     const dispatch = useDispatch();
-    console.log("value of dispatch", dispatch);
+    // console.log("value of dispatch", dispatch);
 
-    const reviews = useSelector((state) => state.reviews.reviews || {}); // ensure data exists
+    const reviews = useSelector((state) => state.reviews.state || {}); // ensure data exists
     const spotReviews = Object.values(reviews).filter((review) => review.spotId === parseInt(id)); // ensure integer comparison
 
     useEffect(() => {
         if(spotReviews.length === 0){
+            console.log("Dispatching fetchReviewsBySpotId with id:", id); // Add this log
         dispatch(fetchReviewsBySpotId(id));
         }
     }, [dispatch, id, spotReviews.length]);

@@ -12,17 +12,20 @@ export const loadReviews = (reviews) => ({
 });
 
 export const fetchReviewsBySpotId = (spotId) => async (dispatch) => {
+    console.log("inside fetch reviews by spot id!")
     const response = await csrfFetch(`/api/spots/${spotId}/reviews`);
-
+    
     if(response.ok){
         const data = await response.json();
+        console.log("fetched data: ", data);
+
 
         // Normalize entire reviews object
         const normalizedReviews = {};
         const normalizedUsers = {};
         const normalizedReviewImages = {};
         
-        data.Reviews.forEach((review) => {
+        data.reviews.forEach((review) => {
             
             // Enable normalization by flattening nested objects and including
             // foreign keys that link to all slices of Reviews state.
