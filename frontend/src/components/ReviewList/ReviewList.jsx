@@ -19,12 +19,18 @@ const ReviewList = ( {spotId} ) => {
 
 return (
     <div className="review-list">
-        {reviews.map((selectReview) => {
-            const reviewUser = users[selectReview.userId];
-            console.log("in reviews, mapping over this User's review: ", reviewUser);
+        {reviews
+            .sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt))
+            .map((selectReview) => {
+                const reviewUser = users[selectReview.userId];
+                console.log("in reviews, mapping over this User's review: ", reviewUser);
         return(
             <div key={selectReview.id} className="review-item">
                 <h4>{reviewUser ? reviewUser.firstName : "Anonymous"}</h4>
+                <p> {new Date(selectReview.createdAt).toLocaleString("default", {
+                        month: "long", year: "numeric",
+                    })}
+                </p>
                 <p>{selectReview.review}</p>
             </div>
         );
