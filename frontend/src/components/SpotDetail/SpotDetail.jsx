@@ -1,121 +1,70 @@
-// Spot detail will present a detailed view of one spot
 import { useParams } from "react-router-dom";
 import { useSelector, useDispatch } from "react-redux";
 import { useEffect } from "react";
 import ReserveButton from "./ReserveButton";
 import { fetchSpot, fetchSpots } from "../../store/spots";
 import { fetchReviewsBySpotId } from "../../store/reviews";
-import { SpotDetailSnippet } from "../SpotDetailSnippet";
-import { ReviewList } from "../ReviewList";
-//import './SpotDetail.css';
-
-// const getOwnersOfSpot = (spotId) => {
-    
-//     const spot = useSelector((state) => state.spots.spots[spotId]);  // Grabbing target spot's object
-//     console.log("Targeted spot object: ", spot);
-//     const owners = useSelector((state) => state.spots.Owners);       // Grabbing owners object
-    
-//     if (!spot || !owners) return [];  // Handling edge cases where data may not be available
-    
-//     // Convert owners object to an array and filter owners who match the spot's ownerId
-//     return spotOwners; 
-// };
+import {SpotDetailSnippet} from "../SpotDetailSnippet";
+import {ReviewList} from "../ReviewList";
 
 const SpotDetail = () => {
-    
-    //console.log("Enter SpotDetail Component!")
-    
     const { id } = useParams();
-    const dispatch=useDispatch();
-    //console.log("sucessfully grabs param: ", id)
-    //console.log("hits dispatch line: ", dispatch);
-    
-    const spot = useSelector((state) => state.spots.spots[id]);          // expect to grab target spot's object from store
+    const dispatch = useDispatch();
+
+    const spot = useSelector((state) => state.spots.spots[id]);
     const owners = useSelector((state) => state.spots.Owners);
-    
-    // necessary logic for future functionality and scalability where mutliple users can one one spots 
-    // const spotOwners = Object.values(owners).filter((owner) => owner.id === spot.ownerId);
-    
     const sessionUser = useSelector((state) => state.session.user);
-    //const sessionUserId = sessionUser ? sessionUser.id : null;
-    const spotReviews = useSelector((state) => Object.values(state.reviews.reviews || {}).filter((review) => review.spotId === parseInt(id, 10)); // Access reviews from Redux store
-    
-    //const reviewsForSpot = Object.values(spotReviews).filter((review) => review.spotId === parseInt(id, 10));
-    
-    // check if this code will create bugs. dont want to stop stop continuous rendering 
+    const spotReviews = useSelector((state) =>
+        Object.values(state.reviews.reviews || {}).filter((review) => review.spotId === parseInt(id, 10))
+    );
+
     useEffect(() => {
-        if(!spot) {
+        if (!spot) {
             dispatch(fetchSpots());
             dispatch(fetchSpot(id));
         }
-        dispatch(fetchReviewsBySpotId(id)); // Fetch reviews when loading SpotDetail
-    }, [dispatch, id, spot]);
-    
-    if(!spot) return <p>spot not found or loading ...</p>;
-    
-    // const owner = owners && spot ? Object.values(owners).find((owner) => owner.id === spot.ownerId) : null;
+        if (!spotReviews.length) {
+            dispatch(fetchReviewsBySpotId(id));
+        }
+    }, [dispatch, id, spot, spotReviews.length]);
+
+    if (!spot) return <p>Spot not found or loading...</p>;
+
     const owner = owners ? owners[spot.ownerId] : null;
-    const spotIsOwnedBySession = spot && sessionUser && spot.ownerId === sessionUserId;
-    
-    // const getSpotOwners = () => {
-    //     return useSelector((state) => {
-    //     console.log("Redux state:", state);                          // expect entire state
-    //     console.log("Redux state.spots: ", state.spots);             // expect Spots slice of state
-    //     console.log("Redux state.spots.Owner: ", state.spots.Owner); // expect access to Owner details
-    //     const owners = Object.values(state.spots.Owners || {});
-    //     return owners; 
-    // }   
-
-
-    const spotImages = spot.SpotImages ? Object.values(spot.SpotImages) : [];
+    const spotIsOwnedBySession = sessionUser && spot.ownerId === sessionUser.id;
 
     return (
-        /* displays content vertically */
         <div className="overview-container">
-            {/* Header section's children are stacked and aligned left*/}
             <section className="header">
                 <h2>{spot.name}</h2>
                 <h5>{spot.city}, {spot.state}, {spot.country}</h5>
             </section>
-            {/*Gallery section displays 1 pic in left half of width, next 4 in second half of width*/}
             <section className="gallery">
-                {/*Image uses the first pic-box's entire width and height*/}
                 <div>
                     <img src={spot.previewImage || ""} alt="Main spot image" />
                 </div>
-                {/*Each image uses a quarter of the second pic-box's width and height*/}
                 <div className="pic-box">
-                    {spotImages && spotImages.slice(0, 4).map((image, index) => (
-                        <img key={index} src={image.url} alt={`image ${index + 1}`} />
+                    {spot.SpotImages && spot.SpotImages.slice(0, 4).map((image, index) => (
+                        <img key={index} src={image.url} alt={`Image ${index + 1}`} />
                     ))}
                 </div>
             </section>
-            {/* The details section display its children horizontally*/}
             <section className="details">
-                {/* blurb uses 2/3 of detail sections width */}
                 <div className="blurb">
                     <h3>Hosted by {owner ? `${owner.firstName} ${owner.lastName}` : "Unknown Host"}</h3>
                     <p>{spot.description}</p>
                 </div>
-                {/* blurb uses 1/3 of detail sections width */}
                 <div className="reserve">
-                    <ReserveButton/>
+                    <ReserveButton />
                 </div>
-                <hr/>
             </section>
             <section className="Review-container">
-                <SpotDetailSnippet/>
-                { sessionUser && !spotIsOwnedBySession && (
-                    <button>Add Review</button>
-                )}
-                { sessionUser && !spotIsOwnedBySession && reviewsForSpot.length === 0 && (
-                    <p>Be the first to post a review!</p>
-                )}
-                <ReviewList spotId={id} reviews={reviewsForSpot} />
+                <SpotDetailSnippet />
+                {sessionUser && !spotIsOwnedBySession && <button>Add Review</button>}
+                <ReviewList reviews={spotReviews} />
             </section>
         </div>
     );
-
 };
 
 export default SpotDetail;
