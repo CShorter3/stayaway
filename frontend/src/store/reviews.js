@@ -19,6 +19,18 @@ export const fetchReviewsBySpotId = (spotId) => async (dispatch) => {
         const data = await response.json();
         console.log("fetched data: ", data);
 
+        // Ensure data.reviews is an array before processing
+        if (!data.reviews || !Array.isArray(data.reviews)) {
+            console.warn("No reviews found or data.reviews is not an array.");
+            dispatch(
+                loadReviews({
+                    reviews: {},  
+                    users: {},
+                    reviewImages: {}
+                })
+            );
+            return; // Exit early if there are no reviews
+        }
 
         // Normalize entire reviews object
         const normalizedReviews = {};

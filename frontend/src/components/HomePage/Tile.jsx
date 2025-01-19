@@ -17,6 +17,10 @@ const Tile = ({ spot }) => {
     
     const tooltipId = `tooltip-${spot.id}`;
 
+    // NOTE: Check if necessary to parse string as INT somehow, too.
+    // ensure avgRating is a valid number
+    const avgRating = typeof spot.avgRating === "number" ? spot.avgRating.toFixed(1) : "New";
+
     return (
         /* display child elements vertically*/
         <div className="tile-container" onClick={handleClick} data-tooltip-id={tooltipId}>
@@ -25,7 +29,7 @@ const Tile = ({ spot }) => {
             {/* spot detail rows should take ~10% container height */}
             <div className="tile-detail-row">
                 <p id="push-detail-left"> {spot.city}, {spot.state} </p>
-                <p id="push-detail-right"> {spot.avgRating ? spot.avgRating.toFixed(1) : "New"} </p>
+                <p id="push-detail-right"> {avgRating} </p>
             </div>
             <div className="tile-detail-row">
             <div> {/* structure details row 2*/}
