@@ -20,31 +20,31 @@ export const fetchReviewsBySpotId = (spotId) => async (dispatch) => {
         console.log("fetched data: ", data);
 
         // Ensure data.reviews is an array before processing
-        // if (!data.reviews || !Array.isArray(data.reviews)) {
-        //     console.warn("No reviews found or data.reviews is not an array.");
-        //     dispatch(
-        //         loadReviews({
-        //             reviews: {},  
-        //             users: {},
-        //             reviewImages: {}
-        //         })
-        //     );
-        //     return; // Exit early if there are no reviews
-        // }
+        if (!data.Reviews || !Array.isArray(data.Reviews)) {
+            console.warn("No reviews found or data.reviews is not an array.");
+            dispatch(
+                loadReviews({
+                    reviews: {},  
+                    users: {},
+                    reviewImages: {}
+                })
+            );
+            return; // Exit early if there are no reviews
+        }
 
         // Normalize entire reviews object
         const normalizedReviews = {};
         const normalizedUsers = {};
         const normalizedReviewImages = {};
         
-        data.reviews.forEach((review) => {
+        data.Reviews.forEach((review) => {
             
             // Enable normalization by flattening nested objects and including
             // foreign keys that link to all slices of Reviews state.
             normalizedReviews[review.id] = {
                 ...review,
-                userId: review.User.id,             // flattened, foreign key
-                spotId: review.Spot?.id || spotId   // created foregin key
+                userId: review.User.id || review.userId,  // flattened, foreign key
+                spotId: review.spotId  || review.Spot.id  // created foregin key
             };
             
             // Normalize flattened User Object - creator of review
@@ -56,6 +56,11 @@ export const fetchReviewsBySpotId = (spotId) => async (dispatch) => {
             });
 
         });
+
+        console.log("Normalized reviews:", normalizedReviews);
+        console.log("Normalized users:", normalizedUsers);
+        console.log("Normalized reviewImages:", normalizedReviewImages);
+
 
         dispatch(
             loadReviews({

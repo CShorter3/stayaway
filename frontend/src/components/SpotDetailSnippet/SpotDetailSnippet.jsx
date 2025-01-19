@@ -37,6 +37,7 @@ const SpotDetailSnippet = () => {
     
     console.log("selected object", reviews)
 
+
     // const newSpot = reviews.length === 0;
     const newSpot = Object.keys(reviews).length === 0;
     // Provide reviews a value until reviews are fetched to prevent crashing before calculating average
