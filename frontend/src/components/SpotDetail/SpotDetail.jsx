@@ -5,6 +5,7 @@ import { useEffect } from "react";
 import ReserveButton from "./ReserveButton";
 import { fetchSpot, fetchSpots } from "../../store/spots";
 import { SpotDetailSnippet } from "../SpotDetailSnippet";
+import { ReviewList } from "../ReviewList";
 //import './SpotDetail.css';
 
 // const getOwnersOfSpot = (spotId) => {
@@ -94,6 +95,7 @@ const SpotDetail = () => {
             <section className="Review-container">
                 <SpotDetailSnippet/>
                 <p> ADD CREATE REVIEW BUTTON HERE</p>
+                <ReviewList spotId={id} />
 
             </section>
         </ div>

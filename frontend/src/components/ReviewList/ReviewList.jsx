@@ -1,8 +1,16 @@
 import { useSelector } from "react-redux";
+//import { useParams } from "react-router-dom";
 
-const ReviewList = ({ spotId }) => {
+const ReviewList = ( {spotId} ) => {
+    console.log("INSIDE REVIEW LIST, GRABBING REVIEWS FOR SPOT: ", spotId);
 
-    const reviews = useSelector((state) => state.reviews[spotId] || []);
+    const allReviews = useSelector((state) => state.reviews.reviews || []); // OPTIMIZE LATER
+    const reviewsArray = Object.values(allReviews);
+    const reviews = reviewsArray.filter((review) => review.spotId === parseInt(spotId, 10));
+    console.log("Selecting the following reviews: ", reviews);
+
+    const users = useSelector((state) => state.reviews.users || {});
+
 
     if(reviews.length === 0) {
         return (
@@ -12,12 +20,15 @@ const ReviewList = ({ spotId }) => {
 
 return (
     <div className="review-list">
-        {reviews.map((review) => (
-            <div key={review.id} className="review-item">
-                <h4>{review.User.firstName}</h4>
-                <p>{review.comment}</p>
+        {reviews.map((selectReview) => {
+            const reviewUser = users[selectReview.userId];
+            console.log("in reviews, mapping over this User's review: ", reviewUser);
+
+            <div key={selectReview.id} className="review-item">
+                <h4>{reviewUser ? reviewUser.firstName : "Anonymous"}</h4>
+                <p>{selectReview.review}</p>
             </div>
-        ))}
+        })}
     </div>
 )
 
