@@ -11,7 +11,6 @@ const ReviewList = ( {spotId} ) => {
 
     const users = useSelector((state) => state.reviews.users || {});
 
-
     if(reviews.length === 0) {
         return (
             <p className = "no-reviews"> Be the first to post a review! </p>
@@ -23,12 +22,13 @@ return (
         {reviews.map((selectReview) => {
             const reviewUser = users[selectReview.userId];
             console.log("in reviews, mapping over this User's review: ", reviewUser);
-
+        return(
             <div key={selectReview.id} className="review-item">
                 <h4>{reviewUser ? reviewUser.firstName : "Anonymous"}</h4>
                 <p>{selectReview.review}</p>
             </div>
-        })}
+        );
+    })}
     </div>
 )
 
