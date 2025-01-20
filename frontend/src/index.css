@@ -1,1 +1,4 @@
 /* TODO: Add sitewide styles */
+.star {
+    transform: translate(0px, 2px);
+}

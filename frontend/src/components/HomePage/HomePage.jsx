@@ -2,11 +2,17 @@ import { useDispatch, useSelector } from 'react-redux';
 import { useEffect } from 'react';
 import { Tile } from '.';
 import { fetchSpots } from '../../store/spots';
-//import "./HomePage.css";
+import "./HomePage.css";
 
 // HomePage will dynamically populate the grid with spot tiles
 function HomePage(){
     const dispatch = useDispatch();
+
+    useEffect(() => {
+        dispatch(fetchSpots());
+        console.log("Re-rendering fetchspots from homepage")
+    }, [dispatch]);
+    
     // access normalized spots object from store
     const displaySpots = useSelector((state) => {
         // console.log("Redux state:", state);                 // Check the full Redux state structure
@@ -16,10 +22,6 @@ function HomePage(){
     });
 
     // listen for spots slice of state changes
-    useEffect(() => {
-        dispatch(fetchSpots());
-        console.log("Re-rendering fetchspots from homepage")
-    }, [dispatch]);
 
     // If spots are not loaded yet, show loading
     if (!displaySpots || displaySpots.length === 0) {

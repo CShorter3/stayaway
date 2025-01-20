@@ -1,17 +1,16 @@
 /* Container for the tiles grid */
 .tiles-grid {
+    max-width: 95%;
+    min-width: 70%;
     display: flex; /* Use flexbox for horizontal alignment */
     flex-wrap: wrap; /* Allow tiles to wrap onto the next row */
     gap: 1.5rem; /* Add space between tiles */
     justify-content: center; /* Center-align tiles horizontally */
     padding: 2rem; /* Add padding around the grid */
-    background-color: #f8f9fa; /* Light gray background for the page */
+    background-color: #fafaf8e3; /* Light gray background for the page */
   }
-  
-  /* Optional responsiveness for smaller screens */
-  @media (max-width: 768px) {
-    .tiles-grid {
-      justify-content: flex-start; /* Align tiles to the left on smaller screens */
-    }
-  }
-  
+
+  .tile-container {
+    flex: 0 0 calc(25% - 1.5rem); /* Each tile takes 25% width minus the gap space */
+    box-sizing: border-box; /* Ensure padding/borders don't affect tile size */
+}
