@@ -40,6 +40,8 @@
     "morgan": "^1.10.0",
     "per-env": "^1.0.2",
     "pg": "^8.13.0",
+    "react-alert": "^7.0.3",
+    "react-alert-template-basic": "^1.0.2",
     "rxjs": "^7.8.1",
     "sequelize": "^6.37.3",
     "sequelize-cli": "^6.6.2"

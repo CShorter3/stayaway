@@ -1,0 +1,18 @@
+/* Container for the tiles grid */
+
+.tiles-grid {
+  max-width: 90%;
+  min-width: 70%;
+  display: grid; /* Use CSS Grid */
+  grid-template-columns: repeat(4, minmax(250px, 1fr)); /* Strictly max 4 items per row */
+  gap: 1.5rem; /* Add space between tiles */
+  justify-content: center; /* Center-align tiles horizontally */
+  padding: 0% 5%; /* Padding around the grid */
+  /* background-color: #fafaf8e3; Light gray background for the page */
+}
+
+
+.tile-container {
+  flex: 0 0 calc(25% - 1.5rem); /* Each tile takes 25% width minus the gap space */
+  box-sizing: border-box; /* Ensure padding/borders don't affect tile size */
+}

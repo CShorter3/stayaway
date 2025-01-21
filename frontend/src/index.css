@@ -1,1 +1,81 @@
 /* TODO: Add sitewide styles */
+div :root {
+    width: 75%;
+    font-family: Arial, sans-serif;
+}
+
+nav {
+    margin-bottom: 1%;
+}
+
+body {
+    margin-top: 5%;
+    font-family: Arial, sans-serif;
+    background-color: purple;
+}
+  
+h1 {
+    margin: 0%;
+    padding: 0%;
+}
+
+h2 {
+    margin: 0%;
+    padding: 0%;
+}
+
+h3 {
+    margin: 0%;
+    padding: 0%;
+}
+
+h4 {
+    margin: 0%;
+    padding: 0%;
+}
+
+h5 {
+    margin: 0%;
+    padding: 0%;
+}
+
+h6 {
+    margin: 0%;
+    padding: 0%;
+}
+
+#bold {
+    font-weight: 700;
+    
+}
+
+.overview-container{
+    max-width: min(100%, 1000px);
+    min-width: 50%;
+    margin: 0px auto;
+    margin-top: 25%;
+    display: flex;
+    justify-content: space-between ;
+    flex-direction: column;
+    gap: 2rem;
+    padding: 2rem;
+    /* background-color: #f8f9fa; Light gray background */
+}
+
+.gallery {
+    max-width: min(95%, 1000px);
+    margin: 0 auto;
+    max-height: auto;
+}
+
+.reserve-btn-container{
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    color: black;
+
+}
+
+.star {
+    transform: translate(0px, 2px);
+}

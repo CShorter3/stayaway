@@ -1,0 +1,6 @@
+.snippet{
+    display: flex;
+    justify-content: space-between;
+    width: 49%;
+    max-width: 49%;
+}
