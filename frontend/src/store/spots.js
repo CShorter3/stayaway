@@ -36,6 +36,33 @@ export const fetchSpots = () => async (dispatch) => {
   }
 };
 
+// Helper function transforms POST response to proper redux store shape
+const normalizeNewSpotShape = (spotData) => {
+  const normalizedResponse = {
+    spots: {
+      [spotData.id]: {
+        id: spotData.id,
+        name: spotData.name,
+        city: spotData.city,
+        state: spotData.state,
+        country: spotData.country,
+        description: spotData.description,
+        price: spotData.price,
+        ownerId: spotData.ownerId,
+        avgRating: 0, // Default value until reviews are added
+        previewImage: null, // Default value until images are added
+      },
+    },
+    SpotImages: {}, // Empty object, will be populated later
+    Owners: {
+      [spotData.ownerId]: {
+        id: spotData.ownerId,
+      },
+    }, // Empty object, will be populated later
+  };
+  return normalizedResponse;
+};
+
 export const fetchSpot = (spotId) => async (dispatch) => {
   const response = await csrfFetch(`/api/spots/${spotId}`);
 
@@ -72,7 +99,25 @@ export const fetchSpot = (spotId) => async (dispatch) => {
   }
 };
 
+// Normalize POST response before dispatching to ADD_SPOT
+export const createSpot = (spot) => async (dispatch) => {
 
+  const response = await csrfFetch(`/api/spots`, {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify(spot),
+  });
+
+  if (response.ok) {
+    const newSpot = await response.json();
+    const normalSpotData = normalizeNewSpotShape(newSpot);
+    dispatch(addSpot(normalSpotData));
+    return normalSpotData;
+  } else {
+    const error = await response.json();
+    throw error;
+  }
+}
 
 const initialState = {
   spots: {},
@@ -99,7 +144,24 @@ const spotsReducer = ( state = initialState, action) => {
             ...state.Owners, 
             ...action.payload.Owners, 
           },
-      };
+      }
+    case "ADD_SPOT": {
+      return {
+        ...state,
+        spots: {
+          ...state.spots,
+          ...action.payload.spots, // Merge new spot(s) into existing spots
+        },
+        SpotImages: {
+          ...state.SpotImages,
+          ...action.payload.SpotImages, // Merge new SpotImages
+        },
+        Owners: {
+          ...state.Owners,
+          ...action.payload.Owners, // Merge new Owners
+        },
+      }
+    }
     default:
       return state;
   }

@@ -17,7 +17,7 @@ const ReserveButton = () => {
     return (
         <div className="reserve-btn-container">
             {/* button content child divs display side by side in one row*/}
-            <div className="btn-content" class>
+            <div className="btn-content">
                 {/* price-block elements are aligned left of btn content*/}
                 <span id="bold">$123.45 </span>
                 <span> night</span>

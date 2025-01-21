@@ -63,10 +63,9 @@ h6 {
 }
 
 .gallery {
-
     max-width: min(95%, 1000px);
     margin: 0 auto;
-    max-height: 900px;
+    max-height: auto;
 }
 
 .reserve-btn-container{
