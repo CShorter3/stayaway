@@ -1,5 +1,6 @@
 import { useAlert } from 'react-alert'
 import { SpotDetailSnippet } from '../SpotDetailSnippet';
+import './ReserveButton.css'
 
 const ReserveButton = () => {
 
@@ -16,17 +17,16 @@ const ReserveButton = () => {
     return (
         <div className="reserve-btn-container">
             {/* button content child divs display side by side in one row*/}
-            <div className="btn-content">
+            <div className="btn-content" class>
                 {/* price-block elements are aligned left of btn content*/}
-                <div className="price-block">
-                    <h5>$123.45 </h5><span>night</span>
-                </div>
+                <span id="bold">$123.45 </span>
+                <span> night</span>
                 {/* price-block elements are aligned right of btn content*/}
-                <div className="reputation-block">
-                    <SpotDetailSnippet/>
-                </div>
+            <div className='reputation-block'>
+                <SpotDetailSnippet/>
             </div>
-            <button onClick={handleClick}>
+            </div>
+            <button className="make-review" onClick={handleClick}>
                 Reserve
             </button>
         </div>

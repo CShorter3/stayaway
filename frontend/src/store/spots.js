@@ -2,6 +2,7 @@ import { csrfFetch } from "./csrf";
 
 export const LOAD_SPOTS = 'spots/LOAD_SPOTS';
 export const LOAD_SPOT = 'spots/LOAD_SPOT';
+export const ADD_SPOT = 'spots/ADD_SPOT';
 
 export const loadSpots = (spots) => ({
   type: LOAD_SPOTS,
@@ -12,6 +13,11 @@ export const loadSpot = (spotDetail) => ({
   type: LOAD_SPOT,
   payload: spotDetail, // Normalized spot data with SpotImages and Owner
 });
+
+export const addSpot = (newSpot) => ({
+  type: ADD_SPOT,
+  payload: newSpot,
+})
 
 export const fetchSpots = () => async (dispatch) => {
   const response = await csrfFetch('/api/spots');
@@ -39,7 +45,11 @@ export const fetchSpot = (spotId) => async (dispatch) => {
     // Normalize SpotImages
     const normalizedSpotImages = {};
     data.SpotImages.forEach((image) => {
-        normalizedSpotImages[image.id] = image;
+        normalizedSpotImages[image.id] = {
+          ...image,
+          spotID: data.id,
+          ownerID: data.ownerId
+        };
     });
 
     // Normalize Owner
@@ -61,6 +71,8 @@ export const fetchSpot = (spotId) => async (dispatch) => {
     );
   }
 };
+
+
 
 const initialState = {
   spots: {},
@@ -94,6 +106,116 @@ const spotsReducer = ( state = initialState, action) => {
 }
       
 export default spotsReducer;
+
+
+
+
+
+
+
+
+
+// import { csrfFetch } from "./csrf";
+
+// export const LOAD_SPOTS = 'spots/LOAD_SPOTS';
+// export const LOAD_SPOT = 'spots/LOAD_SPOT';
+
+// export const loadSpots = (spots) => ({
+//   type: LOAD_SPOTS,
+//   payload: spots, // Normalized spots object
+// });
+
+// export const loadSpot = (spotDetail) => ({
+//   type: LOAD_SPOT,
+//   payload: spotDetail, // Normalized spot data with SpotImages and Owner
+// });
+
+// export const fetchSpots = () => async (dispatch) => {
+//   const response = await csrfFetch('/api/spots');
+
+//   if (response.ok) {
+//     const data = await response.json();
+
+//     // Normalize spots data
+//     const normalizedSpots = {};
+//     data.Spots.forEach((spot) => {
+//         normalizedSpots[spot.id] = spot;
+//     });
+
+//     // Dispatch normalized spots to the store
+//     dispatch(loadSpots(normalizedSpots));
+//   }
+// };
+
+// export const fetchSpot = (spotId) => async (dispatch) => {
+//   const response = await csrfFetch(`/api/spots/${spotId}`);
+
+//   if (response.ok) {
+//     const data = await response.json();
+
+//     // Normalize SpotImages
+//     const normalizedSpotImages = {};
+//     data.SpotImages.forEach((image) => {
+//         normalizedSpotImages[image.id] = image;
+//     });
+
+//     // Normalize Owner
+//     const normalizedOwners = { [data.Owner.id]: data.Owner };
+
+//     // Normalize Spot data (excluding SpotImages and Owner)
+//     const { SpotImages={}, Owners={}, ...normalizedSpot } = data;
+
+//     // Add previewImage key
+//     normalizedSpot.previewImage = SpotImages.find((img) => img.preview)?.url || null;
+
+//     // Dispatch normalized data
+
+//     console.log('API Response:', data);
+//     console.log('Normalized Owners:', normalizedOwners);
+//     console.log('Normalized Spot:', normalizedSpot);
+
+//     dispatch(
+//       loadSpot({
+//         spots: normalizedSpot,
+//         SpotImages: normalizedSpotImages,
+//         Owners: normalizedOwners,
+//       })
+//     );
+//   }
+// };
+
+// const initialState = {
+//   spot: {},
+//   SpotImages: {},
+//   Owners: {}
+// };
+          
+// const spotsReducer = ( state = initialState, action) => {
+//   switch (action.type) {
+//     case LOAD_SPOTS:
+//       return { ...state, spots: { ...state.spots, ...action.payload} }; 
+//     case LOAD_SPOT:
+//       return {
+//         ...state, spots: { ...state.spots,
+//           [action.payload.spot.id]:{
+//             ...state.spots[action.payload.spot.id],   //retain existing spot data
+//             ...action.payload.spot                    //merge new spot data
+//         }},
+//         SpotImages: {
+//             ...state.SpotImages, 
+//             ...action.payload.SpotImages, 
+//         },
+//         Owners: {
+//             ...state.Owners, 
+//             ...action.payload.Owners, 
+//           },
+//       };
+//     default:
+//       return state;
+//   }
+// }
+      
+// export default spotsReducer;
           
           
           

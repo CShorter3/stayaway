@@ -11,7 +11,7 @@ nav {
   left: 0;
   right: 0;
   /* z-index: 1000; */
-  height: 80px; /* Fixed height for nav */
+  height: 10%; /* Fixed height for nav */
   box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
 }
 
@@ -25,8 +25,9 @@ nav {
 .nav-left .nav-link {
   display: inline-block;
   height: 100%;
-  text-decoration: none;
 }
+
+
 
 /* Logo image */
 .nav-logo {
@@ -43,13 +44,12 @@ nav {
   align-items: center;
 }
 
-/* Optional: Add hover effect for the logo */
+/* Add hover effect for the logo 
 .nav-left .nav-link:hover .nav-logo {
-  opacity: 0.8;
-}
+   opacity: 0.8;
+} */
 
-/* Center the <h1> header if needed */
-h1 {
+/* h1 {
   position: absolute;
   top: 50%;
   left: 50%;
@@ -57,7 +57,7 @@ h1 {
   font-weight: bold;
   color: #34495e;
   text-align: center;
-}
+} */
 
 /* Responsive tweaks for mobile screens */
 /* @media (max-width: 768px) {

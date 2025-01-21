@@ -10,7 +10,7 @@ function HomePage(){
 
     useEffect(() => {
         dispatch(fetchSpots());
-        console.log("Re-rendering fetchspots from homepage")
+        //console.log("Re-rendering fetchspots from homepage")
     }, [dispatch]);
     
     // access normalized spots object from store

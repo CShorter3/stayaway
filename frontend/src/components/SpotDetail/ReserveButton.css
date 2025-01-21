@@ -1,0 +1,41 @@
+
+  .btn-content {
+    display: flex;
+    flex-direction: row;
+    justify-content: left;
+    padding: .5rem;
+    width: 100%; /* Ensure the content spans the full width */
+    margin-bottom: 1rem; /* Add some spacing below the row */
+  }
+
+
+  
+  .price-block, .reputation-block {
+    flex: 1; /* Each block takes up equal width */
+    max-width: 100%; /* Ensure no block grows larger than half */
+  }
+  
+  .reputation-block {
+    text-align: right;
+  } 
+
+  .price-block {
+    text-align: left; /* Align text to the left */
+  }
+  
+  button {
+      width: 100%; /* Button takes up the full width */
+      padding: 0.8rem; /* Add some padding for better UX */
+      background-color: #FF3A4E; /* Blue background for button */
+      color: white; /* White text for contrast */
+      border: none;
+      font-size: 1rem;
+      cursor: pointer;
+      border: .2rem solid black;
+      box-shadow: 0 4px 6px rgb(3, 1, 1);
+      margin-bottom: .2rem;
+      margin-top: .2rem;
+    }
+    
+  
+  
