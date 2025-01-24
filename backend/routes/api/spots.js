@@ -185,11 +185,11 @@ const validateSpotData = [
     .isString()
     .withMessage('Country is required'),
   check('lat')
-    .exists({ checkFalsy: true })
+    .optional()
     .isFloat({ min: -90, max: 90 })
     .withMessage('Latitude must must be between -90 to 90'),
   check('lng')
-    .exists({ checkFalsy: true })
+    .optional()
     .isFloat({ min: -180, max: 180 })
     .withMessage('Longitude must be between -180 to 180'),
   check('name')
