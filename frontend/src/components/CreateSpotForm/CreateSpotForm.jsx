@@ -16,8 +16,9 @@ const CreateSpotForm = () => {
         state: '',
         country: '',
         description: '',
-        name: '',
+        title: '',
         price: '',
+        image0: '',
         image1: '',
         image2: '',
         image3: '',
@@ -28,8 +29,7 @@ const CreateSpotForm = () => {
     const [hasSubmitted, setHasSubmitted] = useState(false);
 
     const handleChange = (e) => {
-        setFormData({ ...formData, [e.target.name]: e.target.value });
-
+        setFormData({ ...formData, [e.target.id]: e.target.value });
     };
 
     useEffect(() => {
@@ -50,6 +50,8 @@ const CreateSpotForm = () => {
     const handleSubmit = async (e) => {
         e.preventDefault();
         setHasSubmitted(true);
+        console.log('Form submitted', formData);
+        console.log('Errors:', errors); 
 
         if (Object.keys(errors).length > 0) {
             return;
@@ -61,12 +63,19 @@ const CreateSpotForm = () => {
             state: formData.state,
             country: formData.country,
             description: formData.description,
-            name: formData.name,
+            name: formData.title,
             price: formData.price,
         };
 
+        // console.log('Form submitted', formData);
+        // console.log('Errors:', errors);
+
         const newSpot = await dispatch(createSpot(spotData));
+        
         if (newSpot) {
+            console.log("Response is valid!");
+            console.log('Form submitted: ', formData);
+            console.log('Errors: ', errors);
 
             // const serveSpotImages = [
             //     { url: formData.image1, preview: true },
@@ -82,6 +91,8 @@ const CreateSpotForm = () => {
 
             navigate(`/spots/${newSpot.id}`);
         }
+        console.log('Form submitted', formData);
+        console.log('Errors:', errors);
     };
 
     return (
@@ -89,16 +100,16 @@ const CreateSpotForm = () => {
             <form onSubmit={handleSubmit} className="create-spot-form">
                 <div className="form-header">
                     <h2>Create a New Spot</h2>
-                    <h4>Where's your place located?</h4>
+                    <h4>Where&apos;s your place located?</h4>
                     <p>
-                        Guests will only get your address once they've booked a reservation.
+                        Guests will only get your address once they&apos;ve booked a reservation.
                     </p>
                 </div>
 
                 <div className="form-body">
                     <label htmlFor="country">Country</label>
                     <input
-                        name="country"
+                        id="country"
                         placeholder="Country"
                         type="text"
                         value={formData.country}
@@ -110,7 +121,7 @@ const CreateSpotForm = () => {
 
                     <label htmlFor="address">Street Address</label>
                     <input
-                        name="address"
+                        id="address"
                         placeholder="Street Address"
                         type="text"
                         value={formData.address}
@@ -124,7 +135,7 @@ const CreateSpotForm = () => {
                         <div>
                             <label htmlFor="city">City</label>
                             <input
-                                name="city"
+                                id="city"
                                 placeholder="City"
                                 type="text"
                                 value={formData.city}
@@ -138,7 +149,7 @@ const CreateSpotForm = () => {
                         <div>
                             <label htmlFor="state">State</label>
                             <input
-                                name="state"
+                                id="state"
                                 placeholder="State"
                                 type="text"
                                 value={formData.state}
@@ -155,7 +166,7 @@ const CreateSpotForm = () => {
                 <div>
                     <h4>Describe your place to guests</h4>
                     <textarea
-                        name="description"
+                        id="description"
                         placeholder="Please write at least 30 characters"
                         value={formData.description}
                         onChange={handleChange}
@@ -169,14 +180,14 @@ const CreateSpotForm = () => {
                 <div>
                     <h4>Create a title for your spot</h4>
                     <input
-                        name="name"
+                        id="title"
                         placeholder="Name of your spot"
                         type="text"
-                        value={formData.name}
+                        value={formData.title}
                         onChange={handleChange}
                     />
                     {hasSubmitted && errors.name && (
-                        <p className="errors">{errors.name}</p>
+                        <p className="errors">{errors.title}</p>
                     )}
                 </div>
                 <hr />
@@ -186,7 +197,7 @@ const CreateSpotForm = () => {
                     <label>
                         $
                         <input
-                            name="price"
+                            id="price"
                             placeholder="Price per night (USD)"
                             type="number"
                             value={formData.price}
@@ -202,31 +213,38 @@ const CreateSpotForm = () => {
                 <div>
                     <h4>Liven up your spot with photos</h4>
                     <input
-                        name="image1"
+                        id="image0"
+                        placeholder="Image URL"
+                        type="url"
+                        value={formData.image0}
+                        onChange={handleChange}
+                    />
+                    {hasSubmitted && errors.image0 && (
+                        <p className="errors">{errors.image0}</p>
+                    )}
+                    <input
+                        id="image1"
                         placeholder="Image URL"
                         type="url"
                         value={formData.image1}
                         onChange={handleChange}
                     />
-                    {hasSubmitted && errors.image1 && (
-                        <p className="errors">{errors.image1}</p>
-                    )}
                     <input
-                        name="image2"
+                        id="image2"
                         placeholder="Image URL"
                         type="url"
                         value={formData.image2}
                         onChange={handleChange}
                     />
                     <input
-                        name="image3"
+                        id="image3"
                         placeholder="Image URL"
                         type="url"
                         value={formData.image3}
                         onChange={handleChange}
                     />
                     <input
-                        name="image4"
+                        id="image4"
                         placeholder="Image URL"
                         type="url"
                         value={formData.image4}
@@ -235,9 +253,10 @@ const CreateSpotForm = () => {
                 </div>
                 <hr />
 
-                <button type="submit" className="create-spot-btn">
+                <button onClick={handleSubmit} type="submit" className="create-spot-btn">
                     Create Spot
                 </button>
+
             </form>
         </div>
     );

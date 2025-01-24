@@ -36,21 +36,23 @@ export const fetchSpots = () => async (dispatch) => {
   }
 };
 
-// Helper function transforms POST response to proper redux store shape
+// Supports Create Spot Thunk
+    // Helper function transforms POST response to proper redux store shape
 const normalizeNewSpotShape = (spotData) => {
+  console.log("*****INSIDE NORMALIZE NEW SPOT SHAPE*****");
   const normalizedResponse = {
     spots: {
       [spotData.id]: {
         id: spotData.id,
-        name: spotData.name,
+        name: spotData.title,
         city: spotData.city,
         state: spotData.state,
         country: spotData.country,
         description: spotData.description,
-        price: spotData.price,
+        price: parseFloat(spotData.price),
         ownerId: spotData.ownerId,
-        avgRating: 0, // Default value until reviews are added
-        previewImage: null, // Default value until images are added
+        // avgRating: 0, // Default value until reviews are added *EDGE CASE, WHAT IF THE FIRST REVIEW IS A ZERO RATING
+        // previewImage: null, // Default value until images are added
       },
     },
     SpotImages: {}, // Empty object, will be populated later
@@ -60,6 +62,7 @@ const normalizeNewSpotShape = (spotData) => {
       },
     }, // Empty object, will be populated later
   };
+  console.log("---> normalized new spot data: ", normalizedResponse);
   return normalizedResponse;
 };
 
@@ -100,24 +103,57 @@ export const fetchSpot = (spotId) => async (dispatch) => {
 };
 
 // Normalize POST response before dispatching to ADD_SPOT
+// export const createSpot = (spot) => async (dispatch) => {
+//   console.log("*****INSIDE CREATE SPOT THUNK!*****")
+//   const response = await csrfFetch(`/api/spots`, {
+//     method: 'POST',
+//     headers: { 'Content-Type': 'application/json' },
+//     body: JSON.stringify(spot),
+//   });
+
+//   if (response.ok) {
+//     const postSpotResponse = await response.json();
+//     console.log("1. postSpotResponse: ", postSpotResponse);
+//     const normalizedSpotResponse = normalizeNewSpotShape(postSpotResponse);
+//     console.log("2. normalizedSpotResponse: ", normalizedSpotResponse);
+ 
+//     dispatch(addSpot(normalizedSpotResponse));
+//     return normalizedSpotResponse;
+//   } else {
+//     const error = await response.json();
+//     throw error;
+//   }
+// }
+
 export const createSpot = (spot) => async (dispatch) => {
+  console.log("*****INSIDE CREATE SPOT THUNK!*****");
+  try {
+    const response = await csrfFetch(`/api/spots`, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(spot),
+    });
 
-  const response = await csrfFetch(`/api/spots`, {
-    method: 'POST',
-    headers: { 'Content-Type': 'application/json' },
-    body: JSON.stringify(spot),
-  });
+    if (response.ok) {
+      const postSpotResponse = await response.json();
+      console.log("1. postSpotResponse: ", postSpotResponse);
 
-  if (response.ok) {
-    const newSpot = await response.json();
-    const normalSpotData = normalizeNewSpotShape(newSpot);
-    dispatch(addSpot(normalSpotData));
-    return normalSpotData;
-  } else {
-    const error = await response.json();
-    throw error;
+      const normalizedSpotResponse = normalizeNewSpotShape(postSpotResponse);
+      console.log("2. normalizedSpotResponse: ", normalizedSpotResponse);
+
+      dispatch(addSpot(normalizedSpotResponse));
+      return normalizedSpotResponse;
+    } else {
+      const error = await response.json();
+      console.error("Error during POST request:", error);
+      return Promise.reject(error); // Ensure the error propagates if necessary
+    }
+  } catch (err) {
+    console.error("Unexpected error in createSpot thunk:", err);
+    return Promise.reject(err); // Propagate the unexpected error
   }
-}
+};
+
 
 const initialState = {
   spots: {},
