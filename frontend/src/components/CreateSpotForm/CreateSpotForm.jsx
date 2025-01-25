@@ -16,7 +16,7 @@ const CreateSpotForm = () => {
         state: '',
         country: '',
         description: '',
-        title: '',
+        name: '',
         price: '',
         image0: '',
         image1: '',
@@ -40,7 +40,7 @@ const CreateSpotForm = () => {
         if (!formData.city) newErrors.city = 'City is required';
         if (!formData.state) newErrors.state = 'State is required';
         if (formData.description.length < 30) newErrors.description = 'Description needs 30 or more characters';
-		if (!formData.title) newErrors.title = 'Title is required';
+		if (!formData.name) newErrors.name = 'Title is required';
         if (!formData.price) newErrors.price = 'Price per night is required';
         //if (!formData.image1) newErrors.image1 = 'Preview Image URL is required';
 
@@ -63,15 +63,15 @@ const CreateSpotForm = () => {
             state: formData.state,
             country: formData.country,
             description: formData.description,
-            name: formData.title,
-            price: formData.price,
+            name: formData.name,
+            price: parseInt(formData.price),
         };
 
         // console.log('Form submitted', formData);
         // console.log('Errors:', errors);
 
         const newSpot = await dispatch(createSpot(spotData));
-        
+
         if (newSpot) {
             console.log("Response is valid!");
             console.log('Form submitted: ', formData);
@@ -89,7 +89,7 @@ const CreateSpotForm = () => {
             //     serveSpotImages.map((image) => dispatch(addImageToSpot(newSpot.id, image)))
             // );
 
-            navigate(`/spots/${newSpot.id}`);
+            //navigate(`/spots/${newSpot.spots.id}`);
         }
         console.log('Form submitted', formData);
         console.log('Errors:', errors);
@@ -180,14 +180,14 @@ const CreateSpotForm = () => {
                 <div>
                     <h4>Create a title for your spot</h4>
                     <input
-                        id="title"
+                        id="name"
                         placeholder="Name of your spot"
                         type="text"
-                        value={formData.title}
+                        value={formData.name}
                         onChange={handleChange}
                     />
                     {hasSubmitted && errors.name && (
-                        <p className="errors">{errors.title}</p>
+                        <p className="errors">{errors.name}</p>
                     )}
                 </div>
                 <hr />

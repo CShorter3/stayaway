@@ -63,6 +63,7 @@ const normalizeNewSpotShape = (spotData) => {
     }, // Empty object, will be populated later
   };
   console.log("---> normalized new spot data: ", normalizedResponse);
+  console.log("*****END OF normalizeNewSpotShope*****");
   return normalizedResponse;
 };
 
@@ -103,56 +104,58 @@ export const fetchSpot = (spotId) => async (dispatch) => {
 };
 
 // Normalize POST response before dispatching to ADD_SPOT
-// export const createSpot = (spot) => async (dispatch) => {
-//   console.log("*****INSIDE CREATE SPOT THUNK!*****")
-//   const response = await csrfFetch(`/api/spots`, {
-//     method: 'POST',
-//     headers: { 'Content-Type': 'application/json' },
-//     body: JSON.stringify(spot),
-//   });
-
-//   if (response.ok) {
-//     const postSpotResponse = await response.json();
-//     console.log("1. postSpotResponse: ", postSpotResponse);
-//     const normalizedSpotResponse = normalizeNewSpotShape(postSpotResponse);
-//     console.log("2. normalizedSpotResponse: ", normalizedSpotResponse);
- 
-//     dispatch(addSpot(normalizedSpotResponse));
-//     return normalizedSpotResponse;
-//   } else {
-//     const error = await response.json();
-//     throw error;
-//   }
-// }
-
 export const createSpot = (spot) => async (dispatch) => {
-  console.log("*****INSIDE CREATE SPOT THUNK!*****");
-  try {
-    const response = await csrfFetch(`/api/spots`, {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify(spot),
-    });
+  console.log("*****INSIDE CREATE SPOT THUNK!*****")
+  const response = await csrfFetch(`/api/spots`, {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify(spot),
+  });
 
-    if (response.ok) {
-      const postSpotResponse = await response.json();
-      console.log("1. postSpotResponse: ", postSpotResponse);
-
-      const normalizedSpotResponse = normalizeNewSpotShape(postSpotResponse);
-      console.log("2. normalizedSpotResponse: ", normalizedSpotResponse);
-
-      dispatch(addSpot(normalizedSpotResponse));
-      return normalizedSpotResponse;
-    } else {
-      const error = await response.json();
-      console.error("Error during POST request:", error);
-      return Promise.reject(error); // Ensure the error propagates if necessary
-    }
-  } catch (err) {
-    console.error("Unexpected error in createSpot thunk:", err);
-    return Promise.reject(err); // Propagate the unexpected error
+  if (response.ok) {
+    const postSpotResponse = await response.json();
+     console.log("1. postSpotResponse: ", postSpotResponse);
+    const normalizedSpotResponse = normalizeNewSpotShape(postSpotResponse);
+    console.log("2. normalizedSpotResponse: ", normalizedSpotResponse);
+ 
+    dispatch(addSpot(normalizedSpotResponse));
+    console.log(normalizedSpotResponse);
+    console.log("*****END OF CREATE SPOT THUNK*****");
+    return normalizedSpotResponse;
+  } else {
+    const error = await response.json();
+    throw error;
   }
-};
+}
+
+// // export const createSpot = (spot) => async (dispatch) => {
+// //   console.log("*****INSIDE CREATE SPOT THUNK!*****");
+// //   try {
+// //     const response = await csrfFetch(`/api/spots`, {
+// //       method: 'POST',
+// //       headers: { 'Content-Type': 'application/json' },
+// //       body: JSON.stringify(spot),
+// //     });
+
+// //     if (response.ok) {
+// //       const postSpotResponse = await response.json();
+// //       console.log("1. postSpotResponse: ", postSpotResponse);
+
+// //       const normalizedSpotResponse = normalizeNewSpotShape(postSpotResponse);
+// //       console.log("2. normalizedSpotResponse: ", normalizedSpotResponse);
+
+// //       dispatch(addSpot(normalizedSpotResponse));
+// //       return normalizedSpotResponse;
+// //     } else {
+// //       const error = await response.json();
+// //       console.error("Error during POST request:", error);
+// //       return Promise.reject(error); // Ensure the error propagates if necessary
+// //     }
+// //   } catch (err) {
+// //     console.error("Unexpected error in createSpot thunk:", err);
+// //     return Promise.reject(err); // Propagate the unexpected error
+// //   }
+// // };
 
 
 const initialState = {
@@ -181,7 +184,7 @@ const spotsReducer = ( state = initialState, action) => {
             ...action.payload.Owners, 
           },
       }
-    case "ADD_SPOT": {
+    case ADD_SPOT: {
       return {
         ...state,
         spots: {
