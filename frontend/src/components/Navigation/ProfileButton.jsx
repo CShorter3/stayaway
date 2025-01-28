@@ -67,6 +67,13 @@ function ProfileButton({ user }) {
           <>
             <li>Hello, {user.firstName}</li>
             <li>{user.email}</li>
+            <hr/>
+            <li>
+              <NavLink to="/spots/current">
+                Manage Spots
+              </NavLink>
+              <hr/>
+            </li>
             <li>
               <button className="auth-btn" onClick={logoutHandler}>
                 Log Out
@@ -87,6 +94,9 @@ function ProfileButton({ user }) {
               className="auth-btn" 
               modalComponent={<LoginFormModal/>}
               />
+            </li>
+            <li>
+
             </li>
 
           </>
