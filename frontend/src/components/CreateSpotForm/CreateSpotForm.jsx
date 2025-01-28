@@ -1,13 +1,17 @@
 import { useState, useEffect } from 'react';
-import { useDispatch } from 'react-redux';
-import { useNavigate } from 'react-router-dom';
-import { createSpot } from '../../store/spots';
+import { useDispatch, useSelector} from 'react-redux';
+//import { useNavigate } from 'react-router-dom';
+import { addImageToSpot, createSpot } from '../../store/spots';
 import './CreateSpotForm.css';
 
 const CreateSpotForm = () => {
 
     const dispatch = useDispatch();
-    const navigate = useNavigate();
+    //const navigate = useNavigate();
+
+    const owner = useSelector((state) => state.session.user);
+    console.log("Current session user id: ", owner.id)
+    console.log("Current session names: ", owner.firstName, owner.lastName);
 
     // Remaining spot fields
     const [formData, setFormData] = useState({
@@ -42,7 +46,7 @@ const CreateSpotForm = () => {
         if (formData.description.length < 30) newErrors.description = 'Description needs 30 or more characters';
 		if (!formData.name) newErrors.name = 'Title is required';
         if (!formData.price) newErrors.price = 'Price per night is required';
-        //if (!formData.image1) newErrors.image1 = 'Preview Image URL is required';
+        if (!formData.image0) newErrors.image0 = 'Preview Image URL is required';
 
         setErrors(newErrors);
     }, [formData]);
@@ -71,23 +75,29 @@ const CreateSpotForm = () => {
         // console.log('Errors:', errors);
 
         const newSpot = await dispatch(createSpot(spotData));
+        const newSpotId = Object.keys(newSpot.spots)[0];
 
-        if (newSpot) {
-            console.log("Response is valid!");
+        console.log("Value of new spot returned from create spot thunk: ", newSpot);
+        console.log("Value of newSpotId: ", newSpotId);
+        
+
+        if (newSpot && newSpotId && owner) {
+            console.log("*****INSIDE CREATE SPOT IF BLOCK!*****");
             console.log('Form submitted: ', formData);
             console.log('Errors: ', errors);
 
-            // const serveSpotImages = [
-            //     { url: formData.image1, preview: true },
-            //     { url: formData.image2, preview: false },
-            //     { url: formData.image3, preview: false },
-            //     { url: formData.image4, preview: false },
-            //     { url: formData.image5, preview: false },
-            // ].filter((image) => image.url);
+            // Return array where image.url is valid
+            const serveSpotImages = [
+                { url: formData.image0, preview: true },
+            //  { url: formData.image1, preview: false },
+            //  { url: formData.image2, preview: false },
+            //  { url: formData.image3, preview: false },
+            //  { url: formData.image4, preview: false },
+            ].filter((image) => image.url);
 
-            // await Promise.all(
-            //     serveSpotImages.map((image) => dispatch(addImageToSpot(newSpot.id, image)))
-            // );
+            await Promise.all(
+                serveSpotImages.map((image) => dispatch(addImageToSpot(newSpotId, owner, image)))
+            );
 
             //navigate(`/spots/${newSpot.spots.id}`);
         }

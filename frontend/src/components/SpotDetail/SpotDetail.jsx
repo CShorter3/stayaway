@@ -6,11 +6,15 @@ import { fetchSpot } from "../../store/spots";
 import { fetchReviewsBySpotId } from "../../store/reviews";
 import { SpotDetailSnippet } from "../SpotDetailSnippet";
 import { ReviewList } from "../ReviewList";
+import { ReviewFormModal } from "../ReviewFormModal";
+import { useModal } from '../../context/Modal';
 import "./SpotDetail.css";
 
 const SpotDetail = () => {
     const { id } = useParams();
     const dispatch = useDispatch();
+    const { setModalContent/*, closeModal*/ } = useModal();
+
 
     // Select spot and related data from Redux
     const spot = useSelector((state) => state.spots.spots[id]);
@@ -31,6 +35,11 @@ const SpotDetail = () => {
         )
     );
 
+    // check is authenticated session user has posted review at spot
+    const hasUserPostedReview = spotReviews.some(
+        (review) => review.userId === sessionUser?.id
+    );
+
     useEffect(() => {
         dispatch(fetchSpot(id));
         dispatch(fetchReviewsBySpotId(id));
@@ -38,7 +47,10 @@ const SpotDetail = () => {
 
     if (!spot) return <p>Spot not found or loading...</p>;
 
+    // access owner object of spot
     const owner = owners ? owners[spot.ownerId] : null;
+
+    // prepare logic to check if spot is owned by the logged in user
     const spotIsOwnedBySession =
         sessionUser && spot.ownerId === sessionUser.id;
 
@@ -77,7 +89,15 @@ const SpotDetail = () => {
             </section>
             <section className="Review-container">
                 <SpotDetailSnippet />
-                {sessionUser && !spotIsOwnedBySession && <button>Add Review</button>}
+                {sessionUser && 
+                    !spotIsOwnedBySession && 
+                    !hasUserPostedReview &&
+                    (<button onClick={() => setModalContent(<ReviewFormModal spotId={spot.id} />)}
+							className='add-review-btn'
+                    >
+							Post Your Review
+					</button>)
+                }
                 <ReviewList reviews={spotReviews} />
             </section>
         </div>

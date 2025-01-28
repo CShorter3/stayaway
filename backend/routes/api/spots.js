@@ -729,7 +729,26 @@ router.post('/:spotId/reviews',
         message: 'User already has a review for this spot'
       });
     }
-  
+ 
+    if (!review || stars == null) {
+      return res.status(400).json({
+        message: 'Validation error',
+        errors: {
+          review: 'Review text is required',
+          stars: 'Stars must be an integer from 1 to 5',
+        },
+      });
+    }
+
+    if (stars < 1 || stars > 5 || !Number.isInteger(stars)) {
+      return res.status(400).json({
+        message: 'Validation error',
+        errors: {
+          stars: 'Stars must be an integer from 1 to 5',
+        },
+      });
+    }
+
     try {
       const newReview = await spot.createReview({
         userId, review, stars

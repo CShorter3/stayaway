@@ -3,6 +3,7 @@ import { csrfFetch } from "./csrf";
 export const LOAD_SPOTS = 'spots/LOAD_SPOTS';
 export const LOAD_SPOT = 'spots/LOAD_SPOT';
 export const ADD_SPOT = 'spots/ADD_SPOT';
+export const ADD_IMAGE = 'spots/ADD_IMAGE';
 
 export const loadSpots = (spots) => ({
   type: LOAD_SPOTS,
@@ -17,7 +18,12 @@ export const loadSpot = (spotDetail) => ({
 export const addSpot = (newSpot) => ({
   type: ADD_SPOT,
   payload: newSpot,
-})
+});
+
+export const addImage = (image) => ({
+	type: ADD_IMAGE,
+	payload: image,
+});
 
 export const fetchSpots = () => async (dispatch) => {
   const response = await csrfFetch('/api/spots');
@@ -44,15 +50,15 @@ const normalizeNewSpotShape = (spotData) => {
     spots: {
       [spotData.id]: {
         id: spotData.id,
-        name: spotData.title,
+        name: spotData.name,
         city: spotData.city,
         state: spotData.state,
         country: spotData.country,
         description: spotData.description,
         price: parseFloat(spotData.price),
         ownerId: spotData.ownerId,
-        // avgRating: 0, // Default value until reviews are added *EDGE CASE, WHAT IF THE FIRST REVIEW IS A ZERO RATING
-        // previewImage: null, // Default value until images are added
+        avgRating: null, // Default value until reviews are added *EDGE CASE, WHAT IF THE FIRST REVIEW IS A ZERO RATING
+        previewImage: null, // Default value until images are added
       },
     },
     SpotImages: {}, // Empty object, will be populated later
@@ -105,7 +111,7 @@ export const fetchSpot = (spotId) => async (dispatch) => {
 
 // Normalize POST response before dispatching to ADD_SPOT
 export const createSpot = (spot) => async (dispatch) => {
-  console.log("*****INSIDE CREATE SPOT THUNK!*****")
+  console.log("*****INSIDE CREATE SPOT THUNK!*****");
   const response = await csrfFetch(`/api/spots`, {
     method: 'POST',
     headers: { 'Content-Type': 'application/json' },
@@ -119,8 +125,8 @@ export const createSpot = (spot) => async (dispatch) => {
     console.log("2. normalizedSpotResponse: ", normalizedSpotResponse);
  
     dispatch(addSpot(normalizedSpotResponse));
+    //dispatch(addSpot(normalizedSpot.spots[spotData.id]));
     console.log(normalizedSpotResponse);
-    console.log("*****END OF CREATE SPOT THUNK*****");
     return normalizedSpotResponse;
   } else {
     const error = await response.json();
@@ -157,6 +163,44 @@ export const createSpot = (spot) => async (dispatch) => {
 // //   }
 // // };
 
+export const addImageToSpot = (newSpotId, owner, image) => async (dispatch) => {
+  console.log("*****INSIDE ADD IMAGE TO SPOT!*****");
+  console.log("Valid of first argument, newSpotId: ", newSpotId);
+  const response = await csrfFetch(`/api/spots/${newSpotId}/images`, {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify(image),
+  });
+
+  if (response.ok) {
+		const newImage = await response.json();
+    console.log("Add Image To Spot post response: ", newImage);
+
+    // Normalize image data to match Redux store shape
+    const normalizedImageData = {
+      spots: {},
+      SpotImages: {
+        [newImage.id]: {
+          id: newImage.id,
+          url: newImage.url,
+          preview: newImage.preview,
+          spotID: newSpotId,
+          ownerID: owner.id
+        }
+      },
+      Owners: {
+        [owner.id]: {
+          id: owner.id,
+          firstName: owner.firstName,
+          lastName: owner.lastName,
+        },
+      }
+	  } 
+    dispatch(addSpot(normalizedImageData));
+    return normalizedImageData;
+  } 
+  throw new Error("Failed to add image to spot")
+}
 
 const initialState = {
   spots: {},
@@ -182,7 +226,7 @@ const spotsReducer = ( state = initialState, action) => {
         Owners: {
             ...state.Owners, 
             ...action.payload.Owners, 
-          },
+        },
       }
     case ADD_SPOT: {
       return {
@@ -198,8 +242,21 @@ const spotsReducer = ( state = initialState, action) => {
         Owners: {
           ...state.Owners,
           ...action.payload.Owners, // Merge new Owners
-        },
+        }
       }
+    }
+    case ADD_IMAGE: {
+      return {
+        ...state,
+        SpotImages: {
+          ...state.SpotImages,
+          ...action.payload.SpotImages,
+        },
+        Owners: {
+          ...state.Owners,
+          ...action.payload.Owners
+        }
+      };
     }
     default:
       return state;
