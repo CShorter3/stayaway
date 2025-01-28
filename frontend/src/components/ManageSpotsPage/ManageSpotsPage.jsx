@@ -1,6 +1,6 @@
 import { useDispatch, useSelector } from 'react-redux';
 import { useEffect } from 'react';
-import { Tile } from '../HomePage';
+import { ManageTile } from '.';
 import { fetchSpots } from '../../store/spots';
 
 // HomePage will dynamically populate the grid with spot tiles
@@ -31,7 +31,7 @@ function ManageSpotsPage() {
             {userSpotsFullfilled ? (
                 <div className="tiles-grid">
                     {sessionUserSpots.map((spot) => (
-                        <Tile key={spot.id} spot={spot} />
+                        <ManageTile key={spot.id} spot={spot} />
                     ))}
                 </div>
             ) : (
