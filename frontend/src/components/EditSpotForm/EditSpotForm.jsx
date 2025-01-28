@@ -5,6 +5,7 @@ import { addImageToSpot, createSpot } from '../../store/spots';
 import './EditSpotForm.css';
 
 const EditSpotForm = () => {
+    console.log("INSIDE MANAGE SPOT ")
 
     const dispatch = useDispatch();
     //const navigate = useNavigate();

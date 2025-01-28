@@ -9,6 +9,7 @@ import HomePage from './components/HomePage/HomePage';
 import { SpotDetail } from './components/SpotDetail';
 import { CreateSpotForm } from './components/CreateSpotForm';
 import { ManageSpotsPage } from './components/ManageSpotsPage';
+import { EditSpotForm } from './components/EditSpotForm';
 
 function Layout() {
   const dispatch = useDispatch();
@@ -47,6 +48,10 @@ const router = createBrowserRouter([
       {
         path: '/spots/current',
         element: <ManageSpotsPage />
+      },
+      {
+        path: '/spots/:id/edit',
+        element: <EditSpotForm />
       },
       // {
       //  path: '/signup',

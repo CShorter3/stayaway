@@ -10,6 +10,11 @@ const ManageTile = ({ spot }) => {
         navigate(`/spots/${spot.id}`);
     };
 
+    const handleEditClick = (e) => {
+        e.stopPropagation();
+        navigate(`/spots/${spot.id}/edit`);
+    }
+
     const tooltipId = `tooltip-${spot.id}`;
 
     return (
@@ -25,7 +30,7 @@ const ManageTile = ({ spot }) => {
                 <p id="push-detail-left">${spot.price} <span>night</span></p>
             </div>
             <div className="manage-action-row">
-                <button>Edit</button>
+                <button onClick={handleEditClick}>Edit</button>
                 <button>Delete</button>
             </div>
             <Tooltip
