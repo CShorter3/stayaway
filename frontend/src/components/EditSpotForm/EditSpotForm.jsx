@@ -139,7 +139,7 @@ const EditSpotForm = () => {
         <div>
             <form onSubmit={handleSubmit} className="create-spot-form">
                 <div className="form-header">
-                    <h2>Create a New Spot</h2>
+                    <h2>Update your Spot</h2>
                     <h4>Where&apos;s your place located?</h4>
                     <p>
                         Guests will only get your address once they&apos;ve booked a reservation.
@@ -294,7 +294,7 @@ const EditSpotForm = () => {
                 </div>
 
                 <button onClick={handleSubmit} type="submit" className="create-spot-btn">
-                    Update Spot
+                    Update your Spot
                 </button>
 
             </form>
