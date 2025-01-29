@@ -315,9 +315,22 @@ const spotsReducer = ( state = initialState, action) => {
       };
     }
     case EDIT_SPOT: {
-			
-			return newState;
-		}
+      return {
+        ...state,
+        spots: {
+          ...state.spots,
+          ...action.payload.spots, // Merge new spot(s) into existing spots
+        },
+        SpotImages: {
+          ...state.SpotImages,
+          ...action.payload.SpotImages, // Merge new SpotImages
+        },
+        Owners: {
+          ...state.Owners,
+          ...action.payload.Owners, // Merge new Owners
+        }
+      }
+    }
     default:
       return state;
   }
