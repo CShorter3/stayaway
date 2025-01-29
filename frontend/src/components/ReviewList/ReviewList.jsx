@@ -9,7 +9,10 @@ const ReviewList = ( { reviews } ) => {
     // const reviews = reviewsArray.filter((review) => review.spotId === parseInt(spotId, 10));
     // console.log("Selecting the following reviews: ", reviews);
 
-     const users = useSelector((state) => state.reviews.users || {});
+    const sessionUser = useSelector(state => state.session.userId);
+    console.log("Curent session user's id: ", sessionUser)
+    
+    const users = useSelector((state) => state.reviews.users || {});
 
     if(reviews.length === 0){
         return <p className="no-reviews"> Be the first to post a review!</p>;

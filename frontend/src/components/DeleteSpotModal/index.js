@@ -1,0 +1,1 @@
+export { default as DeleteSpotModal } from './DeleteSpotModal';

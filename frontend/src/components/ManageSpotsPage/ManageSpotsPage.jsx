@@ -1,11 +1,13 @@
 import { useDispatch, useSelector } from 'react-redux';
 import { useEffect } from 'react';
-import { ManageTile } from '.';
+import { useNavigate } from 'react-router-dom';
+import ManageTile from '../ManageSpotsPage/ManageTile';
 import { fetchSpots } from '../../store/spots';
 
 // HomePage will dynamically populate the grid with spot tiles
 function ManageSpotsPage() {
     const dispatch = useDispatch();
+    const navigate = useNavigate();
 
     // Get the current session user's ID
     const sessionUserId = useSelector((state) => state.session.user.id);
@@ -23,7 +25,7 @@ function ManageSpotsPage() {
 
     useEffect(() => {
         dispatch(fetchSpots());
-    }, [dispatch]);
+    }, [dispatch, sessionUserSpots.length]);
 
     return (
         <div className="manage-spots-container">
@@ -35,7 +37,9 @@ function ManageSpotsPage() {
                     ))}
                 </div>
             ) : (
-                <button>Create A Spot</button>
+                <button to='/spots/new' className='create-spot-button'>   
+                    Create A Spot
+                </button>
             )}
         </div>
     );

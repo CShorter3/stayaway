@@ -1,5 +1,7 @@
 import { useNavigate } from "react-router-dom";
 import { Tooltip } from "react-tooltip";
+import { DeleteSpotModal } from '../DeleteSpotModal';
+import { OpenModalButton } from "../OpenModalButton";
 import { FaStar } from 'react-icons/fa';
 import "./ManageTile.css";
 
@@ -13,10 +15,6 @@ const ManageTile = ({ spot }) => {
     const handleEditClick = (e) => {
         e.stopPropagation();
         navigate(`/spots/${spot.id}/edit`);
-    }
-
-    const handleDeleteClick = (e) => {
-        e.stopPropagation(); 
     }
 
     const tooltipId = `tooltip-${spot.id}`;
@@ -35,7 +33,10 @@ const ManageTile = ({ spot }) => {
             </div>
             <div className="manage-action-row">
                 <button onClick={handleEditClick}>Edit</button>
-                <button onClick={handleDeleteClick}>Delete</button>
+                <OpenModalButton
+                    buttonText="Delete"
+                    modalComponent={<DeleteSpotModal spotId={spot.id} />}
+                />
             </div>
             <Tooltip
                 id={tooltipId}
@@ -48,7 +49,6 @@ const ManageTile = ({ spot }) => {
 };
 
 export default ManageTile;
-
 
 // import { useEffect } from "react";
 // import { useDispatch, useSelector } from "react-redux";

@@ -1,10 +1,11 @@
 import { csrfFetch } from "./csrf";
 
-export const LOAD_SPOTS = 'spots/LOAD_SPOTS';
-export const LOAD_SPOT = 'spots/LOAD_SPOT';
-export const ADD_SPOT = 'spots/ADD_SPOT';
-export const ADD_IMAGE = 'spots/ADD_IMAGE';
-export const EDIT_SPOT = 'spots/EDIT_IMAGE';
+export const LOAD_SPOTS = "spots/LOAD_SPOTS";
+export const LOAD_SPOT = "spots/LOAD_SPOT";
+export const ADD_SPOT = "spots/ADD_SPOT";
+export const ADD_IMAGE = "spots/ADD_IMAGE";
+export const EDIT_SPOT = "spots/EDIT_IMAGE";
+export const DELETE_SPOT = "spots/DELETE_SPOT";
 
 export const loadSpots = (spots) => ({
   type: LOAD_SPOTS,
@@ -22,17 +23,22 @@ export const addSpot = (newSpot) => ({
 });
 
 export const addImage = (image) => ({
-	type: ADD_IMAGE,
-	payload: image,
+  type: ADD_IMAGE,
+  payload: image,
 });
 
 export const editSpot = (spot) => ({
   type: EDIT_SPOT,
-  payload: spot
-})
+  payload: spot,
+});
+
+export const deleteSpot = (spot) => ({
+  type: DELETE_SPOT,
+  payload: spot,
+});
 
 export const fetchSpots = () => async (dispatch) => {
-  const response = await csrfFetch('/api/spots');
+  const response = await csrfFetch("/api/spots");
 
   if (response.ok) {
     const data = await response.json();
@@ -40,7 +46,7 @@ export const fetchSpots = () => async (dispatch) => {
     // Normalize spots data
     const normalizedSpots = {};
     data.Spots.forEach((spot) => {
-        normalizedSpots[spot.id] = spot;
+      normalizedSpots[spot.id] = spot;
     });
 
     // Dispatch normalized spots to the store
@@ -49,7 +55,7 @@ export const fetchSpots = () => async (dispatch) => {
 };
 
 // Supports Create Spot Thunk
-    // Helper function transforms POST response to proper redux store shape
+// Helper function transforms POST response to proper redux store shape
 const normalizeNewSpotShape = (spotData) => {
   console.log("*****INSIDE NORMALIZE NEW SPOT SHAPE*****");
   const normalizedResponse = {
@@ -80,7 +86,7 @@ const normalizeNewSpotShape = (spotData) => {
 };
 
 // Supports Update Spot Thunk
-    // Helper function transforms PUT response to proper redux store shape
+// Helper function transforms PUT response to proper redux store shape
 const normalizePutSpotShape = (spotData) => {
   console.log("*****INSIDE NORMALIZE NEW SPOT SHAPE*****");
   const normalizedPutResponse = {
@@ -114,21 +120,23 @@ export const fetchSpot = (spotId) => async (dispatch) => {
     // Normalize SpotImages
     const normalizedSpotImages = {};
     data.SpotImages.forEach((image) => {
-        normalizedSpotImages[image.id] = {
-          ...image,
-          spotID: data.id,
-          ownerID: data.ownerId
-        };
+      normalizedSpotImages[image.id] = {
+        ...image,
+        spotID: data.id,
+        ownerID: data.ownerId,
+      };
     });
 
     // Normalize Owner
     const normalizedOwners = { [data.Owner.id]: data.Owner };
 
     // Normalize Spot data (excluding SpotImages and Owner)
-    const { SpotImages=[], Owners={}, ...normalizedSpot } = data;
+    const { SpotImages = [], Owners = {}, ...normalizedSpot } = data;
+    
 
     // Add previewImage key
-    normalizedSpot.previewImage = SpotImages.find((img) => img.preview)?.url || null;
+    normalizedSpot.previewImage =
+      SpotImages.find((img) => img.preview)?.url || null;
 
     // Dispatch normalized data
     dispatch(
@@ -145,17 +153,17 @@ export const fetchSpot = (spotId) => async (dispatch) => {
 export const createSpot = (spot) => async (dispatch) => {
   console.log("*****INSIDE CREATE SPOT THUNK!*****");
   const response = await csrfFetch(`/api/spots`, {
-    method: 'POST',
-    headers: { 'Content-Type': 'application/json' },
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
     body: JSON.stringify(spot),
   });
 
   if (response.ok) {
     const postSpotResponse = await response.json();
-     console.log("1. postSpotResponse: ", postSpotResponse);
+    console.log("1. postSpotResponse: ", postSpotResponse);
     const normalizedSpotResponse = normalizeNewSpotShape(postSpotResponse);
     console.log("2. normalizedSpotResponse: ", normalizedSpotResponse);
- 
+
     dispatch(addSpot(normalizedSpotResponse));
     //dispatch(addSpot(normalizedSpot.spots[spotData.id]));
     console.log(normalizedSpotResponse);
@@ -164,7 +172,7 @@ export const createSpot = (spot) => async (dispatch) => {
     const error = await response.json();
     throw error;
   }
-}
+};
 
 // // export const createSpot = (spot) => async (dispatch) => {
 // //   console.log("*****INSIDE CREATE SPOT THUNK!*****");
@@ -199,13 +207,13 @@ export const addImageToSpot = (newSpotId, owner, image) => async (dispatch) => {
   console.log("*****INSIDE ADD IMAGE TO SPOT!*****");
   console.log("Valid of first argument, newSpotId: ", newSpotId);
   const response = await csrfFetch(`/api/spots/${newSpotId}/images`, {
-    method: 'POST',
-    headers: { 'Content-Type': 'application/json' },
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
     body: JSON.stringify(image),
   });
 
   if (response.ok) {
-		const newImage = await response.json();
+    const newImage = await response.json();
     console.log("Add Image To Spot post response: ", newImage);
 
     // Normalize image data to match Redux store shape
@@ -217,8 +225,8 @@ export const addImageToSpot = (newSpotId, owner, image) => async (dispatch) => {
           url: newImage.url,
           preview: newImage.preview,
           spotID: newSpotId,
-          ownerID: owner.id
-        }
+          ownerID: owner.id,
+        },
       },
       Owners: {
         [owner.id]: {
@@ -226,28 +234,28 @@ export const addImageToSpot = (newSpotId, owner, image) => async (dispatch) => {
           firstName: owner.firstName,
           lastName: owner.lastName,
         },
-      }
-	  } 
+      },
+    };
     dispatch(addSpot(normalizedImageData));
     return normalizedImageData;
-  } 
-  throw new Error("Failed to add image to spot")
-}
+  }
+  throw new Error("Failed to add image to spot");
+};
 
 export const updateSpot = (spotId, updatedSpot) => async (dispatch) => {
   console.log("*****INSIDE UPDATE SPOT THUNK!*****");
   const response = await csrfFetch(`/api/spots/${spotId}`, {
-    method: 'PUT',
-    headers: { 'Content-Type': 'application/json' },
+    method: "PUT",
+    headers: { "Content-Type": "application/json" },
     body: JSON.stringify(updatedSpot),
   });
 
   if (response.ok) {
     const putSpotResponse = await response.json();
-     console.log("1. putSpotResponse: ", putSpotResponse);
+    console.log("1. putSpotResponse: ", putSpotResponse);
     const normalizedPutSpotResponse = normalizePutSpotShape(putSpotResponse);
     console.log("2. normalizedPutResponse: ", normalizedPutSpotResponse);
- 
+
     dispatch(editSpot(normalizedPutSpotResponse));
     //dispatch(addSpot(normalizedSpot.spots[spotData.id]));
     console.log(normalizedPutSpotResponse);
@@ -256,34 +264,59 @@ export const updateSpot = (spotId, updatedSpot) => async (dispatch) => {
     const error = await response.json();
     throw error;
   }
-}
+};
+
+export const removeSpot = (spotId) => async (dispatch) => {
+  console.log("*****INSIDE DELETE SPOT THUNK!*****");
+  // consider how SpotImages with the unique key
+  try {
+    const response = await csrfFetch(`/api/spots/${spotId}`, {
+      method: "DELETE",
+      headers: { "Content-Type": "application/json" },
+    });
+
+    console.log("Value of fetched response data to delete: ", response);
+
+    if (response.ok) {
+      dispatch(deleteSpot(spotId));
+    } else {
+      const errorData = await response.json();
+      console.error("Failed to delete spot:", errorData);
+    }
+  } catch (error) {
+    console.error("Error deleting spot:", error);
+  }
+};
 
 const initialState = {
   spots: {},
   SpotImages: {},
-  Owners: {}
+  Owners: {},
 };
-          
-const spotsReducer = ( state = initialState, action) => {
+
+const spotsReducer = (state = initialState, action) => {
   switch (action.type) {
     case LOAD_SPOTS:
-      return { ...state, spots: { ...state.spots, ...action.payload} }; 
+      return { ...state, spots: { ...state.spots, ...action.payload } };
     case LOAD_SPOT:
       return {
-        ...state, spots: { ...state.spots,
-          [action.payload.spot.id]:{
-            ...state.spots[action.payload.spot.id],   //retain existing spot data
-            ...action.payload.spot                    //merge new spot data
-        }},
+        ...state,
+        spots: {
+          ...state.spots,
+          [action.payload.spot.id]: {
+            ...state.spots[action.payload.spot.id], //retain existing spot data
+            ...action.payload.spot, //merge new spot data
+          },
+        },
         SpotImages: {
-            ...state.SpotImages, 
-            ...action.payload.SpotImages, 
+          ...state.SpotImages,
+          ...action.payload.SpotImages,
         },
         Owners: {
-            ...state.Owners, 
-            ...action.payload.Owners, 
+          ...state.Owners,
+          ...action.payload.Owners,
         },
-      }
+      };
     case ADD_SPOT: {
       return {
         ...state,
@@ -298,8 +331,8 @@ const spotsReducer = ( state = initialState, action) => {
         Owners: {
           ...state.Owners,
           ...action.payload.Owners, // Merge new Owners
-        }
-      }
+        },
+      };
     }
     case ADD_IMAGE: {
       return {
@@ -310,8 +343,8 @@ const spotsReducer = ( state = initialState, action) => {
         },
         Owners: {
           ...state.Owners,
-          ...action.payload.Owners
-        }
+          ...action.payload.Owners,
+        },
       };
     }
     case EDIT_SPOT: {
@@ -328,23 +361,20 @@ const spotsReducer = ( state = initialState, action) => {
         Owners: {
           ...state.Owners,
           ...action.payload.Owners, // Merge new Owners
-        }
-      }
+        },
+      };
+    }
+    case "DELETE_SPOT": {
+      const newState = { ...state };
+      delete newState[action.payload]; // Remove deleted spot from state
+      return newState;
     }
     default:
       return state;
   }
-}
-      
+};
+
 export default spotsReducer;
-
-
-
-
-
-
-
-
 
 // import { csrfFetch } from "./csrf";
 
@@ -420,11 +450,11 @@ export default spotsReducer;
 //   SpotImages: {},
 //   Owners: {}
 // };
-          
+
 // const spotsReducer = ( state = initialState, action) => {
 //   switch (action.type) {
 //     case LOAD_SPOTS:
-//       return { ...state, spots: { ...state.spots, ...action.payload} }; 
+//       return { ...state, spots: { ...state.spots, ...action.payload} };
 //     case LOAD_SPOT:
 //       return {
 //         ...state, spots: { ...state.spots,
@@ -433,39 +463,25 @@ export default spotsReducer;
 //             ...action.payload.spot                    //merge new spot data
 //         }},
 //         SpotImages: {
-//             ...state.SpotImages, 
-//             ...action.payload.SpotImages, 
+//             ...state.SpotImages,
+//             ...action.payload.SpotImages,
 //         },
 //         Owners: {
-//             ...state.Owners, 
-//             ...action.payload.Owners, 
+//             ...state.Owners,
+//             ...action.payload.Owners,
 //           },
 //       };
 //     default:
 //       return state;
 //   }
 // }
-      
+
 // export default spotsReducer;
-          
-          
-          
-          
-          
-          
-          
-          
-          
-          
-          
-
-
-          
 
 // // **** Action Creators ****
 // export const loadSpots = (spots) => ({
 //         type: LOAD_SPOTS,
-//         payload: spots 
+//         payload: spots
 // });
 
 // export const loadSpot = (spot) => ({
@@ -479,7 +495,7 @@ export default spotsReducer;
 //     console.log("Value of dispatch at invocation: ", dispatch || "empty");
 //     const response = await csrfFetch('/api/spots');
 //     console.log("Fetch api response: ", response);
-    
+
 //     if(response.ok){
 //         console.log("Response is ok!");
 //         const data = await response.json();
@@ -497,19 +513,19 @@ export default spotsReducer;
 
 // export const fetchSpot = (spotId) => async (dispatch) => {
 //   const response = await csrfFetch(`/api/spots/${spotId}`);
-  
+
 //   if (response.ok) {
 //     const spot = await response.json();
-    
+
 //     // Normalize SpotImages
 //     const normalizedSpotImages = {};
 //     for (const image of spot.SpotImages) {
 //       normalizedSpotImages[image.id] = image;
 //     }
-    
+
 //     // Normalize Owner
 //     const normalizedOwner = { [spot.Owner.id]: spot.Owner };
-    
+
 //     // Normalize Spot - forget previewImage
 //     const excludedKeys = ['SpotImages', 'Owner', 'previewImage'];
 //     const normalizedSpot = {};
@@ -521,20 +537,16 @@ export default spotsReducer;
 
 //     // Set previewImage key manually to implement logic
 //     normalizedSpot.previewImage = spot.SpotImages.find((img) => img.preview)?.url || null;
-    
+
 //     // Dispatch the normalized data
 //     dispatch(loadSpot({
-//       spot: normalizedSpot,            
-//       SpotImages: normalizedSpotImages, 
-//       Owner: normalizedOwner,       
+//       spot: normalizedSpot,
+//       SpotImages: normalizedSpotImages,
+//       Owner: normalizedOwner,
 //     })
 //   );
 // }
 // };
-
-
-
-
 
 // export const fetchSpot = (spotId) => async (dispatch) =>{
 //   const response = await csrfFetch(`/api/spots/${spotId}`);
@@ -542,9 +554,8 @@ export default spotsReducer;
 //   if(response.ok){
 //     const spot = await response.json();
 //     dispatch(loadSpot(spot));
-//   } 
+//   }
 // }
-
 
 // **** Spots Object ****
 
