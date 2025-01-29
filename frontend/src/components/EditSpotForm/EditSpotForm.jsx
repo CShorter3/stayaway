@@ -1,18 +1,25 @@
 import { useState, useEffect } from 'react';
 import { useDispatch, useSelector} from 'react-redux';
-//import { useNavigate } from 'react-router-dom';
-import { addImageToSpot, createSpot } from '../../store/spots';
+import { useNavigate, useParams} from 'react-router-dom';
+import { fetchSpot, updateSpot } from '../../store/spots';
 import './EditSpotForm.css';
 
 const EditSpotForm = () => {
-    console.log("INSIDE MANAGE SPOT ")
+    console.log("*****INSIDE EDIT SPOT!*****");
 
     const dispatch = useDispatch();
-    //const navigate = useNavigate();
+    const navigate = useNavigate();
 
-    const owner = useSelector((state) => state.session.user);
-    console.log("Current session user id: ", owner.id)
-    console.log("Current session names: ", owner.firstName, owner.lastName);
+    //const owner = useSelector((state) => state.session.user);
+    // console.log("Current session user id: ", owner.id);
+    // console.log("Current session names: ", owner.firstName, owner.lastName);
+
+    const { spotId } = useParams();
+    const editSpot = useSelector((state) => state.spots.spots[spotId]);
+
+    console.log("id pulled from param: ", spotId);
+
+    console.log("targeted spot to edit based on id: ", editSpot);
 
     // Remaining spot fields
     const [formData, setFormData] = useState({
@@ -23,15 +30,34 @@ const EditSpotForm = () => {
         description: '',
         name: '',
         price: '',
-        image0: '',
-        image1: '',
-        image2: '',
-        image3: '',
-        image4: '',
+        // image0: '',
+        // image1: '',
+        // image2: '',
+        // image3: '',
+        // image4: '',
     });
 
     const [errors, setErrors] = useState({});
     const [hasSubmitted, setHasSubmitted] = useState(false);
+
+    useEffect(() => {
+		dispatch(fetchSpot(spotId));
+	}, [dispatch, spotId]);
+
+    useEffect(() => {
+		if (editSpot) {
+			setFormData({
+				country: editSpot.country || '',
+				address: editSpot.address || '',
+				city: editSpot.city || '',
+				state: editSpot.state || '',
+				description: editSpot.description || '',
+				name: editSpot.name || '',
+				price: editSpot.price || '',
+			});
+		}
+	}, [editSpot]);
+
 
     const handleChange = (e) => {
         setFormData({ ...formData, [e.target.id]: e.target.value });
@@ -39,7 +65,7 @@ const EditSpotForm = () => {
 
     useEffect(() => {
         const newErrors = {};
-
+        // MY BACKEND WILL USE PREVIOUS FIELD DATA IF NEW DATA NOT PROVIDED
         if (!formData.country) newErrors.country = 'Country is required';
         if (!formData.address) newErrors.address = 'Street Address is required';
         if (!formData.city) newErrors.city = 'City is required';
@@ -47,7 +73,7 @@ const EditSpotForm = () => {
         if (formData.description.length < 30) newErrors.description = 'Description needs 30 or more characters';
 		if (!formData.name) newErrors.name = 'Title is required';
         if (!formData.price) newErrors.price = 'Price per night is required';
-        if (!formData.image0) newErrors.image0 = 'Preview Image URL is required';
+        //if (!formData.image0) newErrors.image0 = 'Preview Image URL is required';
 
         setErrors(newErrors);
     }, [formData]);
@@ -55,14 +81,15 @@ const EditSpotForm = () => {
     const handleSubmit = async (e) => {
         e.preventDefault();
         setHasSubmitted(true);
-        console.log('Form submitted', formData);
+
+        console.log('Form data POSTED to server', formData);
         console.log('Errors:', errors); 
 
         if (Object.keys(errors).length > 0) {
             return;
         }
 
-        const spotData = {
+        const updatedSpot = {
             address: formData.address,
             city: formData.city,
             state: formData.state,
@@ -72,38 +99,40 @@ const EditSpotForm = () => {
             price: parseInt(formData.price),
         };
 
-        // console.log('Form submitted', formData);
+        console.log('Edited Spot Data', updatedSpot);
         // console.log('Errors:', errors);
 
-        const newSpot = await dispatch(createSpot(spotData));
-        const newSpotId = Object.keys(newSpot.spots)[0];
+        const updatedSpotResponse = await dispatch(updateSpot(spotId, updatedSpot));
 
-        console.log("Value of new spot returned from create spot thunk: ", newSpot);
-        console.log("Value of newSpotId: ", newSpotId);
+        // const newSpotId = Object.keys(newSpot.spots)[0];
+
+        console.log("Value of new spot returned from update spot thunk: ", updatedSpotResponse);
+       // console.log("Value of newSpotId: ", newSpotId);
+        //console.log("Value of newSpotId: ", newSpotId);
         
+        // EDITING IMAGE DETAILS IS OPTIONAL FOR MVP
+        if (updatedSpotResponse) {
+        //     console.log("*****INSIDE CREATE SPOT IF BLOCK!*****");
+        //     console.log('Form submitted: ', formData);
+        //     console.log('Errors: ', errors);
+            console.log("inside response if block")
+        //     // Return array where image.url is valid
+        //     const serveSpotImages = [
+        //         { url: formData.image0, preview: true },
+        //     //  { url: formData.image1, preview: false },
+        //     //  { url: formData.image2, preview: false },
+        //     //  { url: formData.image3, preview: false },
+        //     //  { url: formData.image4, preview: false },
+        //     ].filter((image) => image.url);
 
-        if (newSpot && newSpotId && owner) {
-            console.log("*****INSIDE CREATE SPOT IF BLOCK!*****");
-            console.log('Form submitted: ', formData);
-            console.log('Errors: ', errors);
+        //     await Promise.all(
+        //         serveSpotImages.map((image) => dispatch(addImageToSpot(newSpotId, owner, image)))
+        //     );
 
-            // Return array where image.url is valid
-            const serveSpotImages = [
-                { url: formData.image0, preview: true },
-            //  { url: formData.image1, preview: false },
-            //  { url: formData.image2, preview: false },
-            //  { url: formData.image3, preview: false },
-            //  { url: formData.image4, preview: false },
-            ].filter((image) => image.url);
-
-            await Promise.all(
-                serveSpotImages.map((image) => dispatch(addImageToSpot(newSpotId, owner, image)))
-            );
-
-            //navigate(`/spots/${newSpot.spots.id}`);
+        navigate(`/spots/${spotId}`);
         }
-        console.log('Form submitted', formData);
-        console.log('Errors:', errors);
+        console.log("outside response if block")
+
     };
 
     return (
@@ -219,7 +248,6 @@ const EditSpotForm = () => {
                         <p className="errors">{errors.price}</p>
                     )}
                 </div>
-                <hr />
 
                 <div>
                     <h4>Liven up your spot with photos</h4>
@@ -233,6 +261,7 @@ const EditSpotForm = () => {
                     {hasSubmitted && errors.image0 && (
                         <p className="errors">{errors.image0}</p>
                     )}
+                {/* 
                     <input
                         id="image1"
                         placeholder="Image URL"
@@ -261,11 +290,11 @@ const EditSpotForm = () => {
                         value={formData.image4}
                         onChange={handleChange}
                     />
+                    */ }
                 </div>
-                <hr />
 
                 <button onClick={handleSubmit} type="submit" className="create-spot-btn">
-                    Create Spot
+                    Update Spot
                 </button>
 
             </form>

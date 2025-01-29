@@ -4,6 +4,7 @@ export const LOAD_SPOTS = 'spots/LOAD_SPOTS';
 export const LOAD_SPOT = 'spots/LOAD_SPOT';
 export const ADD_SPOT = 'spots/ADD_SPOT';
 export const ADD_IMAGE = 'spots/ADD_IMAGE';
+export const EDIT_SPOT = 'spots/EDIT_IMAGE';
 
 export const loadSpots = (spots) => ({
   type: LOAD_SPOTS,
@@ -24,6 +25,11 @@ export const addImage = (image) => ({
 	type: ADD_IMAGE,
 	payload: image,
 });
+
+export const editSpot = (spot) => ({
+  type: EDIT_SPOT,
+  payload: spot
+})
 
 export const fetchSpots = () => async (dispatch) => {
   const response = await csrfFetch('/api/spots');
@@ -73,6 +79,32 @@ const normalizeNewSpotShape = (spotData) => {
   return normalizedResponse;
 };
 
+// Supports Update Spot Thunk
+    // Helper function transforms PUT response to proper redux store shape
+const normalizePutSpotShape = (spotData) => {
+  console.log("*****INSIDE NORMALIZE NEW SPOT SHAPE*****");
+  const normalizedPutResponse = {
+    spots: {
+      [spotData.id]: {
+        id: spotData.id,
+        name: spotData.name,
+        city: spotData.city,
+        state: spotData.state,
+        country: spotData.country,
+        description: spotData.description,
+        price: parseFloat(spotData.price),
+        ownerId: spotData.ownerId,
+        //avgRating: null, // Default value until reviews are added *EDGE CASE, WHAT IF THE FIRST REVIEW IS A ZERO RATING
+        //previewImage: null, // Default value until images are added
+      },
+    },
+    SpotImages: {}, // Empty object, will be populated later
+    Owners: {}, // Empty object, will be populated later
+  };
+  console.log("---> normalized edit spot data: ", normalizedPutResponse);
+  console.log("*****END OF normalizeNewPutSpotShape*****");
+  return normalizedPutResponse;
+};
 export const fetchSpot = (spotId) => async (dispatch) => {
   const response = await csrfFetch(`/api/spots/${spotId}`);
 
@@ -202,6 +234,30 @@ export const addImageToSpot = (newSpotId, owner, image) => async (dispatch) => {
   throw new Error("Failed to add image to spot")
 }
 
+export const updateSpot = (spotId, updatedSpot) => async (dispatch) => {
+  console.log("*****INSIDE UPDATE SPOT THUNK!*****");
+  const response = await csrfFetch(`/api/spots/${spotId}`, {
+    method: 'PUT',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify(updatedSpot),
+  });
+
+  if (response.ok) {
+    const putSpotResponse = await response.json();
+     console.log("1. putSpotResponse: ", putSpotResponse);
+    const normalizedPutSpotResponse = normalizePutSpotShape(putSpotResponse);
+    console.log("2. normalizedPutResponse: ", normalizedPutSpotResponse);
+ 
+    dispatch(editSpot(normalizedPutSpotResponse));
+    //dispatch(addSpot(normalizedSpot.spots[spotData.id]));
+    console.log(normalizedPutSpotResponse);
+    return normalizedPutSpotResponse;
+  } else {
+    const error = await response.json();
+    throw error;
+  }
+}
+
 const initialState = {
   spots: {},
   SpotImages: {},
@@ -258,6 +314,10 @@ const spotsReducer = ( state = initialState, action) => {
         }
       };
     }
+    case EDIT_SPOT: {
+			
+			return newState;
+		}
     default:
       return state;
   }

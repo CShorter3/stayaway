@@ -1,13 +1,13 @@
 import { useState, useEffect } from 'react';
 import { useDispatch, useSelector} from 'react-redux';
-//import { useNavigate } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
 import { addImageToSpot, createSpot } from '../../store/spots';
 import './CreateSpotForm.css';
 
 const CreateSpotForm = () => {
 
     const dispatch = useDispatch();
-    //const navigate = useNavigate();
+    const navigate = useNavigate();
 
     const owner = useSelector((state) => state.session.user);
     console.log("Current session user id: ", owner.id)
@@ -89,10 +89,10 @@ const CreateSpotForm = () => {
             // Return array where image.url is valid
             const serveSpotImages = [
                 { url: formData.image0, preview: true },
-            //  { url: formData.image1, preview: false },
-            //  { url: formData.image2, preview: false },
-            //  { url: formData.image3, preview: false },
-            //  { url: formData.image4, preview: false },
+             { url: formData.image1, preview: false },
+             { url: formData.image2, preview: false },
+             { url: formData.image3, preview: false },
+             { url: formData.image4, preview: false },
             ].filter((image) => image.url);
 
             await Promise.all(
@@ -100,6 +100,7 @@ const CreateSpotForm = () => {
             );
 
             //navigate(`/spots/${newSpot.spots.id}`);
+            navigate(`/spots/${newSpotId}`);
         }
         console.log('Form submitted', formData);
         console.log('Errors:', errors);
