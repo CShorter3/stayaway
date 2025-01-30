@@ -72,7 +72,6 @@ function ProfileButton({ user }) {
               <NavLink to="/spots/current">
                 Manage Spots
               </NavLink>
-              <hr/>
             </li>
             <li>
               <button className="auth-btn" onClick={logoutHandler}>
