@@ -20,6 +20,9 @@ function ManageSpotsPage() {
         (spot) => spot.ownerId === parseInt(sessionUserId, 10)
     );
 
+    const handleClick = async () => {
+       navigate('/spots/new')
+    };
     // Check if the user owns any spots
     const userSpotsFullfilled = sessionUserSpots.length > 0;
 
@@ -37,7 +40,7 @@ function ManageSpotsPage() {
                     ))}
                 </div>
             ) : (
-                <button to='/spots/new' className='create-spot-button'>   
+                <button onClick={handleClick} className='create-spot-button'>   
                     Create A Spot
                 </button>
             )}
