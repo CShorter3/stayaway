@@ -31,6 +31,7 @@ function SignupFormModal() {
     } else {
       setErrors((prevErrors) => {
         const { confirmPassword, ...rest } = prevErrors; // extract confirmPassword key from errors object
+        console.log(confirmPassword); // delete
         return rest;
       })
     }
@@ -61,6 +62,7 @@ function SignupFormModal() {
   return (
     <>
       <form onSubmit={handleSubmit}>
+        <h1>Sign Up</h1>
         <label>
           Email
           <input

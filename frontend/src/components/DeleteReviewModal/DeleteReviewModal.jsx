@@ -2,6 +2,7 @@
 import { useDispatch } from "react-redux";
 import { removeReview } from "../../store/reviews"; // Assuming you have a deleteSpot thunk
 import { useModal } from "../../Context/Modal";
+import './DeleteReviewModal.css';
 
 function DeleteReviewModal({ reviewId }) {
     

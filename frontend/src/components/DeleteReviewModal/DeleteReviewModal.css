@@ -56,3 +56,10 @@
 .keep-button:hover {
     background-color: #3f5872;
 }
+
+#modal-content{
+    border-radius: 15px;
+    border: 2px solid black;
+    box-shadow: 0 4px 6px rgba(28, 2, 61, 0.472);
+
+}
