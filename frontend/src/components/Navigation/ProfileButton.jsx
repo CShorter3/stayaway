@@ -69,7 +69,7 @@ function ProfileButton({ user }) {
             <li>{user.email}</li>
             <hr/>
             <li>
-              <NavLink to="/spots/current">
+              <NavLink to="/spots/current" style={{ textDecoration: "none" }}>
                 Manage Spots
               </NavLink>
             </li>
