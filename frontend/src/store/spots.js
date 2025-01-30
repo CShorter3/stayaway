@@ -132,7 +132,7 @@ export const fetchSpot = (spotId) => async (dispatch) => {
 
     // Normalize Spot data (excluding SpotImages and Owner)
     const { SpotImages = [], Owners = {}, ...normalizedSpot } = data;
-    
+    console.log(Owners); // delete
 
     // Add previewImage key
     normalizedSpot.previewImage =
@@ -364,11 +364,14 @@ const spotsReducer = (state = initialState, action) => {
         },
       };
     }
-    case "DELETE_SPOT": {
-      const newState = { ...state };
-      delete newState[action.payload]; // Remove deleted spot from state
+    case DELETE_SPOT: {
+      const newState = {
+        ...state,
+        spots: { ...state.spots },
+      };
+      delete newState.spots[action.payload];
       return newState;
-    }
+    } 
     default:
       return state;
   }

@@ -2,6 +2,7 @@ import { useSelector } from "react-redux";
 import { DeleteReviewModal } from "../DeleteReviewModal";
 import { OpenModalButton } from "../OpenModalButton";
 //import { useParams } from "react-router-dom";
+import './ReviewList.css';
 
 const ReviewList = ( { reviews } ) => {
     // console.log("INSIDE REVIEW LIST, GRABBING REVIEWS FOR SPOT: ", spotId);

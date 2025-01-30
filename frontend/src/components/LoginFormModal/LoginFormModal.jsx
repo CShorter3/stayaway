@@ -70,7 +70,6 @@ function LoginFormModal() {
   return (
     <>
       <form onSubmit={handleSubmit}>
-      <a href="#" className="demoLink" onClick={handleDemoLogin}>Log in as Demo User</a>
       <h1 style={{ padding: "10px", margin: "10px"}}>Log In</h1>
         <label>
           Username or Email
@@ -101,6 +100,8 @@ function LoginFormModal() {
         >
           Log In
         </button>
+        <a href="#" className="demoLink" onClick={handleDemoLogin}>Log in as Demo User</a>
+
       </form>
     </>
   );

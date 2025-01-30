@@ -87,6 +87,8 @@ button.prohibited-cursor:hover {
 .demoLink {
   display: flex;
   justify-content: flex-end;
+  font-size: 0.8rem;
+  font-weight:200;
 }
 
 /* .login-modal {

@@ -1,19 +1,158 @@
-/* TODO: Add sitewide styles */
+/***** Document *****/
+html, body {
+    display: flex !important;
+    flex-direction: column !important;
+    font-family: Arial, sans-serif !important;
+    background-color: purple !important;
+    height: 100dvh !important;
+    min-height: 100dvh !important;
+    margin: 10 0rem !important;
+    padding: 0rem !important;
+}
+
+nav {
+    height: 9% !important;
+    max-height: 100px !important;
+    width: 100% !important;
+    flex-shrink: 0 !important;
+}
+
+#root {
+    height: calc(100dvh - 30%) !important;
+    min-height: calc(100dvh - 30%) !important;
+    display: flex;
+    flex-direction: column;
+}
+  
+/***** Buttons *****/
+button{
+    width: 100%;
+    padding: 0.5rem;
+    margin-top: 0.4rem;
+    margin-bottom: 0.4rem;
+    margin-left: none;
+    margin-right: none;
+    font-size: 1rem;
+    color: #ffffff;
+    background-color: #e74c3c;
+    border: 1.75px solid black;
+    border-radius: 4px;
+    cursor: pointer;
+    transition: background-color 0.2s ease;
+    box-shadow: 0 4px 6px rgb(3, 1, 1);
+}
+
+button.small{
+    width:fit-content;
+    height:fit-content;
+    font-size: 0.6em;
+}
+
+button.bi:hover{
+    background-color: #3498db;
+}
+
+button.stop{
+    background-color: #57779a;
+}
+
+button.stop:hover{
+    background-color: #3f5872;
+    cursor: url('data:image/svg+xml;charset=UTF-8,<svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="red" background="black"><circle cx="12" cy="12" r="10" stroke="red" stroke-width="2" fill="none"/><line x1="6" y1="6" x2="18" y2="18" stroke="red" stroke-width="2" /></svg>'), not-allowed;
+}
+
+button.basic{
+    width:fit-content;
+    background-color: #3498db;
+}
+
+button.basic:hover{
+    background-color: #2980b9;
+}
+
+#no-border{
+    box-shadow: none;
+}
+
+#center{
+    margin: 0 auto;
+}
+
+/***** Forms *****/
+form {
+    display: flex;
+    flex-direction: column;
+    width: 100%;
+    max-width: 400px;
+    margin: 20rem auto;
+    padding: 2rem;
+    border-radius: 8px;
+    background-color: #ffffff;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+}
+
+form h1 {
+    margin: 0 auto;
+    padding-top: .5rem;
+    padding-bottom: 0.5rem;
+    font-size: 1.8rem;
+    text-align: center;
+    color: black;
+}
+
+form h4 {
+    margin: none;
+    padding-top: .5rem;
+    padding-bottom: .3rem;
+    text-align: left;
+    color: black;
+}
+
+form label {
+    display: block;
+    font-size: 0.9rem;
+    margin-bottom: 0.2rem;
+    margin-top: 0rem;
+    padding-bottom: 0rem;
+    padding-top: 0rem;
+    color: #34495e;
+}
+
+form input {
+    width: 100%;
+    padding: 0.5rem;
+    font-size: 0.7rem;
+    border: 1px solid #dcdde1;
+    border-radius: 4px;
+    margin-bottom: .2rem;
+    box-sizing: border-box;
+    outline: none;
+    transition: border-color 0.2s ease;
+  }
+
+form input:focus {
+    border-color: #3498db;
+}
+
+form textarea{
+    width: 100%;
+    max-width: 100%;
+    min-width: 100%;
+    min-height: 5rem;
+    max-height: 10rem;
+    margin-bottom: .2rem;
+}
+
 div :root {
     width: 75%;
     font-family: Arial, sans-serif;
 }
 
 nav {
-    margin-bottom: 1%;
+    height: 10%;
+    max-height: 120px;
 }
 
-body {
-    margin-top: 5%;
-    font-family: Arial, sans-serif;
-    background-color: purple;
-}
-  
 h1 {
     margin: 0%;
     padding: 0%;
@@ -35,6 +174,7 @@ h4 {
 }
 
 h5 {
+    font-size: 0.7rem;
     margin: 0%;
     padding: 0%;
 }
@@ -50,22 +190,27 @@ h6 {
 }
 
 .overview-container{
-    max-width: min(100%, 1000px);
+    max-width: min(95%, 900px);
     min-width: 50%;
     margin: 0px auto;
-    margin-top: 25%;
     display: flex;
     justify-content: space-between ;
     flex-direction: column;
+    background-color: #f8f9fa;
     gap: 2rem;
     padding: 2rem;
-    /* background-color: #f8f9fa; Light gray background */
+    background-color: #f8f9fa;
+    box-shadow: -2px -2px 4px rgba(57, 89, 6, 0.05),  /* Very light shadow on the top-left */
+    2px 0px 2px rgba(0, 0, 0, 0.05); 
 }
 
 .gallery {
-    max-width: min(95%, 1000px);
+    max-width: min(90%, 1000px);
     margin: 0 auto;
-    max-height: auto;
+    display: flex;
+    gap: 1rem;
+    height: 50%; /* Consistent height for the gallery */
+    max-height: 300px;
 }
 
 .reserve-btn-container{
@@ -73,7 +218,6 @@ h6 {
     flex-direction: column;
     justify-content: space-between;
     color: black;
-
 }
 
 .star {

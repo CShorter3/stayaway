@@ -67,7 +67,6 @@ function ProfileButton({ user }) {
           <>
             <li>Hello, {user.firstName}</li>
             <li>{user.email}</li>
-            <hr/>
             <li>
               <NavLink to="/spots/current" style={{ textDecoration: "none" }}>
                 Manage Spots

@@ -88,12 +88,12 @@ const SpotDetail = () => {
                 </div>
             </section>
             <section className="Review-container">
-                <SpotDetailSnippet />
+                <SpotDetailSnippet className="large-snippet"/>
                 {sessionUser && 
                     !spotIsOwnedBySession && 
                     !hasUserPostedReview &&
                     (<button onClick={() => setModalContent(<ReviewFormModal spotId={spot.id} />)}
-							className='add-review-btn'
+							className='basic small'
                     >
 							Post Your Review
 					</button>)

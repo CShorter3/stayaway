@@ -3,6 +3,7 @@ import { csrfFetch } from "./csrf";
 // load spot's reviews
 export const LOAD_REVIEWS = "reviews/LOAD_REVIEWS";
 export const ADD_REVIEW = 'reviews/ADD_REVIEW';
+export const DELETE_REVIEW = 'reviews/DELETE_REVIEW';
 
 // posting or editing single review
 // export const LOAD_SPOT_REVIEW = "reviews/LOAD_REVIEW";
@@ -18,6 +19,11 @@ const addReview = (review) => {
 		payload: review,
 	};
 };
+
+export const deleteReview = (review) => ({
+    type: DELETE_REVIEW,
+    payload: review
+});
 
 export const fetchReviewsBySpotId = (spotId) => async (dispatch) => {
     console.log("inside fetch reviews by spot id!")
@@ -138,6 +144,28 @@ export const addSpotReview = (review, spotId, user = null) => async (dispatch) =
 
 };
 
+export const removeReview = (reviewId) => async (dispatch) => {
+    console.log("*****INSIDE DELETE SPOT THUNK!*****");
+    // consider how SpotImages with the unique key
+    try {
+      const response = await csrfFetch(`/api/reviews/${reviewId}`, {
+        method: "DELETE",
+        headers: { "Content-Type": "application/json" },
+      });
+  
+      console.log("Value of fetched response data to delete: ", response);
+  
+      if (response.ok) {
+        dispatch(deleteReview(reviewId));
+      } else {
+        const errorData = await response.json();
+        console.error("Failed to delete review:", errorData);
+      }
+    } catch (error) {
+      console.error("Error deleting review:", error);
+    }
+  };
+
 const initialState = { 
     reviews: {},
     users: {},
@@ -159,6 +187,14 @@ const reviewsReducer = (state = initialState, action) => {
                 users: { ...state.users, ...action.payload.users },
                 reviewImages: { ...state.reviewImages, ...action.payload.reviewImages }
             }
+        }
+        case DELETE_REVIEW: {
+            const newState = { 
+                ...state, 
+                reviews: { ...state.reviews }
+            };
+            delete newState.reviews[action.payload];
+            return newState;
         }
         default:
             return state;

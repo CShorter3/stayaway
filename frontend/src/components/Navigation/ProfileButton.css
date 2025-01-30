@@ -1,17 +1,8 @@
-/* Profile button container */
-/* li {
-    margin: 0px;
-    padding: 0px;
-}
-
-ul {
-    margin: 0px;
-    padding: 0px;
-} */
-
 .profile-button-container {
     position: relative; /* Allows dropdown to position relative to the button */
     display: flex;
+    gap: 12px;
+    flex-direction: row;
     align-items: center;
     justify-content: center;
   }
@@ -26,8 +17,8 @@ ul {
     padding: 0.8rem;
     border-radius: 10%;
     display: flex;
-    align-items: center;
-    justify-content: center;
+    align-items:end;
+    justify-content:center;
     transition: background-color 0.2s ease, transform 0.2s ease;
     box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
   }
@@ -49,7 +40,7 @@ ul {
     margin: 0;
     padding: 1rem 0rem;
     width: 200px;
-    z-index: 1000;
+    z-index: 1001;
     display: flex;
     flex-direction: column;
   }
@@ -81,7 +72,7 @@ ul {
     padding: 0rem;
     border-radius: 4px;
     cursor: pointer;
-    font-size: 0.9rem;
+    font-size: 0.8rem;
     text-align: center;
     transition: background-color 0.2s ease;
   }
@@ -96,3 +87,9 @@ ul {
     display: none;
   }
   
+  a.create-spot-link {
+    text-decoration: solid;
+    display: inline-block;
+    width: fit-content;
+  }
+
