@@ -17,6 +17,10 @@ const ManageTile = ({ spot }) => {
         navigate(`/spots/${spot.id}/edit`);
     }
 
+    const handleModalClose = () => {
+        navigate(`/spots/current`);
+    }
+
     const tooltipId = `tooltip-${spot.id}`;
 
     return (
@@ -35,7 +39,8 @@ const ManageTile = ({ spot }) => {
                 <button onClick={handleEditClick}>Edit</button>
                 <OpenModalButton
                     buttonText="Delete"
-                    modalComponent={<DeleteSpotModal spotId={spot.id} />}
+                    onModalClose={handleModalClose}
+                    modalComponent={<DeleteSpotModal spotId={spot.id} onModalClose={handleModalClose} />}
                 />
             </div>
             <Tooltip
