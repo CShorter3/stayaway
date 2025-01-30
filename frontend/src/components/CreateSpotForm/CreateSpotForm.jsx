@@ -107,169 +107,188 @@ const CreateSpotForm = () => {
     };
 
     return (
-        <div>
-            <form onSubmit={handleSubmit} className="create-spot-form">
-                <div className="form-header">
-                    <h2>Create a New Spot</h2>
-                    <h4>Where&apos;s your place located?</h4>
-                    <p>
-                        Guests will only get your address once they&apos;ve booked a reservation.
-                    </p>
-                </div>
+        <form onSubmit={handleSubmit} className="create-spot-form">
+            <div className="head-unit" >
+                <h1>Create a New Spot</h1>
+                <h4>Where&apos;s your place located?</h4>
+                <p>
+                    Guests will only get your address once they&apos;ve booked a reservation.
+                </p>
+            </div>
 
-                <div className="form-body">
-                    <label htmlFor="country">Country</label>
-                    <input
-                        id="country"
-                        placeholder="Country"
-                        type="text"
-                        value={formData.country}
-                        onChange={handleChange}
-                    />
-                    {hasSubmitted && errors.country && (
-                        <p className="errors">{errors.country}</p>
-                    )}
+            <div className="form-unit">
+                <label htmlFor="country">Country</label>
+                <input
+                    id="country"
+                    placeholder="Country"
+                    type="text"
+                    value={formData.country}
+                    onChange={handleChange}
+                />
+                {hasSubmitted && errors.country && (
+                    <p className="errors">{errors.country}</p>
+                )}
+                
 
-                    <label htmlFor="address">Street Address</label>
-                    <input
-                        id="address"
-                        placeholder="Street Address"
-                        type="text"
-                        value={formData.address}
-                        onChange={handleChange}
-                    />
-                    {hasSubmitted && errors.address && (
-                        <p className="errors">{errors.address}</p>
-                    )}
+            <div className="form-unit">
+                <label htmlFor="address">Street Address</label>
+                <input
+                    id="address"
+                    placeholder="Street Address"
+                    type="text"
+                    value={formData.address}
+                    onChange={handleChange}
+                />
+                {hasSubmitted && errors.address && (
+                    <p className="errors">{errors.address}</p>
+                )}
+            </div>
 
-                    <div className="share-city-state-row">
-                        <div>
-                            <label htmlFor="city">City</label>
-                            <input
-                                id="city"
-                                placeholder="City"
-                                type="text"
-                                value={formData.city}
-                                onChange={handleChange}
-                            />
-                            {hasSubmitted && errors.city && (
-                                <p className="errors">{errors.city}</p>
-                            )}
-                        </div>
-
-                        <div>
-                            <label htmlFor="state">State</label>
-                            <input
-                                id="state"
-                                placeholder="State"
-                                type="text"
-                                value={formData.state}
-                                onChange={handleChange}
-                            />
-                            {hasSubmitted && errors.state && (
-                                <p className="errors">{errors.state}</p>
-                            )}
-                        </div>
-                    </div>
-                </div>
-                <hr />
-
-                <div>
-                    <h4>Describe your place to guests</h4>
-                    <textarea
-                        id="description"
-                        placeholder="Please write at least 30 characters"
-                        value={formData.description}
-                        onChange={handleChange}
-                    />
-                    {hasSubmitted && errors.description && (
-                        <p className="errors">{errors.description}</p>
-                    )}
-                </div>
-                <hr />
-
-                <div>
-                    <h4>Create a title for your spot</h4>
-                    <input
-                        id="name"
-                        placeholder="Name of your spot"
-                        type="text"
-                        value={formData.name}
-                        onChange={handleChange}
-                    />
-                    {hasSubmitted && errors.name && (
-                        <p className="errors">{errors.name}</p>
-                    )}
-                </div>
-                <hr />
-
-                <div>
-                    <h4>Set a base price for your spot</h4>
-                    <label>
-                        $
+            <div className="city-state-row">
+                <div className="form-unit">
+                    <div className="split-left">
+                        <label htmlFor="city">City</label>
                         <input
-                            id="price"
-                            placeholder="Price per night (USD)"
-                            type="number"
-                            value={formData.price}
+                            id="city"
+                            placeholder="City"
+                            type="text"
+                            value={formData.city}
                             onChange={handleChange}
                         />
-                    </label>
-                    {hasSubmitted && errors.price && (
-                        <p className="errors">{errors.price}</p>
-                    )}
+                        {hasSubmitted && errors.city && (
+                            <p className="errors">{errors.city}</p>
+                        )}
+                    </div>
                 </div>
-                <hr />
 
-                <div>
-                    <h4>Liven up your spot with photos</h4>
-                    <input
-                        id="image0"
-                        placeholder="Image URL"
-                        type="url"
-                        value={formData.image0}
-                        onChange={handleChange}
-                    />
-                    {hasSubmitted && errors.image0 && (
-                        <p className="errors">{errors.image0}</p>
-                    )}
-                    <input
-                        id="image1"
-                        placeholder="Image URL"
-                        type="url"
-                        value={formData.image1}
-                        onChange={handleChange}
-                    />
-                    <input
-                        id="image2"
-                        placeholder="Image URL"
-                        type="url"
-                        value={formData.image2}
-                        onChange={handleChange}
-                    />
-                    <input
-                        id="image3"
-                        placeholder="Image URL"
-                        type="url"
-                        value={formData.image3}
-                        onChange={handleChange}
-                    />
-                    <input
-                        id="image4"
-                        placeholder="Image URL"
-                        type="url"
-                        value={formData.image4}
-                        onChange={handleChange}
-                    />
+                <div className="form-unit">
+                    <div className="split-right">
+                        <label htmlFor="state">State</label>
+                        <input
+                            id="state"
+                            placeholder="State"
+                            type="text"
+                            value={formData.state}
+                            onChange={handleChange}
+                        />
+                        {hasSubmitted && errors.state && (
+                            <p className="errors">{errors.state}</p>
+                        )}
+                    </div>
                 </div>
-                <hr />
+            </div>
+            </div>
+            <hr/>
 
-                <button onClick={handleSubmit} type="submit" className="create-spot-btn">
-                    Create Spot
-                </button>
+            <div>
+                <h4>Describe your place to guests</h4>
+                <p>
+					Mention the best features of your space, any special amenities
+					like fast wifi or parking, and what you love about the
+					neighborhood.
+				</p>
+                <textarea
+                    id="description"
+                    placeholder="Please write at least 30 characters"
+                    value={formData.description}
+                    onChange={handleChange}
+                />
+                {hasSubmitted && errors.description && (
+                    <p className="errors">{errors.description}</p>
+                )}
+            </div>
+            <hr />
 
-            </form>
-        </div>
+            <div>
+                <h4>Create a title for your spot</h4>
+                <p>
+					Catch guests&apos; attention with a spot title that highlights
+					what makes your place special
+				</p>
+                <input
+                    id="name"
+                    placeholder="Name of your spot"
+                    type="text"
+                    value={formData.name}
+                    onChange={handleChange}
+                />
+                {hasSubmitted && errors.name && (
+                    <p className="errors">{errors.name}</p>
+                )}
+            </div>
+            <hr />
+
+            <div>
+                <h4>Set a base price for your spot</h4>
+                <p>
+                    Competitive pricing can help your listing stand out and rank
+                    higher in search results
+                </p>
+                <label className="one-row">
+                    $
+                    <input
+                        id="price"
+                        placeholder="Price per night (USD)"
+                        type="number"
+                        value={formData.price}
+                        onChange={handleChange}
+                    />
+                </label>
+                {hasSubmitted && errors.price && (
+                    <p className="errors">{errors.price}</p>
+                )}
+            </div>
+            <hr />
+
+            <div>
+                <h4>Liven up your spot with photos</h4>
+                <p>Submit a link to at least one photo to publish your spot.</p>
+                <input
+                    id="image0"
+                    placeholder="Image URL"
+                    type="url"
+                    value={formData.image0}
+                    onChange={handleChange}
+                />
+                {hasSubmitted && errors.image0 && (
+                    <p className="errors">{errors.image0}</p>
+                )}
+                <input
+                    id="image1"
+                    placeholder="Image URL"
+                    type="url"
+                    value={formData.image1}
+                    onChange={handleChange}
+                />
+                <input
+                    id="image2"
+                    placeholder="Image URL"
+                    type="url"
+                    value={formData.image2}
+                    onChange={handleChange}
+                />
+                <input
+                    id="image3"
+                    placeholder="Image URL"
+                    type="url"
+                    value={formData.image3}
+                    onChange={handleChange}
+                />
+                <input
+                    id="image4"
+                    placeholder="Image URL"
+                    type="url"
+                    value={formData.image4}
+                    onChange={handleChange}
+                />
+            </div>
+            <hr />
+
+            <button onClick={handleSubmit} type="submit" className="small bi" id='center'>
+                Create Spot
+            </button>
+
+        </form>
     );
 };
 

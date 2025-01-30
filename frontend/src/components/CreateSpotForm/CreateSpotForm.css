@@ -1,0 +1,31 @@
+form .form-unit{
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+}
+
+form p.errors{
+    margin: none;
+    padding: none;
+    color: #e74c3c;
+    font-size: 0.6rem;
+    font-weight:200;
+}
+
+label.one-row{
+    display: flex;
+    align-content: normal;
+    gap: 10px;
+}
+.city-state-row {
+    display: flex;
+    gap: 15px;
+}
+  
+.split-left {
+    flex: 2; 
+}
+
+.split-right {
+    flex: 1; 
+}
