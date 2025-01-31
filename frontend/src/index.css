@@ -110,8 +110,8 @@ form h1 {
 
 form h4 {
     margin: none;
-    padding-top: .5rem;
-    padding-bottom: .3rem;
+    padding-top: 1rem;
+    padding-bottom: .2em;
     text-align: left;
     color: black;
 }

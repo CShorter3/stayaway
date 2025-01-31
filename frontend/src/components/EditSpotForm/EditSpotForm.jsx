@@ -72,7 +72,11 @@ const EditSpotForm = () => {
     if (formData.description.length < 30)
       newErrors.description = "Description needs 30 or more characters";
     if (!formData.name) newErrors.name = "Title is required";
-    if (!formData.price) newErrors.price = "Price per night is required";
+    if (!formData.price) {
+      newErrors.price = "Price per night is required";
+  } else if (isNaN(formData.price) || Number(formData.price) <= 0) {
+      newErrors.price = "Price must be a positive number";
+  }
     //if (!formData.image0) newErrors.image0 = 'Preview Image URL is required';
 
     setErrors(newErrors);
@@ -226,7 +230,6 @@ const EditSpotForm = () => {
           <p className="errors">{errors.description}</p>
         )}
       </div>
-      <hr />
 
       <div>
         <h4>Create a title for your spot</h4>
@@ -243,7 +246,6 @@ const EditSpotForm = () => {
         />
         {hasSubmitted && errors.name && <p className="errors">{errors.name}</p>}
       </div>
-      <hr />
 
       <div>
         <h4>Set a base price for your spot</h4>
@@ -265,8 +267,9 @@ const EditSpotForm = () => {
           <p className="errors">{errors.price}</p>
         )}
       </div>
+      <hr/>
 
-      <div>
+      {/* <div>
         <h4>Liven up your spot with photos</h4>
         <p>Submit a link to at least one photo to publish your spot.</p>
         <input
@@ -278,7 +281,7 @@ const EditSpotForm = () => {
         />
         {hasSubmitted && errors.image0 && (
           <p className="errors">{errors.image0}</p>
-        )}
+        )} */}
         {/* 
                     <input
                         id="image1"
@@ -308,15 +311,15 @@ const EditSpotForm = () => {
                         value={formData.image4}
                         onChange={handleChange}
                     />
-                    */}
+                    
       </div>
-      <hr />
-
+*/}
       <button
         onClick={handleSubmit}
         type="submit"
         className="small bi"
         id="center"
+        style={{marginTop: "0.5rem"}}
       >
         Update your Spot
       </button>
