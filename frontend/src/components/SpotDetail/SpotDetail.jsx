@@ -7,7 +7,7 @@ import { fetchReviewsBySpotId } from "../../store/reviews";
 import { SpotDetailSnippet } from "../SpotDetailSnippet";
 import { ReviewList } from "../ReviewList";
 import { ReviewFormModal } from "../ReviewFormModal";
-import { useModal } from '../../context/Modal';
+import { useModal } from '../../Context/Modal';
 import "./SpotDetail.css";
 
 const SpotDetail = () => {

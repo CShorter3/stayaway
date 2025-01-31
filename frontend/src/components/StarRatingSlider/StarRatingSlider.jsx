@@ -1,7 +1,7 @@
 
 import { useState } from 'react';
 import { FaStar } from 'react-icons/fa';
-//import './StarRating.css';
+import './StarRatingSlider.css';
 
 const StarRatingSlider = ({ rating, setRating }) => {
 	const [hover, setHover] = useState(0);
@@ -13,7 +13,7 @@ const StarRatingSlider = ({ rating, setRating }) => {
 
 				return (
 					<label key={index}>
-						<input
+						<input className='hidden'
 							type='radio'
 							name='rating'
 							value={rate}

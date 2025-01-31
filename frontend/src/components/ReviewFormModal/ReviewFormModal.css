@@ -1,0 +1,31 @@
+.one-row {
+    display: flex;
+    align-items: center;
+    gap: 10px; /* Adjusts spacing between stars and text */
+    width:min-content;
+    margin: 0 auto;
+    padding: 0.2rem;
+}
+
+.stars-label {
+    display: flex;
+    align-items: center;
+    gap: 5px; /* Adjusts spacing between stars and "Stars" text */
+}
+
+.one-row {
+    display: flex;
+    justify-content: baseline;
+    width: 0 auto;
+}
+
+#push-left {
+    flex-grow: 1; /* Ensures stars stay on the left */
+}
+
+#push-right {
+    font-size: 16px;
+    font-weight: bold;
+    color: #333;
+}
+
