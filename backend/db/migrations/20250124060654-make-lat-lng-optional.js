@@ -10,11 +10,11 @@ module.exports = {
      * await queryInterface.createTable('users', { id: Sequelize.INTEGER });
      */
     await queryInterface.changeColumn('Spots', 'lat', {
-      type: Sequelize.FLOAT,
+      type: Sequelize.DECIMAL,
       allowNull: true,
     });
     await queryInterface.changeColumn('Spots', 'lng', {
-      type: Sequelize.FLOAT,
+      type: Sequelize.DECIMAL,
       allowNull: true,
     });
   },
@@ -28,11 +28,11 @@ module.exports = {
      * await queryInterface.dropTable('users');
      */
       await queryInterface.changeColumn('Spots', 'lat', {
-        type: Sequelize.FLOAT,
+        type: Sequelize.DECIMAL,
         allowNull: false,
       });
       await queryInterface.changeColumn('Spots', 'lng', {
-        type: Sequelize.FLOAT,
+        type: Sequelize.DECIMAL,
         allowNull: false,
       });
     },
