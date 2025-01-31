@@ -151,7 +151,6 @@ form textarea{
     display: flex;
     flex-direction: row;
     justify-content: center;
-    align-items:;
 }
 
 div :root {
@@ -197,7 +196,6 @@ h6 {
 
 #bold {
     font-weight: 700;
-    
 }
 
 .overview-container{
