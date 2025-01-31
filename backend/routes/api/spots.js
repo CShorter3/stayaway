@@ -185,11 +185,11 @@ const validateSpotData = [
     .isString()
     .withMessage('Country is required'),
   check('lat')
-    .exists({ checkFalsy: true })
+    .optional()
     .isFloat({ min: -90, max: 90 })
     .withMessage('Latitude must must be between -90 to 90'),
   check('lng')
-    .exists({ checkFalsy: true })
+    .optional()
     .isFloat({ min: -180, max: 180 })
     .withMessage('Longitude must be between -180 to 180'),
   check('name')
@@ -399,9 +399,11 @@ const validateSpotEdit = [
     .exists({ checkFalsy: true })
     .withMessage('Country is required'),
   check('lat')
+    .optional()
     .isFloat({ min: -90, max: 90 })
     .withMessage('Latitude must must be between -90 to 90'),
   check('lng')
+    .optional()
     .isFloat({ min: -180, max: 180 })
     .withMessage('Longitude must be between -180 to 180'),
   check('name')
@@ -729,7 +731,26 @@ router.post('/:spotId/reviews',
         message: 'User already has a review for this spot'
       });
     }
-  
+ 
+    if (!review || stars == null) {
+      return res.status(400).json({
+        message: 'Validation error',
+        errors: {
+          review: 'Review text is required',
+          stars: 'Stars must be an integer from 1 to 5',
+        },
+      });
+    }
+
+    if (stars < 1 || stars > 5 || !Number.isInteger(stars)) {
+      return res.status(400).json({
+        message: 'Validation error',
+        errors: {
+          stars: 'Stars must be an integer from 1 to 5',
+        },
+      });
+    }
+
     try {
       const newReview = await spot.createReview({
         userId, review, stars

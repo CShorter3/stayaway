@@ -1,0 +1,96 @@
+/* Container for each individual tile */
+.tile-container {
+  display: flex; /* Use flexbox for vertical alignment */
+  flex-direction: column; /* Arrange child elements vertically */
+  width: 280px; /* Fixed width for each tile */
+  height: 240px; /* Fixed height for each tile */
+  margin: 0 auto;
+  margin-bottom: 2%;
+  padding: 0%;
+  min-width: 140px;
+  min-height: 260px;
+  max-width: 260px;
+  background-color: white; /* White background for each tile */
+  border-radius: 8px; /* Rounded corners */
+  overflow: hidden; /* Ensure content doesn't overflow the container */
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); /* Subtle shadow for depth */
+  transition: transform 0.2s ease-in-out, box-shadow 0.2s ease-in-out;
+  cursor: pointer; /* Pointer cursor for interactive tiles */
+}
+
+.tile-container:hover {
+  transform: translateY(-4px); /* Lift effect on hover */
+  box-shadow: 0 8px 16px rgba(0, 0, 0, 0.2); /* Deeper shadow on hover */
+}
+
+/* Image container taking 80% of the tile */
+.tile-image {
+  height: 98%; /* 80% of the tile height */
+  width: auto;
+  margin: 0%;
+  padding: 0%;
+  overflow: hidden; /* Ensure the image does not overflow the container */
+}
+
+.tile-image img {
+  width: 100%; /* Full width of the container */
+  height: 100%; /* Full height of the container (80% of the tile) */
+  margin: 0%;
+  padding: 0px;
+  object-fit: cover; /* Ensure the image scales properly */
+}
+
+/* Spot detail rows taking ~10% of the container each */
+.tile-detail-row {
+  display: flex; /* Use flexbox for row alignment */
+  justify-content: space-between; /* Space out the details */
+  align-items: center; /* Center-align the text vertically */
+  height: 4%; /* Each row takes 10% of the tile height */
+  padding: 0.5rem 1%; /* Add padding for spacing */
+  margin: 0%;
+  font-size: 1rem; /* Standard font size for details */
+  font-weight: 500; /* Medium font weight */
+}
+
+#one-row{
+  display: inline-flex; /* Use flexbox for row alignment */
+  flex-direction: row;
+  justify-content: flex-start;
+}
+
+.manage-action-row{
+  display: inline-flex;
+  direction: row;
+  justify-content: flex-start;
+  align-items: baseline;
+  gap: 10px;
+}
+
+.manage-action-row button{
+    width: fit-content;
+    font-size:small; 
+    color: beige;
+    background-color: #6c757d;
+    box-shadow: none;
+    border-radius: 8px;
+}
+
+.review-item button:hover {
+    color: beige;
+    background-color: #495057;
+}
+
+.tiles-grid {
+  padding-top: 1%;
+  padding-bottom: 1%;
+  margin: 0 auto;
+}
+
+/* Push content to the left and right */
+/* #push-detail-left {
+  text-align: left;
+}
+
+#push-detail-right {
+  text-align: right;
+} */

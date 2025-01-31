@@ -6,7 +6,7 @@ import * as sessionActions from '../../store/session';
 import { OpenModalButton } from '../OpenModalButton';
 import { LoginFormModal } from '../LoginFormModal';
 import { SignupFormModal } from '../SignupFormModal';
-import { useNavigate } from 'react-router-dom';
+import { NavLink, useNavigate } from 'react-router-dom';
 import './ProfileButton.css';
 //import OpenModalMenuItem from './OpenModalMenuItem';
 
@@ -54,6 +54,11 @@ function ProfileButton({ user }) {
 
   return (
     <div className="profile-button-container">
+       {user && (
+        <NavLink to="/spots/new" className="create-spot-link">
+          Create a New Spot
+        </NavLink>
+      )}
       <button /*ref={buttonRef}*/ onClick={toggleMenu} className="profile-btn">
         <FaUserCircle />
       </button>
@@ -62,6 +67,11 @@ function ProfileButton({ user }) {
           <>
             <li>Hello, {user.firstName}</li>
             <li>{user.email}</li>
+            <li>
+              <NavLink to="/spots/current" style={{ textDecoration: "none" }}>
+                Manage Spots
+              </NavLink>
+            </li>
             <li>
               <button className="auth-btn" onClick={logoutHandler}>
                 Log Out
@@ -82,6 +92,9 @@ function ProfileButton({ user }) {
               className="auth-btn" 
               modalComponent={<LoginFormModal/>}
               />
+            </li>
+            <li>
+
             </li>
 
           </>

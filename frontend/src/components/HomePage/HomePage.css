@@ -1,5 +1,9 @@
 /* Container for the tiles grid */
 
+div h1 {
+  margin-bottom: 4rem;
+}
+
 .tiles-grid {
   max-width: 90%;
   min-width: 70%;
@@ -11,8 +15,11 @@
   /* background-color: #fafaf8e3; Light gray background for the page */
 }
 
-
 .tile-container {
   flex: 0 0 calc(25% - 1.5rem); /* Each tile takes 25% width minus the gap space */
   box-sizing: border-box; /* Ensure padding/borders don't affect tile size */
+}
+
+.heading {
+  margin-bottom: 3rem;
 }

@@ -2,6 +2,8 @@ import { csrfFetch } from "./csrf";
 
 // load spot's reviews
 export const LOAD_REVIEWS = "reviews/LOAD_REVIEWS";
+export const ADD_REVIEW = 'reviews/ADD_REVIEW';
+export const DELETE_REVIEW = 'reviews/DELETE_REVIEW';
 
 // posting or editing single review
 // export const LOAD_SPOT_REVIEW = "reviews/LOAD_REVIEW";
@@ -9,6 +11,18 @@ export const LOAD_REVIEWS = "reviews/LOAD_REVIEWS";
 export const loadReviews = (reviews) => ({
     type: LOAD_REVIEWS,
     payload: reviews
+});
+
+const addReview = (review) => {
+	return {
+		type: ADD_REVIEW,
+		payload: review,
+	};
+};
+
+export const deleteReview = (review) => ({
+    type: DELETE_REVIEW,
+    payload: review
 });
 
 export const fetchReviewsBySpotId = (spotId) => async (dispatch) => {
@@ -72,7 +86,86 @@ export const fetchReviewsBySpotId = (spotId) => async (dispatch) => {
     }
 }
 
-// **** Thunks ****
+export const addSpotReview = (review, spotId, user = null) => async (dispatch) => {
+    console.log("*****INSIDE ADD SPOT REVIEW THUNK*****")
+	const response = await csrfFetch(`/api/spots/${spotId}/reviews`, {
+		method: 'POST',
+		headers: {
+			'Content-Type': 'application/json',
+		},
+		body: JSON.stringify(review),
+	});
+    // destructure id, userId, spotId, review, stars
+    
+	if (response.ok) {
+        console.log("Add Spot POST response is ok!");
+        const review = await response.json();
+
+    // {
+    //   "id": 1,
+    //   "userId": 1,
+    //   "spotId": 1,
+    //   "review": "This was an awesome spot!",
+    //   "stars": 5,
+    //   "createdAt": "2021-11-19 20:39:36",
+    //   "updatedAt": "2021-11-19 20:39:36"
+    // }
+        console.log("Fetched Add Spot POST data: ", review);
+
+        // check how redux handles reducer merging with null values
+        const normalizeReviewData = {
+            reviews: {
+                [review.id]: {
+                    id: review.id,
+                    userId: review.userId,
+                    spotId: review.spotId,
+                    spotID: review.spotId,
+                    review: review.review,
+                    stars: review.stars,
+                    createdAt: review.createdAt,
+                    updatedAt: review.updatedAt
+                }
+            },
+            users: {
+                [review.userId]: {
+                    id: review.userId,
+                    firstName: user.firstName || null,
+                    lastName: user.lastName || null
+                }
+            },
+            reviewImages: {}
+        }
+
+        console.log("Fetched data, normalized: ", normalizeReviewData);
+
+		dispatch(addReview(normalizeReviewData));
+		return review;
+	}
+
+};
+
+export const removeReview = (reviewId) => async (dispatch) => {
+    console.log("*****INSIDE DELETE SPOT THUNK!*****");
+    // consider how SpotImages with the unique key
+    try {
+      const response = await csrfFetch(`/api/reviews/${reviewId}`, {
+        method: "DELETE",
+        headers: { "Content-Type": "application/json" },
+      });
+  
+      console.log("Value of fetched response data to delete: ", response);
+  
+      if (response.ok) {
+        dispatch(deleteReview(reviewId));
+      } else {
+        const errorData = await response.json();
+        console.error("Failed to delete review:", errorData);
+      }
+    } catch (error) {
+      console.error("Error deleting review:", error);
+    }
+  };
+
 const initialState = { 
     reviews: {},
     users: {},
@@ -88,9 +181,25 @@ const reviewsReducer = (state = initialState, action) => {
                 reviewImages: { ...state.reviewImages, ...action.payload.reviewImages }
             }
         }
+        case ADD_REVIEW: {
+            return { ...state,
+                reviews: { ...state.reviews, ...action.payload.reviews },
+                users: { ...state.users, ...action.payload.users },
+                reviewImages: { ...state.reviewImages, ...action.payload.reviewImages }
+            }
+        }
+        case DELETE_REVIEW: {
+            const newState = { 
+                ...state, 
+                reviews: { ...state.reviews }
+            };
+            delete newState.reviews[action.payload];
+            return newState;
+        }
         default:
             return state;
     }
 }
 
 export default reviewsReducer;
+

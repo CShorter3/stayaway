@@ -1,5 +1,8 @@
 import { useSelector } from "react-redux";
+import { DeleteReviewModal } from "../DeleteReviewModal";
+import { OpenModalButton } from "../OpenModalButton";
 //import { useParams } from "react-router-dom";
+import './ReviewList.css';
 
 const ReviewList = ( { reviews } ) => {
     // console.log("INSIDE REVIEW LIST, GRABBING REVIEWS FOR SPOT: ", spotId);
@@ -9,7 +12,11 @@ const ReviewList = ( { reviews } ) => {
     // const reviews = reviewsArray.filter((review) => review.spotId === parseInt(spotId, 10));
     // console.log("Selecting the following reviews: ", reviews);
 
-     const users = useSelector((state) => state.reviews.users || {});
+    const sessionUser = useSelector(state => state.session.user.id);
+    console.log("Curent session user's id: ", sessionUser)
+    
+    const users = useSelector((state) => state.reviews.users || {});
+    console.log("value of users", users);
 
     if(reviews.length === 0){
         return <p className="no-reviews"> Be the first to post a review!</p>;
@@ -30,13 +37,17 @@ const ReviewList = ( { reviews } ) => {
                         })}
                     </p>
                     <p>{selectReview.review}</p>
+                    {selectReview.userId === sessionUser && (
+                        <OpenModalButton
+                            buttonText="Delete Review"
+                            modalComponent={ <DeleteReviewModal reviewId={selectReview.id}/>}
+                        />
+                    )}
                 </div>
             );
         })}
         </div>
-)
-
-
+    )
 }
 
 export default ReviewList;

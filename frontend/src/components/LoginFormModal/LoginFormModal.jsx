@@ -49,6 +49,7 @@ function LoginFormModal() {
       }
     };
 
+
     /*
     const handleSubmit = async (e) => {
     e.preventDefault();
@@ -68,10 +69,8 @@ function LoginFormModal() {
 
   return (
     <>
-      <div style={{ position: 'absolute', top: 0, right: 0 }}>
-        <a href="#" onClick={handleDemoLogin}>Log in as Demo User</a>
-      </div>
       <form onSubmit={handleSubmit}>
+      <h1 style={{ padding: "10px", margin: "10px"}}>Log In</h1>
         <label>
           Username or Email
           <input
@@ -101,6 +100,8 @@ function LoginFormModal() {
         >
           Log In
         </button>
+        <a href="#" className="demoLink" onClick={handleDemoLogin}>Log in as Demo User</a>
+
       </form>
     </>
   );

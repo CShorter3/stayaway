@@ -1,73 +1,43 @@
-/* .overview-container {
-  width: 100%;
-  min-width: 50%;
-  margin: 0px 100px;
-  display: flex;
-  justify-content: space-evenly ;
-  flex-direction: column;
-  gap: 2rem;
-  padding: 2rem;
-  background-color: #f8f9fa; 
-  font-family: Arial, sans-serif;
-}  */
-
-/* Header section styles */
-/* 
-.header h2 {
-  font-weight: bold;
-  margin-bottom: 1rem;
-}
-
-.header h5 {
-  font-weight: 400;
-  margin-top: 0.5rem;
-  color: rgb(19, 10, 10); /* Subtle gray for location text */
+/* Overall container */
 
 
-p {
-  color: black;
-}
-/* Gallery section styles */
-.gallery {
-  display: flex;
-  gap: 1rem;
-  height: 50%; /* Fixed height for the gallery */
-}
-
-/* Left side image (Main spot image) */
+/* Main spot image */
 .gallery > div:first-child {
-  flex: 1; /* Take up 50% of the width */
-  width: 100%; /* Full height of the gallery */
-  overflow: hidden; /* Ensure the image doesn't overflow */
-  border-radius: 8px; /* Rounded corners for the main image */
+  flex: 1;
+  width: 100%;
+  height: 100%;
+  overflow: hidden;
+  border-radius: 8px;
   box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
 }
 
 .gallery > div:first-child img {
-  width: 100%; /* Full width of the container */
-  height: 100%; /* Full height of the container */
-  object-fit: cover; /* Scale and crop the image */
+  width: 100%;
+  height: 100%;
+  object-fit: cover; /* Ensures all images fit consistently */
 }
 
-/* Right side images (Smaller images) */
+/* Right-side images (thumbnails) */
 .pic-box {
   display: grid;
-  grid-template-columns: repeat(2, 1fr); /* 2 images per row */
-  grid-template-rows: repeat(2, 1fr); /* 2 rows of images */
-  gap: 0.5rem; /* Add spacing between images */
-  flex: 1; /* Take up 50% of the width */
+  grid-template-columns: repeat(2, 1fr);
+  grid-template-rows: repeat(2, 1fr);
+  gap: 0.5rem;
+  flex: 1;
+  height: 100%; /* Ensures the pic-box matches the main image height */
 }
 
 .pic-box img {
-  width: 100%; /* Full width of the grid cell */
-  height: 100%; /* Full height of the grid cell */
-  object-fit: cover; /* Scale and crop the image */
-  border-radius: 8px; /* Rounded corners for smaller images */
+  width: 100%;
+  height: 100%;
+  object-fit: cover; /* Ensures all images maintain consistency */
+  border-radius: 8px;
   box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
 }
 
-/* Details section styles */
+/* Details section */
 .details {
+  padding: 0 0rem;
   display: flex;
   justify-content: space-between;
   gap: 2rem;
@@ -86,23 +56,24 @@ p {
 }
 
 .blurb p {
-  font-size: 1rem;
+  font-size: 0.75rem;
   line-height: 1.5;
-  color: #495057; /* Darker gray for description text */
+  color: #495057;
 }
 
 /* Reserve section takes 1/3 of the details width */
 .reserve {
   flex: 1;
-  border: 1px solid #dee2e6; /* Subtle border for reserve section */
+  border: 1px solid #dee2e6;
   border-radius: 8px;
   padding: 1rem;
   box-shadow: 0 4px 8px rgba(0, 0, 0, 0.05);
   background-color: white;
 }
 
-.reserve hr {
+hr {
   margin: 1rem 0;
   border: none;
-  border-top: 1px solid #e9ecef; /* Subtle divider line */
+  border-top: 1px solid #3b3102ca;
+  z-index: 1002;
 }
