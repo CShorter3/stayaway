@@ -29,15 +29,23 @@ function HomePage(){
     }
 
     return (
-        <div className="tiles-grid">
+        <>
+            <div>
+                <h1 className='heading'> STAYAWAY! Where dystopia meets adventure.</h1>
+                
+            </div>
 
-            {displaySpots.map((spot) => {
-                // console.log("iterating over...", displaySpots);       // expect to see the same spots object with unqiue keys at each map pass
-                // console.log("current spot id: ", spot.id)   // expect spot id to be a new spot id at each map pass, which is used to key into a spot object
-                // console.log("current spot object: ", spot)   // expect spot to be a new spot object that maps to a unique spots object key
-                return <Tile key={spot.id} spot={spot} />
-            })}
-        </div>
+
+            <div className="tiles-grid">
+                {displaySpots.map((spot) => {
+                    // console.log("iterating over...", displaySpots);       // expect to see the same spots object with unqiue keys at each map pass
+                    // console.log("current spot id: ", spot.id)   // expect spot id to be a new spot id at each map pass, which is used to key into a spot object
+                    // console.log("current spot object: ", spot)   // expect spot to be a new spot object that maps to a unique spots object key
+                    return <Tile key={spot.id} spot={spot} />
+                })}
+            </div>
+        
+        </>
     )
 }
 

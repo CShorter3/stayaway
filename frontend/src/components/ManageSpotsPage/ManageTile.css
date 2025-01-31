@@ -67,7 +67,6 @@
 }
 
 .manage-action-row button{
- 
     width: fit-content;
     font-size:small; 
     color: beige;
@@ -79,6 +78,12 @@
 .review-item button:hover {
     color: beige;
     background-color: #495057;
+}
+
+.tiles-grid {
+  padding-top: 1%;
+  padding-bottom: 1%;
+  margin: 0 auto;
 }
 
 /* Push content to the left and right */

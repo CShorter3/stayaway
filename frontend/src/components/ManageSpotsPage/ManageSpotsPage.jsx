@@ -32,7 +32,10 @@ function ManageSpotsPage() {
 
     return (
         <div className="manage-spots-container">
-            <h1>Manage Your Spots</h1>
+            <h1 style={{textAlign: "left", paddingBottom: "1rem"}}>Manage Your Spots</h1>
+            <button onClick={handleClick} className='basic small' id='medium' style={{marginBottom: "4rem"}}>   
+                Create a New Spot
+            </button>
             {userSpotsFullfilled ? (
                 <div className="tiles-grid">
                     {sessionUserSpots.map((spot) => (

@@ -178,7 +178,6 @@ const CreateSpotForm = () => {
                 </div>
             </div>
             </div>
-            <hr/>
 
             <div>
                 <h4>Describe your place to guests</h4>
@@ -197,7 +196,6 @@ const CreateSpotForm = () => {
                     <p className="errors">{errors.description}</p>
                 )}
             </div>
-            <hr />
 
             <div>
                 <h4>Create a title for your spot</h4>
@@ -216,7 +214,6 @@ const CreateSpotForm = () => {
                     <p className="errors">{errors.name}</p>
                 )}
             </div>
-            <hr />
 
             <div>
                 <h4>Set a base price for your spot</h4>
@@ -238,7 +235,6 @@ const CreateSpotForm = () => {
                     <p className="errors">{errors.price}</p>
                 )}
             </div>
-            <hr />
 
             <div>
                 <h4>Liven up your spot with photos</h4>
