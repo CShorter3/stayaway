@@ -1,4 +1,4 @@
-.delete-spot-modal {
+.delete-review-modal {
     display: flex;
     flex-direction: column;
     align-items: center;
@@ -10,13 +10,13 @@
     box-shadow: 0 4px 6px rgb(3, 1, 1);
 }
 
-.delete-spot-modal h2 {
+.delete-review-modal h2 {
     font-size: 1.5rem;
     color: black;
     margin-bottom: 10px;
 }
 
-.delete-spot-modal p {
+.delete-review-modal p {
     font-size: 1rem;
     color: #555;
     margin-bottom: 20px;
@@ -61,5 +61,5 @@
     border-radius: 15px;
     border: 2px solid black;
     box-shadow: 0 4px 6px rgba(28, 2, 61, 0.472);
-
+    background-color: white;
 }
