@@ -28,11 +28,11 @@ module.exports = {
      * await queryInterface.dropTable('users');
      */
       await queryInterface.changeColumn('Spots', 'lat', {
-        type: Sequelize.DECIMAL,
+        type: Sequelize.FLOAT,
         allowNull: false,
       });
       await queryInterface.changeColumn('Spots', 'lng', {
-        type: Sequelize.DECIMAL,
+        type: Sequelize.FLOAT,
         allowNull: false,
       });
     },
