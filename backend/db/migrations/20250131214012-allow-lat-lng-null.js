@@ -15,10 +15,9 @@ module.exports = {
     });
     await queryInterface.changeColumn('Spots', 'lng', {
       type: Sequelize.DECIMAL,
-      allowNull: true,
+      allowNull: true, 
     });
   },
-
 
   async down (queryInterface, Sequelize) {
     /**
@@ -27,13 +26,13 @@ module.exports = {
      * Example:
      * await queryInterface.dropTable('users');
      */
-      await queryInterface.changeColumn('Spots', 'lat', {
-        type: Sequelize.DECIMAL,
-        allowNull: false,
-      });
-      await queryInterface.changeColumn('Spots', 'lng', {
-        type: Sequelize.DECIMAL,
-        allowNull: false,
-      });
-    },
+    await queryInterface.changeColumn('Spots', 'lat', {
+      type: Sequelize.DECIMAL,
+      allowNull: false,
+    });
+    await queryInterface.changeColumn('Spots', 'lng', {
+      type: Sequelize.DECIMAL,
+      allowNull: false, 
+    });
+  }
 };
