@@ -50,7 +50,7 @@ const ReviewFormModal = ({ spotId }) => {
 	
     return (
 		<div>
-			<h2 className='review-title-form'>How was your stay?</h2>
+
 			<form onSubmit={handleSubmit}>
 				<h1>{`How was your stay at ${spotName}?`}</h1>
 				<textarea
