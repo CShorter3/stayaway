@@ -22,6 +22,8 @@ if (process.env.NODE_ENV === 'production'){
     );
   });
 
+  //  /Users/Calid/AppAcademy/Stayaway/frontend/dist/index.html
+
   // serve the static assets in the frontend's build folder
   router.use(express.static(path.resolve("../frontend/dist")));
 
