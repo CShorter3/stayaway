@@ -14,8 +14,13 @@ form p.errors{
 
 label.one-row{
     display: flex;
-    align-content: normal;
+    align-items:flex-start;
     gap: 10px;
+    width: 100%
+}
+label.one-row input {
+    flex: 1; 
+    min-width: 0; 
 }
 .city-state-row {
     display: flex;
