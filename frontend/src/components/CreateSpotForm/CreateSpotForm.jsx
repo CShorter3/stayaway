@@ -282,7 +282,7 @@ const CreateSpotForm = () => {
                     onChange={handleChange}
                 />
             </div>
-            <hr />
+
 
             <button onClick={handleSubmit} type="submit" className="small bi" id='center'>
                 Create Spot

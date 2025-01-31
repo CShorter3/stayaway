@@ -52,11 +52,40 @@
   font-weight: 500; /* Medium font weight */
 }
 
+#one-row{
+  display: inline-flex; /* Use flexbox for row alignment */
+  flex-direction: row;
+  justify-content: flex-start;
+}
+
+.manage-action-row{
+  display: inline-flex;
+  direction: row;
+  justify-content: flex-start;
+  align-items: baseline;
+  gap: 10px;
+}
+
+.manage-action-row button{
+ 
+    width: fit-content;
+    font-size:small; 
+    color: beige;
+    background-color: #6c757d;
+    box-shadow: none;
+    border-radius: 8px;
+}
+
+.review-item button:hover {
+    color: beige;
+    background-color: #495057;
+}
+
 /* Push content to the left and right */
-#push-detail-left {
+/* #push-detail-left {
   text-align: left;
 }
 
 #push-detail-right {
   text-align: right;
-}
+} */

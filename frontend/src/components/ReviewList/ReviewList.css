@@ -70,5 +70,19 @@
     margin-top: 2rem;
   }
 
+.review-item button {
+    width: fit-content;
+    font-size: xx-small; 
+    color: beige;
+    background-color: #6c757d;
+    box-shadow: none;
+}
+.review-item button:hover {
+    color: beige;
+    background-color: #495057;
+}
+
+
+
 
   

@@ -33,15 +33,17 @@ const ManageTile = ({ spot }) => {
                 <p id="push-detail-right"><FaStar className="star"/> {spot.avgRating ?? "New"}</p>
             </div>
             <div className="tile-detail-row">
-                <p id="push-detail-left">${spot.price} <span>night</span></p>
+                <p id="push-detail-left">${`${spot.price} `} <span>night</span></p>
             </div>
-            <div className="manage-action-row">
-                <button onClick={handleEditClick}>Edit</button>
-                <OpenModalButton
-                    buttonText="Delete"
-                    onModalClose={handleModalClose}
-                    modalComponent={<DeleteSpotModal spotId={spot.id} onModalClose={handleModalClose} />}
-                />
+            <div id="one-row">
+                <div className="manage-action-row">
+                    <button onClick={handleEditClick}>Update</button>
+                    <OpenModalButton
+                        buttonText="Delete"
+                        onModalClose={handleModalClose}
+                        modalComponent={<DeleteSpotModal spotId={spot.id} onModalClose={handleModalClose} />}
+                    />
+                </div>
             </div>
             <Tooltip
                 id={tooltipId}
