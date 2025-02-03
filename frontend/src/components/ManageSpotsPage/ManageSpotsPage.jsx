@@ -34,13 +34,15 @@ function ManageSpotsPage() {
         <div className="manage-spots-container">
             <h1 style={{textAlign: "left", paddingBottom: "1rem"}}>Manage Your Spots</h1>
             {userSpotsFullfilled ? (
-                <div className="tiles-grid">
-            <button onClick={handleClick} className='basic small' id='medium' style={{marginBottom: "4rem"}}>   
-                Create a New Spot
-            </button>
-                     {sessionUserSpots.map((spot) => (
-                        <ManageTile key={spot.id} spot={spot} />
-                    ))}
+                <div>
+                    <button onClick={handleClick} className='basic small' id='medium' style={{marginBottom: "4rem"}}>   
+                        Create a New Spot
+                    </button>
+                    <div className="tiles-grid">
+                        {sessionUserSpots.map((spot) => (
+                            <ManageTile key={spot.id} spot={spot} />
+                        ))}
+                    </div>
                 </div>
             ) : (
                 <button onClick={handleClick} className='create-spot-button'>   
