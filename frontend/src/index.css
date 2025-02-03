@@ -303,3 +303,9 @@ h6 {
 .star {
     transform: translate(0px, 2px);
 }
+
+.manage-spots{
+    display: flex;
+    flex-direction: column;
+    align-items:flex-start;
+}
