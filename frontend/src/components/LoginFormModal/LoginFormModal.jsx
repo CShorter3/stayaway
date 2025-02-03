@@ -41,7 +41,7 @@ function LoginFormModal() {
     const handleDemoLogin = async () => {
       setErrors({});
       try {
-        await dispatch(sessionActions.login({ credential: "Demo-lition", password: "password" }));
+        await dispatch(sessionActions.login({ credential: "demo@user.io", password: "password" }));
         closeModal(); // Close the modal if login is successful
       } catch (error) {
         console.log("Error caught: ", error);
@@ -69,7 +69,7 @@ function LoginFormModal() {
 
   return (
     <>
-      <form onSubmit={handleSubmit}>
+      <form id="auth-modal" onSubmit={handleSubmit}>
       <h1 style={{ padding: "10px", margin: "10px"}}>Log In</h1>
         <label>
           Username or Email
@@ -91,10 +91,10 @@ function LoginFormModal() {
         </label>
 
         {errors.credential && (
-          <p>{errors.credential}</p>
+          <p className='error'>{errors.credential}</p>
         )}
         
-        <button type="submit" 
+        <button id="auth" type="submit" 
           disabled={isDisabled}
           className={isDisabled ? "prohibited-cursor" : ""}
         >
