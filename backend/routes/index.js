@@ -5,9 +5,9 @@ const router = express.Router();
 const apiRouter = require('./api');
 
 //trouble shoot deployment
-router.get('/', (req, res) => {
-  res.send('Hello World!');
-});
+// router.get('/', (req, res) => {
+//   res.send('Hello World!');
+// });
 
 router.use('/api', apiRouter);
 
@@ -21,6 +21,8 @@ if (process.env.NODE_ENV === 'production'){
       path.resolve(__dirname,'../../frontend', 'dist', 'index.html')
     );
   });
+
+  //  /Users/Calid/AppAcademy/Stayaway/frontend/dist/index.html
 
   // serve the static assets in the frontend's build folder
   router.use(express.static(path.resolve("../frontend/dist")));
