@@ -1,4 +1,4 @@
-.delete-review-modal {
+/* .delete-review-modal {
     display: flex;
     flex-direction: column;
     align-items: center;
@@ -8,7 +8,7 @@
     padding: 20px;
     text-align: center;
     box-shadow: 0 4px 6px rgb(3, 1, 1);
-}
+} */
 
 .delete-review-modal h2 {
     font-size: 1.5rem;
@@ -58,8 +58,15 @@
 }
 
 #modal-content{
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: space-between;
+    background: white;
+    border-radius: 15px;
+    padding: none;
+    text-align: center;
     border-radius: 15px;
     border: 2px solid black;
     box-shadow: 0 4px 6px rgba(28, 2, 61, 0.472);
-    background-color: white;
 }

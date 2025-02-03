@@ -1,4 +1,4 @@
-form .form-unit{
+form.form-unit{
     display: flex;
     flex-direction: column;
     justify-content: space-between;

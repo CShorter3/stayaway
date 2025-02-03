@@ -142,7 +142,7 @@ const EditSpotForm = () => {
   };
 
   return (
-    <form onSubmit={handleSubmit} className="create-spot-form">
+    <form onSubmit={handleSubmit} className="spot-form">
       <div className="head-unit">
         <h1>Update your Spot</h1>
         <h4>Where&apos;s your place located?</h4>

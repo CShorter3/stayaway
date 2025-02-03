@@ -42,15 +42,15 @@
     margin-top: 0.2rem 0rem;
     font-weight: 200;
     font-size: 0.70rem;
-    color: #6c757d; /* Subtle gray for the date */
+    color: #6c757d; 
   }
   
   /* Review content styling */
   .review-item p:nth-child(3) {
     margin-top: 0.2rem;
     font-size: 0.75rem;
-    color: #495057; /* Dark gray for review text */
-    line-height: 1.5; /* More readable line height */
+    color: #495057;
+    line-height: 1.5; 
     max-width: 33%;
   }
   
