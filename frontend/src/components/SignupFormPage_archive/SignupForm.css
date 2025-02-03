@@ -1,5 +1,5 @@
 /* General styling for the container */
-body {
+  /* body {
     font-family: Arial, sans-serif;
     background: linear-gradient(to bottom, #f0f4f8, #d9e2ec);
     display: flex;
@@ -7,9 +7,8 @@ body {
     align-items: center;
     height: 100vh;
     margin: 0;
-  }
-  
-  /* Form container */
+  } */
+/*   
   form {
     background-color: #ffffff;
     padding: 2rem;
@@ -19,7 +18,6 @@ body {
     max-width: 400px;
   }
   
-  /* Form title */
   h1 {
     font-size: 1.8rem;
     text-align: center;
@@ -27,7 +25,6 @@ body {
     margin-bottom: 1.5rem;
   }
   
-  /* Labels */
   label {
     display: block;
     font-size: 0.9rem;
@@ -35,7 +32,6 @@ body {
     color: #34495e;
   }
   
-  /* Inputs */
   input {
     width: 100%;
     padding: 0.8rem;
@@ -48,12 +44,10 @@ body {
     transition: border-color 0.2s ease;
   }
   
-  /* Focus effect */
   input:focus {
     border-color: #3498db;
   }
   
-  /* Button */
   button {
     width: 100%;
     padding: 0.8rem;
@@ -63,5 +57,4 @@ body {
     border: none;
     border-radius: 4px;
     cursor: pointer;
-    transition: backgrou
-  }
+  } */
