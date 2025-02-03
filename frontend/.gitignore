@@ -10,7 +10,6 @@ lerna-debug.log*
 node_modules
 dist-ssr
 *.local
-seeders
 
 # Editor directories and files
 .vscode/*
